@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scanner de Innovación CChC — Echeverría Izquierdo Edificaciones S.A.</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Segoe,Arial,sans-serif;background:#F5F6F8;color:#1A2B4A;padding:2rem}
+.container{max-width:960px;margin:0 auto}
+.header{background:#009FDB;color:#fff;padding:1.25rem 1.5rem;border-radius:12px;margin-bottom:1rem}
+.header h1{font-size:16px;font-weight:600;margin-bottom:2px}
+.header p{font-size:12px;opacity:0.85}
+.header-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.btn-info{background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.5);color:#fff;font-size:11px;padding:5px 14px;border-radius:20px;cursor:pointer;white-space:nowrap;transition:background 0.2s}
+.btn-info:hover{background:rgba(255,255,255,0.32)}
+.info-panel{display:none;background:#fff;border:1px solid #E2E8F0;border-radius:12px;padding:1.25rem;margin-bottom:1rem}
+.info-panel.open{display:block}
+.intro-text{font-size:13px;color:#1A2B4A;line-height:1.75;margin-bottom:1rem}
+.intro-text strong{font-weight:600}
+.dim-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1rem}
+.dim-card{background:#F5F6F8;border-radius:8px;padding:10px 12px}
+.dim-name{font-size:12px;font-weight:600;color:#1A2B4A;margin-bottom:3px}
+.dim-desc{font-size:11px;color:#5F6D8A;line-height:1.5}
+.etapas-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.etapa{border-radius:8px;padding:10px 12px;text-align:center}
+.etapa-label{font-size:11px;font-weight:600;margin-bottom:3px}
+.etapa-desc{font-size:10px;line-height:1.4}
+.section-lbl{font-size:11px;font-weight:600;color:#5F6D8A;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px}
+.muestra-card{background:#fff;border-radius:8px;padding:10px 14px;font-size:12px;color:#1A2B4A;line-height:1.7;border-left:3px solid #009FDB;margin-bottom:1.25rem}
+.muestra-card strong{font-weight:600}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.25rem}
+.kpi{background:#fff;border-radius:8px;padding:14px 12px;text-align:center;border:1px solid #E2E8F0}
+.kpi-label{font-size:10px;color:#5F6D8A;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em}
+.kpi-value{font-size:26px;font-weight:600;color:#009FDB}
+.kpi-sub{font-size:11px;color:#5F6D8A;margin-top:2px}
+.charts-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:1.25rem}
+.card{background:#fff;border:1px solid #E2E8F0;border-radius:12px;padding:1rem 1.25rem}
+.legend{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:10px;font-size:11px;color:#5F6D8A}
+.leg-dot{width:10px;height:10px;border-radius:2px;display:inline-block;margin-right:4px;vertical-align:middle}
+.sesgo-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1rem}
+.sesgo-card{background:#F5F6F8;border-radius:8px;padding:12px 14px}
+.sesgo-label{font-size:11px;color:#5F6D8A;margin-bottom:4px}
+.sesgo-val{font-size:22px;font-weight:600}
+.sesgo-sub{font-size:11px;color:#5F6D8A;margin-top:2px}
+.insight-box{background:#E1F5EE;border-left:3px solid #0F6E56;border-radius:0 8px 8px 0;padding:12px 14px;font-size:12px;color:#085041;line-height:1.65}
+.insight-box strong{font-weight:600;color:#04342C}
+.insight-q{margin-top:8px;padding:8px 10px;background:#C8EDD9;border-radius:8px;font-style:italic;color:#0F6E56}
+.divider-row{display:flex;align-items:center;gap:10px;margin:1.25rem 0 1rem}
+.divider-row::before,.divider-row::after{content:'';flex:1;height:1px;background:#E2E8F0}
+.divider-badge{font-size:11px;font-weight:600;color:#009FDB;background:#E6F7FF;padding:3px 12px;border-radius:10px;white-space:nowrap}
+.brecha-pill{font-size:11px;font-weight:600;color:#0F6E56;background:#E1F5EE;padding:3px 10px;border-radius:10px}
+.brecha-row{display:flex;align-items:center;gap:10px;margin:10px 0 12px}
+.brecha-row::before,.brecha-row::after{content:'';flex:1;height:1px;background:#E2E8F0}
+.ranking-table{width:100%;border-collapse:collapse;font-size:12px;table-layout:fixed}
+.ranking-table th{font-weight:600;color:#5F6D8A;text-align:left;padding:7px 8px;border-bottom:1px solid #E2E8F0;font-size:11px}
+.ranking-table td{padding:7px 8px;border-bottom:1px solid #E2E8F0;color:#1A2B4A;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ranking-table tr:last-child td{border-bottom:none}
+.ranking-table tr:hover td{background:#F5F6F8}
+.bar-wrap{width:100%;background:#E2E8F0;border-radius:4px;height:6px;display:inline-block;vertical-align:middle}
+.bar-fill{height:6px;border-radius:4px;background:#009FDB}
+.badge{display:inline-block;font-size:10px;padding:2px 8px;border-radius:10px;font-weight:600}
+.footer{font-size:10px;color:#8898AA;text-align:center;margin-top:1.25rem;padding-top:1rem;border-top:1px solid #E2E8F0}
+.close-btn{display:block;margin:1rem auto 0;background:none;border:1px solid #CBD5E0;color:#5F6D8A;font-size:11px;padding:5px 18px;border-radius:20px;cursor:pointer}
+.close-btn:hover{background:#F5F6F8}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header">
+  <div class="header-row">
+    <div>
+      <h1>Scanner de Innovación CChC — Echeverría Izquierdo Edificaciones S.A.</h1>
+      <p>Análisis de resultados · 12 respondentes · Junio 2026</p>
+    </div>
+    <button class="btn-info" onclick="toggleInfo()" id="infoBtn">&#9432; ¿Qué es el Scanner?</button>
+  </div>
+</div>
+
+<div class="info-panel" id="infoPanel">
+  <p class="intro-text">El <strong>Scanner de Innovación</strong> es una herramienta de autoevaluación desarrollada por la <strong>Cámara Chilena de la Construcción (CChC)</strong> dentro de su plataforma <strong>CompromisoPro</strong>, iniciativa estratégica del gremio para impulsar la sostenibilidad en las empresas socias. La innovación es uno de los 7 pilares de sostenibilidad que promueve la CChC.</p>
+  <p class="intro-text">Permite a las empresas del sector conocer y comparar su nivel de madurez en innovación, identificando brechas y oportunidades de mejora a través de <strong>7 dimensiones</strong> y un índice global llamado <strong>IPI (Índice de Preparación para la Innovación)</strong>.</p>
+  <div class="section-lbl">Las 7 dimensiones que evalúa</div>
+  <div class="dim-grid">
+    <div class="dim-card"><div class="dim-name">Estrategia</div><div class="dim-desc">Alineación estratégica de la innovación con los objetivos del negocio</div></div>
+    <div class="dim-card"><div class="dim-name">Estructura y Recursos</div><div class="dim-desc">Organización, equipo y presupuesto asignado a la innovación</div></div>
+    <div class="dim-card"><div class="dim-name">Procesos</div><div class="dim-desc">Metodologías y procesos formales para gestionar iniciativas innovadoras</div></div>
+    <div class="dim-card"><div class="dim-name">Formación</div><div class="dim-desc">Capacitación y desarrollo del talento innovador en la organización</div></div>
+    <div class="dim-card"><div class="dim-name">Portafolio</div><div class="dim-desc">Gestión del portafolio de proyectos innovadores con métricas de impacto</div></div>
+    <div class="dim-card"><div class="dim-name">Cultura</div><div class="dim-desc">Cultura organizacional que promueve la experimentación y mejora continua</div></div>
+    <div class="dim-card"><div class="dim-name">Redes</div><div class="dim-desc">Conexiones externas y participación en ecosistemas de innovación</div></div>
+  </div>
+  <div class="section-lbl" style="margin-top:1rem">Etapas de madurez</div>
+  <div class="etapas-row">
+    <div class="etapa" style="background:#FCEBEB"><div class="etapa-label" style="color:#A32D2D">Exploración</div><div class="etapa-desc" style="color:#791F1F">La innovación ocurre de manera espontánea, sin procesos formales</div></div>
+    <div class="etapa" style="background:#FEF3E2"><div class="etapa-label" style="color:#854F0B">Organización</div><div class="etapa-desc" style="color:#633806">Se están definiendo roles, criterios y primeras estructuras</div></div>
+    <div class="etapa" style="background:#EBF4FF"><div class="etapa-label" style="color:#185FA5">Formalización</div><div class="etapa-desc" style="color:#0C447C">La innovación forma parte de la gestión con metas e indicadores</div></div>
+    <div class="etapa" style="background:#E1F5EE"><div class="etapa-label" style="color:#0F6E56">Escalamiento</div><div class="etapa-desc" style="color:#085041">La innovación es una ventaja competitiva consolidada y escalable</div></div>
+  </div>
+  <button class="close-btn" onclick="toggleInfo()">Cerrar</button>
+</div>
+
+<div class="divider-row"><span class="divider-badge">Aplicación en EI Edificaciones — 12 profesionales</span></div>
+
+<div class="muestra-card">
+  El Scanner fue aplicado a <strong>12 profesionales de distintos niveles y áreas</strong> de Echeverría Izquierdo Edificaciones, con el objetivo de obtener una medición representativa y no sesgada: desde el equipo de innovación hasta jefaturas de terreno, oficina técnica, calidad y soporte. Evaluaciones realizadas entre el <strong>1 y el 16 de junio de 2026</strong>.
+</div>
+
+<div class="kpi-grid" id="kpiGrid"></div>
+
+<div class="charts-row">
+  <div class="card">
+    <div class="section-lbl">Promedio por dimensión</div>
+    <div class="legend">
+      <span><span class="leg-dot" style="background:#2A9D8F"></span>Escalamiento ≥70%</span>
+      <span><span class="leg-dot" style="background:#F4A261"></span>Organización 40–69%</span>
+      <span><span class="leg-dot" style="background:#E63946"></span>Exploración &lt;40%</span>
+    </div>
+    <div style="position:relative;width:100%;height:240px">
+      <canvas id="dimChart" role="img" aria-label="Barras por dimensión"></canvas>
+    </div>
+  </div>
+  <div class="card">
+    <div class="section-lbl">Radar: empresa vs. grupos</div>
+    <div class="legend">
+      <span><span class="leg-dot" style="background:#009FDB"></span>Empresa</span>
+      <span><span class="leg-dot" style="background:#1A2B4A"></span>Equipo Innov.</span>
+      <span><span class="leg-dot" style="background:#E24B4A"></span>Resto</span>
+    </div>
+    <div style="position:relative;width:100%;height:240px">
+      <canvas id="radarChart" role="img" aria-label="Radar 7 dimensiones"></canvas>
+    </div>
+  </div>
+</div>
+
+<div class="card" style="margin-bottom:1.25rem">
+  <div class="section-lbl">Análisis de brecha de conocimiento</div>
+  <div class="sesgo-row" style="margin-top:10px" id="sesgoCards"></div>
+  <div class="brecha-row" id="brechaRow"></div>
+  <div class="insight-box">
+    &#128161; <strong>Oportunidad de gestión, no un sesgo metodológico.</strong> La diferencia entre el Equipo de Innovación y el resto de la organización no refleja un problema en la medición, sino una <strong>asimetría de conocimiento</strong>: quienes lideran la innovación conocen en profundidad los procesos, herramientas y portafolio de la empresa, mientras ese conocimiento aún no ha permeado hacia obra, oficina técnica y soporte.
+    <div class="insight-q">&#8594; <strong>Desafío de gestión:</strong> ¿Cómo comunicamos y transferimos ese conocimiento hacia los equipos de obra, oficina técnica y soporte para reducir esta brecha en el próximo ciclo?</div>
+  </div>
+</div>
+
+<div class="card" style="margin-bottom:1.25rem">
+  <div class="section-lbl">IPI por grupo</div>
+  <div style="position:relative;width:100%;height:160px;margin-top:10px">
+    <canvas id="grupoChart" role="img" aria-label="IPI por grupo"></canvas>
+  </div>
+</div>
+
+<div class="card" style="margin-bottom:1.25rem">
+  <div class="section-lbl">Ranking individual</div>
+  <table class="ranking-table">
+    <colgroup><col style="width:30px"><col style="width:22%"><col style="width:22%"><col style="width:20%"><col style="width:60px"><col></colgroup>
+    <thead><tr><th>#</th><th>Nombre</th><th>Cargo</th><th>Grupo</th><th>IPI</th><th>Barra</th></tr></thead>
+    <tbody id="rankingBody"></tbody>
+  </table>
+</div>
+
+<div class="footer">Echeverría Izquierdo Edificaciones S.A. &nbsp;·&nbsp; Equipo de Innovación &nbsp;·&nbsp; Confidencial — Junio 2026</div>
+</div>
+
+<script>
+function toggleInfo(){
+  const panel=document.getElementById('infoPanel');
+  const btn=document.getElementById('infoBtn');
+  const open=panel.classList.toggle('open');
+  btn.textContent=open?'✕ Cerrar':'ℹ ¿Qué es el Scanner?';
+}
+
+Chart.defaults.font.family="'Segoe UI',Segoe,Arial,sans-serif";
+
+const cargos={
+  'Lukas Solla':'Subgte Innovación y TD',
+  'Michelle Valenzuela':'Coordinadora Innovación',
+  'Magdalena Basoalto':'Gerente Desarrollo Metro',
+  'Constanza Alarcón':'Prof. Oficina Técnica',
+  'Roberto Concha':'Jefe de Calidad',
+  'Mauricio Toledo':'Jefe de Terreno',
+  'Cristian Aballay':'Administrador de Obra',
+  'Jorge Ocares':'Administrador de Obra',
+  'Alix Saez':'Jefe Oficina Técnica',
+  'Elizabeth Machuca':'Jefe Oficina Técnica',
+  'Claudia Arre':'Business Partner',
+  'Fabián Manríquez':'Coordinador BIM'
+};
+
+const grupos={
+  'Lukas Solla':'Equipo Innovación',
+  'Michelle Valenzuela':'Equipo Innovación',
+  'Magdalena Basoalto':'Gerencia',
+  'Constanza Alarcón':'Oficina Técnica',
+  'Roberto Concha':'Soporte/Staff',
+  'Mauricio Toledo':'Obra',
+  'Cristian Aballay':'Obra',
+  'Jorge Ocares':'Obra',
+  'Alix Saez':'Oficina Técnica',
+  'Elizabeth Machuca':'Oficina Técnica',
+  'Claudia Arre':'Soporte/Staff',
+  'Fabián Manríquez':'Soporte/Staff'
+};
+
+const personas=[
+  {nombre:'Lukas Solla',        ipi:89, dim:[100,67,80,100,100,100,83]},
+  {nombre:'Michelle Valenzuela',ipi:88, dim:[100,67,80,100,100,100,67]},
+  {nombre:'Magdalena Basoalto', ipi:82, dim:[100,56,80,75,100,60,100]},
+  {nombre:'Constanza Alarcón',  ipi:67, dim:[92,44,80,75,75,20,50]},
+  {nombre:'Roberto Concha',     ipi:65, dim:[92,56,80,50,75,20,33]},
+  {nombre:'Mauricio Toledo',    ipi:64, dim:[85,56,80,0,75,100,33]},
+  {nombre:'Cristian Aballay',   ipi:61, dim:[69,44,80,50,75,80,17]},
+  {nombre:'Jorge Ocares',       ipi:61, dim:[69,44,80,25,75,100,33]},
+  {nombre:'Alix Saez',          ipi:58, dim:[92,22,80,0,75,80,33]},
+  {nombre:'Elizabeth Machuca',  ipi:57, dim:[77,33,40,50,75,60,67]},
+  {nombre:'Claudia Arre',       ipi:55, dim:[62,44,0,100,75,60,67]},
+  {nombre:'Fabián Manríquez',   ipi:34, dim:[62,33,0,25,50,40,0]},
+];
+
+personas.forEach(p=>{p.cargo=cargos[p.nombre];p.grupo=grupos[p.nombre];});
+
+const dimLabels=['Estrategia','Estruc. y Rec.','Procesos','Formación','Portafolio','Cultura','Redes'];
+const dimAvg=dimLabels.map((_,i)=>Math.round(personas.reduce((s,p)=>s+p.dim[i],0)/personas.length));
+const ipiAvg=Math.round(personas.reduce((s,p)=>s+p.ipi,0)/personas.length);
+
+const innov=personas.filter(p=>p.grupo==='Equipo Innovación');
+const resto=personas.filter(p=>p.grupo!=='Equipo Innovación');
+const prom=arr=>Math.round(arr.reduce((a,b)=>a+b,0)/arr.length);
+const innovIPI=prom(innov.map(p=>p.ipi));
+const restoIPI=prom(resto.map(p=>p.ipi));
+const innovDim=dimLabels.map((_,i)=>prom(innov.map(p=>p.dim[i])));
+const restoDim=dimLabels.map((_,i)=>prom(resto.map(p=>p.dim[i])));
+
+// Dimensión más fuerte y débil
+const dimNombres=['Estrategia','Estructura y Rec.','Procesos','Formación','Portafolio','Cultura','Redes'];
+const maxIdx=dimAvg.indexOf(Math.max(...dimAvg));
+const minIdx=dimAvg.indexOf(Math.min(...dimAvg));
+
+// KPIs
+document.getElementById('kpiGrid').innerHTML=`
+  <div class="kpi"><div class="kpi-label">IPI promedio empresa</div><div class="kpi-value">${ipiAvg}%</div><div class="kpi-sub">Etapa: Formalización</div></div>
+  <div class="kpi"><div class="kpi-label">Dimensión más fuerte</div><div class="kpi-value" style="font-size:18px;padding-top:4px">${dimNombres[maxIdx]}</div><div class="kpi-sub">${dimAvg[maxIdx]}% promedio</div></div>
+  <div class="kpi"><div class="kpi-label">Dimensión más débil</div><div class="kpi-value" style="font-size:18px;padding-top:4px;color:#E24B4A">${dimNombres[minIdx]}</div><div class="kpi-sub">${dimAvg[minIdx]}% promedio</div></div>
+  <div class="kpi"><div class="kpi-label">Respondentes</div><div class="kpi-value">12</div><div class="kpi-sub">5 grupos · Junio 2026</div></div>`;
+
+// Sesgo
+const brecha=innovIPI-restoIPI;
+document.getElementById('sesgoCards').innerHTML=`
+  <div class="sesgo-card"><div class="sesgo-label">Equipo Innovación (Lukas + Michelle)</div><div class="sesgo-val" style="color:#009FDB">${innovIPI}%</div><div class="sesgo-sub">IPI promedio · 2 personas</div></div>
+  <div class="sesgo-card"><div class="sesgo-label">Resto de la organización</div><div class="sesgo-val" style="color:#1A2B4A">${restoIPI}%</div><div class="sesgo-sub">IPI promedio · 10 personas</div></div>`;
+document.getElementById('brechaRow').innerHTML=`<span class="brecha-pill">Brecha de conocimiento: +${brecha} puntos</span>`;
+
+// Gráfico dimensiones
+const dimColors=dimAvg.map(v=>v>=70?'#2A9D8F':v>=40?'#F4A261':'#E63946');
+const dimOrden=[...dimAvg.map((v,i)=>({v,i,l:['Estrategia','Estruc. Rec.','Procesos','Formación','Portafolio','Cultura','Redes'][i]}))].sort((a,b)=>b.v-a.v);
+new Chart(document.getElementById('dimChart'),{
+  type:'bar',
+  data:{labels:dimOrden.map(d=>d.l),datasets:[{data:dimOrden.map(d=>d.v),backgroundColor:dimOrden.map(d=>d.v>=70?'#2A9D8F':d.v>=40?'#F4A261':'#E63946'),borderRadius:4,borderSkipped:false}]},
+  options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${c.raw}%`}}},scales:{x:{min:0,max:100,ticks:{callback:v=>v+'%',font:{size:10}},grid:{color:'rgba(0,0,0,0.05)'}},y:{ticks:{font:{size:10}}}}}
+});
+
+new Chart(document.getElementById('radarChart'),{
+  type:'radar',
+  data:{labels:['Estrategia','Estruc.','Procesos','Formación','Portafolio','Cultura','Redes'],datasets:[
+    {label:'Empresa',data:dimAvg,borderColor:'#009FDB',backgroundColor:'rgba(0,159,219,0.1)',pointBackgroundColor:'#009FDB',borderWidth:2,pointRadius:3},
+    {label:'Eq. Innovación',data:innovDim,borderColor:'#1A2B4A',backgroundColor:'rgba(26,43,74,0.08)',pointBackgroundColor:'#1A2B4A',borderWidth:2,pointRadius:3},
+    {label:'Resto',data:restoDim,borderColor:'#E24B4A',backgroundColor:'rgba(226,75,74,0.05)',borderDash:[4,3],pointBackgroundColor:'#E24B4A',borderWidth:1.5,pointRadius:3}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{r:{min:0,max:100,ticks:{stepSize:25,font:{size:9},callback:v=>v+'%'},pointLabels:{font:{size:9}}}}}
+});
+
+const grupoNames=['Equipo Innovación','Gerencia','Oficina Técnica','Soporte/Staff','Obra'];
+const grupoAvg=grupoNames.map(g=>{const ps=personas.filter(p=>p.grupo===g);return ps.length?Math.round(ps.reduce((s,p)=>s+p.ipi,0)/ps.length):0;});
+new Chart(document.getElementById('grupoChart'),{
+  type:'bar',
+  data:{labels:grupoNames,datasets:[{data:grupoAvg,backgroundColor:['#009FDB','#1A2B4A','#5DCAA5','#888780','#F4A261'],borderRadius:4}]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${c.raw}%`}}},scales:{y:{min:0,max:100,ticks:{callback:v=>v+'%',font:{size:10}},grid:{color:'rgba(0,0,0,0.05)'}},x:{ticks:{font:{size:10}}}}}
+});
+
+const grupoBadge=g=>{
+  const map={'Equipo Innovación':'#009FDB','Gerencia':'#1A2B4A','Oficina Técnica':'#0F6E56','Soporte/Staff':'#5F5E5A','Obra':'#854F0B'};
+  return `<span class="badge" style="background:${map[g]}22;color:${map[g]}">${g}</span>`;
+};
+
+const tbody=document.getElementById('rankingBody');
+[...personas].sort((a,b)=>b.ipi-a.ipi).forEach((p,i)=>{
+  const arrow=p.ipi>=ipiAvg?`<span style="color:#2A9D8F;font-size:11px">▲</span>`:`<span style="color:#E24B4A;font-size:11px">▼</span>`;
+  tbody.innerHTML+=`<tr>
+    <td style="color:#8898AA;font-size:11px">${i+1}</td>
+    <td style="font-weight:600">${p.nombre}</td>
+    <td style="color:#5F6D8A">${p.cargo}</td>
+    <td>${grupoBadge(p.grupo)}</td>
+    <td style="font-weight:600;color:#009FDB">${p.ipi}% ${arrow}</td>
+    <td><div class="bar-wrap"><div class="bar-fill" style="width:${p.ipi}%"></div></div></td>
+  </tr>`;
+});
+</script>
+</body>
+</html>
