@@ -1,168 +1,175 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Portafolio de Innovación PPEE 2026</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --font: 'Poppins', sans-serif;
-      --bg-primary: #ffffff;
-      --bg-secondary: #f5f6f8;
-      --text-primary: #1a1a1a;
-      --text-secondary: #6b7280;
-      --border: rgba(0,0,0,0.09);
-      --border-md: rgba(0,0,0,0.15);
-      --radius-sm: 7px;
-      --radius-lg: 14px;
-    }
-    body { font-family: var(--font); background: #eef0f4; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
-    .layout { display: grid; grid-template-columns: 260px 1fr; height: 700px; width: 100%; max-width: 1140px; border: 0.5px solid var(--border); border-radius: 16px; overflow: hidden; background: var(--bg-primary); box-shadow: 0 4px 28px rgba(0,0,0,0.09); }
-    .sidebar { border-right: 0.5px solid var(--border); display: flex; flex-direction: column; overflow: hidden; }
-    .sidebar-header { padding: 13px 15px; border-bottom: 0.5px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
-    .sidebar-header h1 { font-size: 14px; font-weight: 600; color: var(--text-primary); font-family: var(--font); }
-    .sidebar-header span { font-size: 10px; color: #185FA5; font-weight: 500; background: #EBF3FB; padding: 2px 7px; border-radius: 10px; }
-    .clear-btn { font-size: 10px; color: #185FA5; background: none; border: none; cursor: pointer; font-family: var(--font); display: none; }
-    .clear-btn.visible { display: block; }
-    .search-wrap { padding: 8px 10px; border-bottom: 0.5px solid var(--border); }
-    .search-wrap input { width: 100%; padding: 6px 10px; font-size: 11px; font-family: var(--font); border: 0.5px solid var(--border); border-radius: var(--radius-sm); background: var(--bg-secondary); color: var(--text-primary); outline: none; }
-    .filters-panel { overflow-y: auto; border-bottom: 0.5px solid var(--border); max-height: 290px; }
-    .filter-group { border-bottom: 0.5px solid var(--border); }
-    .filter-group:last-child { border-bottom: none; }
-    .filter-group-header { display: flex; align-items: center; justify-content: space-between; padding: 7px 12px; cursor: pointer; user-select: none; }
-    .filter-group-label { font-size: 9.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-secondary); font-family: var(--font); }
-    .filter-group-meta { display: flex; align-items: center; gap: 5px; }
-    .active-count { font-size: 10px; background: #EBF3FB; color: #185FA5; border-radius: 10px; padding: 1px 5px; display: none; font-family: var(--font); }
-    .active-count.visible { display: inline-block; }
-    .chevron { font-size: 9px; color: var(--text-secondary); transition: transform 0.15s; }
-    .filter-group.collapsed .chevron { transform: rotate(-90deg); }
-    .filter-group-body { padding: 4px 8px 8px; display: flex; flex-direction: column; gap: 2px; }
-    .filter-group.collapsed .filter-group-body { display: none; }
-    .filter-opt { display: flex; align-items: center; gap: 7px; padding: 4px 5px; border-radius: 6px; cursor: pointer; border: none; background: none; width: 100%; text-align: left; font-family: var(--font); transition: background 0.1s; }
-    .filter-opt:hover { background: var(--bg-secondary); }
-    .filter-opt.selected { background: #EBF3FB; }
-    .filter-opt-check { width: 13px; height: 13px; border-radius: 3px; border: 1.5px solid var(--border-md); flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
-    .filter-opt.selected .filter-opt-check { background: #185FA5; border-color: #185FA5; }
-    .filter-opt-label { font-size: 11px; color: var(--text-primary); flex: 1; font-family: var(--font); }
-    .filter-opt.selected .filter-opt-label { color: #185FA5; }
-    .filter-opt-count { font-size: 10px; color: var(--text-secondary); background: var(--bg-secondary); border-radius: 8px; padding: 1px 5px; font-family: var(--font); }
-    .filter-opt.selected .filter-opt-count { background: #dbeeff; color: #185FA5; }
-    .results-bar { padding: 5px 12px; border-bottom: 0.5px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
-    .results-label { font-size: 10px; color: var(--text-secondary); font-family: var(--font); }
-    .initiative-list { flex: 1; overflow-y: auto; padding: 5px; }
-    .item-btn { width: 100%; text-align: left; background: none; border: 0.5px solid transparent; border-radius: var(--radius-sm); padding: 7px 9px; cursor: pointer; margin-bottom: 2px; font-family: var(--font); transition: background 0.1s; }
-    .item-btn:hover { background: var(--bg-secondary); }
-    .item-btn.active { background: #EBF3FB; border-color: #B5D4F4; }
-    .item-top { display: flex; align-items: center; gap: 4px; margin-bottom: 2px; flex-wrap: wrap; }
-    .item-id { font-size: 10px; font-weight: 600; color: var(--text-secondary); font-family: var(--font); }
-    .item-btn.active .item-id { color: #185FA5; }
-    .item-name { font-size: 11px; color: var(--text-primary); line-height: 1.35; font-family: var(--font); }
-    .item-sub { font-size: 10px; color: var(--text-secondary); margin-top: 3px; display: flex; align-items: center; gap: 6px; font-family: var(--font); }
-    .new-badge { font-size: 9px; font-weight: 600; background: #EAF3DE; color: #3B6D11; border: 1px solid #C0DD97; border-radius: 10px; padding: 1px 6px; }
-    .tag { display: inline-flex; align-items: center; gap: 3px; padding: 2px 7px; border-radius: 20px; font-size: 9px; font-weight: 500; border: 1px solid; font-family: var(--font); }
-    .tag-lg { padding: 4px 10px; font-size: 11px; border-width: 1.5px; }
-    .tag-blue  { background: #EBF3FB; color: #185FA5; border-color: #B5D4F4; }
-    .tag-amber { background: #FAEEDA; color: #854F0B; border-color: #FAC775; }
-    .tag-green { background: #EAF3DE; color: #3B6D11; border-color: #C0DD97; }
-    .tag-red   { background: #FCEBEB; color: #A32D2D; border-color: #F7C1C1; }
-    .tag-gray  { background: #F1EFE8; color: #5F5E5A; border-color: #D3D1C7; }
-    .tag-purple{ background: #EEEDFE; color: #3C3489; border-color: #AFA9EC; }
-    .tag-teal  { background: #E1F5EE; color: #085041; border-color: #9FE1CB; }
-    .tag-orange{ background: #FEF0E7; color: #7A3010; border-color: #F0997B; }
-    .tag-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
-    .main { display: flex; flex-direction: column; overflow: hidden; background: var(--bg-secondary); }
-    .ficha-wrap { flex: 1; overflow-y: auto; padding: 12px; }
-    .ficha { background: var(--bg-primary); border-radius: var(--radius-lg); overflow: hidden; border: 0.5px solid var(--border); }
-    .ficha-header { padding: 15px 17px 13px; }
-    .fh-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 4px; }
-    .fh-id { font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.65); font-family: var(--font); }
-    .fh-title { font-size: 17px; font-weight: 600; color: #fff; line-height: 1.3; font-family: var(--font); }
-    .empresa-logo { height: 28px; max-width: 90px; object-fit: contain; filter: brightness(0) invert(1); opacity: 0.9; }
-    .download-btn { display: inline-flex; align-items: center; gap: 5px; padding: 5px 12px; background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.35); border-radius: 20px; color: #fff; font-size: 11px; font-family: var(--font); cursor: pointer; transition: background 0.15s; margin-top: 10px; }
-    .download-btn:hover { background: rgba(255,255,255,0.30); }
-    .ficha-body { padding: 14px 17px; }
-    .tags-row-lg { display: flex; gap: 5px; margin-bottom: 14px; flex-wrap: wrap; }
-    .stepper { display: flex; align-items: flex-start; margin-bottom: 18px; }
-    .step { display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 50px; }
-    .step-connector { flex: 1; height: 2px; margin-top: 16px; background: #D3D1C7; }
-    .step-connector.done { background: #3B6D11; }
-    .step-circle { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; font-family: var(--font); flex-shrink: 0; }
-    .step-circle.done { background: #3B6D11; color: #fff; }
-    .step-circle.active { background: #185FA5; color: #fff; }
-    .step-circle.pending { background: #E8E6DF; color: #888780; }
-    .step-label { font-size: 10px; color: var(--text-secondary); text-align: center; line-height: 1.3; font-family: var(--font); }
-    .step-label.active-label { color: #185FA5; font-weight: 600; }
-    .section { margin-bottom: 14px; padding-bottom: 14px; border-bottom: 0.5px solid var(--border); }
-    .section:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-    .section-label { font-size: 9.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-secondary); margin-bottom: 7px; font-family: var(--font); }
-    .desc-box { font-size: 13px; color: var(--text-primary); line-height: 1.7; font-family: var(--font); }
-    .placeholder-box { background: var(--bg-secondary); border-radius: 7px; padding: 9px 11px; font-size: 12px; color: var(--text-secondary); line-height: 1.6; border: 0.5px solid var(--border); font-style: italic; font-family: var(--font); }
-    .empresa-card { display: flex; align-items: center; gap: 12px; background: var(--bg-secondary); border-radius: var(--radius-sm); padding: 10px 14px; border: 0.5px solid var(--border); }
-    .empresa-card-logo { height: 30px; max-width: 100px; object-fit: contain; }
-    .empresa-card-name { font-size: 13px; font-weight: 600; color: var(--text-primary); font-family: var(--font); }
-    .empresa-card-url { font-size: 11px; color: #185FA5; font-family: var(--font); }
-    .celula-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 5px; }
-    .celula-card { background: var(--bg-secondary); border-radius: var(--radius-sm); padding: 7px 9px; border: 0.5px solid var(--border); }
-    .celula-role { font-size: 10px; color: var(--text-secondary); margin-bottom: 2px; font-family: var(--font); }
-    .celula-name { font-size: 11px; font-weight: 600; color: var(--text-primary); font-family: var(--font); }
-    .centros-table { width: 100%; border-collapse: collapse; font-family: var(--font); }
-    .centros-table th { font-size: 9px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-secondary); font-weight: 600; padding: 5px 8px; text-align: center; border-bottom: 0.5px solid var(--border); }
-    .centros-table th.left { text-align: left; }
-    .centros-table td { padding: 5px 8px; font-size: 11px; color: var(--text-primary); border-bottom: 0.5px solid var(--border); text-align: center; vertical-align: middle; font-family: var(--font); }
-    .centros-table td.left { text-align: left; font-size: 10px; color: var(--text-secondary); }
-    .centros-table tr:last-child td { border-bottom: none; }
-    .estado-activo { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; background: #EAF3DE; }
-    .estado-finalizado { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; background: #EBF3FB; }
-    .estado-entregado { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; background: #F1EFE8; }
-    .legend { display: flex; gap: 12px; margin-bottom: 8px; flex-wrap: wrap; }
-    .legend-item { display: flex; align-items: center; gap: 5px; font-size: 10px; color: var(--text-secondary); font-family: var(--font); }
-    .hip-block { display: flex; flex-direction: column; gap: 8px; }
-    .hip-item { background: var(--bg-secondary); border-radius: 8px; border: 0.5px solid var(--border); overflow: hidden; }
-    .hip-header { display: flex; align-items: flex-start; gap: 8px; padding: 8px 11px; }
-    .hip-badge { font-size: 10px; font-weight: 600; color: #185FA5; background: #EBF3FB; border-radius: 5px; padding: 2px 6px; flex-shrink: 0; margin-top: 1px; font-family: var(--font); }
-    .hip-text { font-size: 12px; color: var(--text-primary); line-height: 1.55; font-family: var(--font); }
-    .kpi-row { display: flex; flex-direction: column; gap: 3px; padding: 0 11px 8px; margin-top: -2px; }
-    .kpi-pill { display: flex; align-items: flex-start; gap: 6px; background: #fff; border: 0.5px solid var(--border); border-radius: 6px; padding: 5px 8px; }
-    .kpi-num { font-size: 9px; font-weight: 600; color: #888780; flex-shrink: 0; margin-top: 1px; min-width: 24px; font-family: var(--font); }
-    .kpi-text { font-size: 11px; color: var(--text-secondary); line-height: 1.45; font-family: var(--font); }
-    .brechas-list { display: flex; flex-direction: column; gap: 5px; }
-    .brecha-item { display: flex; align-items: flex-start; gap: 8px; background: #FAEEDA; border: 0.5px solid #FAC775; border-radius: 7px; padding: 8px 11px; }
-    .brecha-dot { width: 6px; height: 6px; border-radius: 50%; background: #BA7517; flex-shrink: 0; margin-top: 4px; }
-    .brecha-text { font-size: 12px; color: #633806; line-height: 1.55; font-family: var(--font); }
-    .empty-state { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-secondary); gap: 10px; }
-    .empty-state span { font-size: 13px; font-family: var(--font); }
-    .no-results { padding: 20px; text-align: center; font-size: 12px; color: var(--text-secondary); font-family: var(--font); }
-    .item-logo { height: 13px; max-width: 38px; object-fit: contain; opacity: 0.7; }
-  </style>
-</head>
-<body>
-<div class="layout">
-  <aside class="sidebar">
-    <div class="sidebar-header">
-      <h1>Portafolio PPEE</h1>
-      <span>2026</span>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:#eef0f4;min-height:500px}
+.header{background:#1A6BAF;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.header-left{display:flex;align-items:center;gap:10px}
+.header h1{font-size:15px;font-weight:600;color:#fff}
+.header-badge{font-size:10px;background:rgba(255,255,255,0.2);color:#fff;border-radius:10px;padding:2px 8px;border:1px solid rgba(255,255,255,0.3)}
+.back-btn{display:none;align-items:center;gap:5px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:#fff;border-radius:8px;padding:5px 11px;font-size:11px;cursor:pointer;font-family:inherit}
+.back-btn:hover{background:rgba(255,255,255,0.25)}
+.filters-bar{background:#fff;padding:10px 16px;border-bottom:0.5px solid rgba(0,0,0,0.08);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.search-input{padding:6px 11px;font-size:11px;border:0.5px solid rgba(0,0,0,0.12);border-radius:7px;background:#f5f6f8;color:#1a1a1a;outline:none;width:160px;font-family:inherit}
+.filter-group{position:relative}
+.filter-trigger{display:flex;align-items:center;gap:5px;padding:5px 11px;border-radius:20px;border:1px solid rgba(0,0,0,0.12);background:#f5f6f8;cursor:pointer;font-size:11px;color:#6b7280;font-family:inherit;transition:all 0.1s}
+.filter-trigger:hover{background:#eef0f4}
+.filter-trigger.has-active{background:#EBF3FB;border-color:#B5D4F4;color:#185FA5;font-weight:500}
+.filter-trigger .count{font-size:10px;background:#185FA5;color:#fff;border-radius:8px;padding:0px 5px;font-weight:600}
+.dropdown{position:absolute;top:calc(100% + 6px);left:0;background:#fff;border:0.5px solid rgba(0,0,0,0.12);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,0.12);z-index:100;min-width:200px;padding:6px;display:none;max-height:240px;overflow-y:auto}
+.dropdown.open{display:block}
+.drop-item{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;cursor:pointer;border:none;background:none;width:100%;text-align:left;font-family:inherit;font-size:11px;color:#1a1a1a;transition:background 0.1s}
+.drop-item:hover{background:#f5f6f8}
+.drop-item.selected{background:#EBF3FB;color:#185FA5}
+.drop-check{width:14px;height:14px;border-radius:3px;border:1.5px solid rgba(0,0,0,0.2);flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.drop-item.selected .drop-check{background:#185FA5;border-color:#185FA5}
+.drop-search{width:100%;padding:5px 8px;font-size:11px;border:0.5px solid rgba(0,0,0,0.1);border-radius:6px;margin-bottom:4px;outline:none;font-family:inherit}
+.sep{width:1px;height:20px;background:rgba(0,0,0,0.1);flex-shrink:0}
+.view-toggle{display:flex;gap:3px;background:#f1f1f1;border-radius:7px;padding:2px}
+.vbtn{padding:4px 9px;border-radius:5px;border:none;background:none;cursor:pointer;font-size:11px;color:#6b7280}
+.vbtn.active{background:#fff;color:#185FA5;box-shadow:0 1px 3px rgba(0,0,0,0.08)}
+.clear-link{font-size:10px;color:#185FA5;background:none;border:none;cursor:pointer;font-family:inherit;display:none;white-space:nowrap}
+.clear-link.visible{display:block}
+.stats-bar{padding:8px 16px;background:#f9fafb;border-bottom:0.5px solid rgba(0,0,0,0.06);display:flex;align-items:center;gap:10px;font-size:10px;color:#6b7280;flex-wrap:wrap}
+.stats-bar strong{color:#1a1a1a}
+.content{padding:14px 16px;overflow-y:auto;max-height:390px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px}
+.card{background:#fff;border-radius:10px;border:0.5px solid rgba(0,0,0,0.08);overflow:hidden;cursor:pointer;transition:box-shadow 0.15s,transform 0.12s}
+.card:hover{box-shadow:0 4px 16px rgba(0,0,0,0.1);transform:translateY(-2px)}
+.card-bar{height:4px}
+.card-body{padding:10px 12px 12px}
+.card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px}
+.card-id{font-size:10px;font-weight:600;color:#6b7280}
+.card-new{font-size:9px;font-weight:600;background:#EAF3DE;color:#3B6D11;border-radius:8px;padding:1px 6px}
+.card-name{font-size:12px;font-weight:500;color:#1a1a1a;line-height:1.4;margin-bottom:8px;min-height:34px}
+.card-tags{display:flex;gap:3px;flex-wrap:wrap;margin-bottom:8px}
+.tag{display:inline-flex;align-items:center;gap:2px;padding:2px 6px;border-radius:20px;font-size:9px;font-weight:500;border:1px solid}
+.tag-lg{padding:4px 10px;font-size:11px;border-width:1.5px}
+.tag-blue{background:#EBF3FB;color:#185FA5;border-color:#B5D4F4}
+.tag-amber{background:#FAEEDA;color:#854F0B;border-color:#FAC775}
+.tag-green{background:#EAF3DE;color:#3B6D11;border-color:#C0DD97}
+.tag-red{background:#FCEBEB;color:#A32D2D;border-color:#F7C1C1}
+.tag-gray{background:#F1EFE8;color:#5F5E5A;border-color:#D3D1C7}
+.tag-purple{background:#EEEDFE;color:#3C3489;border-color:#AFA9EC}
+.tag-teal{background:#E1F5EE;color:#085041;border-color:#9FE1CB}
+.tag-orange{background:#FEF0E7;color:#7A3010;border-color:#F0997B}
+.tag-dot{width:4px;height:4px;border-radius:50%;flex-shrink:0}
+.card-footer{border-top:0.5px solid rgba(0,0,0,0.06);padding-top:7px;font-size:10px;color:#6b7280;display:flex;align-items:center;gap:4px}
+.tbl-wrap{background:#fff;border-radius:10px;border:0.5px solid rgba(0,0,0,0.08);overflow:hidden}
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{font-size:9px;text-transform:uppercase;letter-spacing:0.06em;color:#6b7280;font-weight:600;padding:8px 12px;text-align:left;border-bottom:0.5px solid rgba(0,0,0,0.08);background:#f9fafb}
+.tbl td{padding:8px 12px;font-size:11px;color:#1a1a1a;border-bottom:0.5px solid rgba(0,0,0,0.06);cursor:pointer}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:#f0f4ff}
+.ficha-view{display:none;padding:14px 16px;overflow-y:auto;max-height:430px}
+.ficha-card{background:#fff;border-radius:12px;overflow:hidden;border:0.5px solid rgba(0,0,0,0.08)}
+.fh{padding:16px 18px 14px}
+.fh-id{font-size:11px;color:rgba(255,255,255,0.65);margin-bottom:3px}
+.fh-title{font-size:17px;font-weight:600;color:#fff;line-height:1.3}
+.fh-new{display:inline-block;font-size:10px;font-weight:600;background:rgba(255,255,255,0.2);color:#fff;border:1px solid rgba(255,255,255,0.35);border-radius:10px;padding:2px 8px;margin-top:6px}
+.fb{padding:14px 18px}
+.tags-lg{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px}
+.stepper{display:flex;align-items:flex-start;margin-bottom:18px}
+.step{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:50px}
+.step-conn{flex:1;height:2px;margin-top:16px;background:#D3D1C7}
+.step-conn.done{background:#3B6D11}
+.step-circle{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0}
+.step-circle.done{background:#3B6D11;color:#fff}
+.step-circle.active{background:#185FA5;color:#fff}
+.step-circle.pending{background:#E8E6DF;color:#888780}
+.step-lbl{font-size:10px;color:#6b7280;text-align:center;line-height:1.3}
+.step-lbl.active-lbl{color:#185FA5;font-weight:600}
+.sec{margin-bottom:14px;padding-bottom:14px;border-bottom:0.5px solid rgba(0,0,0,0.08)}
+.sec:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.sec-lbl{font-size:9.5px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:#6b7280;margin-bottom:7px}
+.desc{font-size:13px;color:#1a1a1a;line-height:1.7}
+.placeholder{background:#f5f6f8;border-radius:7px;padding:9px 11px;font-size:12px;color:#6b7280;font-style:italic;border:0.5px solid rgba(0,0,0,0.08)}
+.celula-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+.cel-card{background:#f5f6f8;border-radius:7px;padding:7px 9px;border:0.5px solid rgba(0,0,0,0.08)}
+.cel-role{font-size:10px;color:#6b7280;margin-bottom:2px}
+.cel-name{font-size:11px;font-weight:600;color:#1a1a1a}
+.brecha-list{display:flex;flex-direction:column;gap:5px}
+.brecha-item{display:flex;align-items:flex-start;gap:8px;background:#FAEEDA;border:0.5px solid #FAC775;border-radius:7px;padding:8px 11px}
+.brecha-dot{width:6px;height:6px;border-radius:50%;background:#BA7517;flex-shrink:0;margin-top:4px}
+.brecha-txt{font-size:12px;color:#633806;line-height:1.55}
+.hip-block{display:flex;flex-direction:column;gap:8px}
+.hip-item{background:#f5f6f8;border-radius:8px;border:0.5px solid rgba(0,0,0,0.08);overflow:hidden}
+.hip-hdr{display:flex;align-items:flex-start;gap:8px;padding:8px 11px}
+.hip-badge{font-size:10px;font-weight:600;color:#185FA5;background:#EBF3FB;border-radius:5px;padding:2px 6px;flex-shrink:0;margin-top:1px}
+.hip-txt{font-size:12px;color:#1a1a1a;line-height:1.55}
+.kpi-row{display:flex;flex-direction:column;gap:3px;padding:0 11px 8px;margin-top:-2px}
+.kpi-pill{display:flex;align-items:flex-start;gap:6px;background:#fff;border:0.5px solid rgba(0,0,0,0.08);border-radius:6px;padding:5px 8px}
+.kpi-num{font-size:9px;font-weight:600;color:#888780;flex-shrink:0;margin-top:1px;min-width:24px}
+.kpi-txt{font-size:11px;color:#6b7280;line-height:1.45}
+.no-results{text-align:center;padding:40px;color:#6b7280;font-size:12px}
+</style>
+
+<div id="app">
+  <div class="header">
+    <div class="header-left">
+      <button class="back-btn" id="backBtn" onclick="goBack()">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><polyline points="8,2 4,6 8,10" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Volver
+      </button>
+      <h1 id="headerTitle">Portafolio PPEE</h1>
+      <span class="header-badge" id="headerBadge">2026 · 19 iniciativas</span>
     </div>
-    <div style="padding:4px 10px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between">
-      <span style="font-size:10px;color:var(--text-secondary);font-family:var(--font)">19 iniciativas</span>
-      <button class="clear-btn" id="clearBtn" onclick="clearAll()">✕ Limpiar</button>
+  </div>
+
+  <div id="listView">
+    <div class="filters-bar">
+      <input class="search-input" id="q" placeholder="Buscar…" oninput="render()">
+      <div class="sep"></div>
+
+      <!-- Foco dropdown -->
+      <div class="filter-group" id="grp-foco">
+        <button class="filter-trigger" id="trig-foco" onclick="toggleDropdown('foco')">
+          Foco <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><polyline points="2,3.5 5,6.5 8,3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="dropdown" id="dd-foco"></div>
+      </div>
+
+      <!-- Etapa dropdown -->
+      <div class="filter-group" id="grp-etapa">
+        <button class="filter-trigger" id="trig-etapa" onclick="toggleDropdown('etapa')">
+          Etapa <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><polyline points="2,3.5 5,6.5 8,3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="dropdown" id="dd-etapa"></div>
+      </div>
+
+      <!-- Sponsor dropdown -->
+      <div class="filter-group" id="grp-sponsor">
+        <button class="filter-trigger" id="trig-sponsor" onclick="toggleDropdown('sponsor')">
+          Sponsor <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><polyline points="2,3.5 5,6.5 8,3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="dropdown" id="dd-sponsor">
+          <input class="drop-search" id="sponsor-search" placeholder="Buscar sponsor…" oninput="filterDropdownItems('sponsor')" onclick="event.stopPropagation()">
+        </div>
+      </div>
+
+      <!-- Tipo dropdown -->
+      <div class="filter-group" id="grp-tipo">
+        <button class="filter-trigger" id="trig-tipo" onclick="toggleDropdown('tipo')">
+          Tipo <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><polyline points="2,3.5 5,6.5 8,3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="dropdown" id="dd-tipo"></div>
+      </div>
+
+      <div class="sep"></div>
+      <div class="view-toggle">
+        <button class="vbtn active" id="vgrid" onclick="setView('grid')">⊞</button>
+        <button class="vbtn" id="vlist" onclick="setView('list')">☰</button>
+      </div>
+      <button class="clear-link" id="clearBtn" onclick="clearAll()">✕ Limpiar filtros</button>
     </div>
-    <div class="search-wrap">
-      <input type="text" id="searchInput" placeholder="Buscar por nombre o ID…" oninput="applyFilters()">
-    </div>
-    <div class="filters-panel" id="filtersPanel"></div>
-    <div class="results-bar"><span class="results-label" id="resultsLabel"></span></div>
-    <div class="initiative-list" id="list"></div>
-  </aside>
-  <main class="main" id="main">
-    <div class="empty-state">
-      <svg width="36" height="36" viewBox="0 0 36 36" fill="none"><rect x="4" y="4" width="28" height="28" rx="6" stroke="#D3D1C7" stroke-width="1.5"/><line x1="11" y1="14" x2="25" y2="14" stroke="#D3D1C7" stroke-width="1.5" stroke-linecap="round"/><line x1="11" y1="20" x2="20" y2="20" stroke="#D3D1C7" stroke-width="1.5" stroke-linecap="round"/></svg>
-      <span>Selecciona una iniciativa</span>
-    </div>
-  </main>
+    <div class="stats-bar" id="statsBar"></div>
+    <div class="content" id="content"></div>
+  </div>
+
+  <div class="ficha-view" id="fichaView">
+    <div class="ficha-card" id="fichaContent"></div>
+  </div>
 </div>
+
 <script>
 const STEPS=["Detectar","Idear","Diseñar","Pilotear","Escalar"];
 const ETAPA_STEP={"Detectar":0,"Idear":1,"Diseñar":2,"Pilotear":3,"Escalar":4,"I+D":-1};
@@ -170,326 +177,284 @@ const FOCO_COLOR={"Digitalización":"blue","Sostenibilidad":"teal","Industrializ
 const ETAPA_COLOR={"Detectar":"gray","Idear":"gray","Diseñar":"blue","Pilotear":"amber","Escalar":"green","I+D":"purple"};
 const ESTADO_COLOR={"ACTIVA":"green","PAUSA":"red"};
 const DOTS={blue:"#185FA5",amber:"#BA7517",green:"#3B6D11",red:"#A32D2D",gray:"#5F5E5A",purple:"#3C3489",teal:"#085041",orange:"#C04A10"};
-const HDR_COLOR={"Digitalización":"#1A6BAF","Sostenibilidad":"#0F6E56","Industrialización":"#C25E1A","—":"#6b7280"};
-
-const ALL_CENTROS=["OFICINA CENTRAL","SAN ISIDRO","PARQUE ARAUCO","LOS MILITARES","LA CASTELLANA","METROPOLIS INDEPENDENCIA","TORRE KENNEDY ORIENTE"];
-const CENTRO_SHORT={"OFICINA CENTRAL":"Of. Central","SAN ISIDRO":"San Isidro","PARQUE ARAUCO":"Parque Arauco","LOS MILITARES":"Los Militares","LA CASTELLANA":"La Castellana","METROPOLIS INDEPENDENCIA":"Metrópolis Ind.","TORRE KENNEDY ORIENTE":"Torre Kennedy"};
-
-const CENTROS_MATRIZ={
-  1:{"LOS MILITARES":2,"METROPOLIS INDEPENDENCIA":1},
-  2:{"LOS MILITARES":1,"LA CASTELLANA":1,"METROPOLIS INDEPENDENCIA":1},
-  3:{"PARQUE ARAUCO":1,"LOS MILITARES":1,"LA CASTELLANA":1,"METROPOLIS INDEPENDENCIA":1,"TORRE KENNEDY ORIENTE":1},
-  4:{"OFICINA CENTRAL":1,"PARQUE ARAUCO":1,"LOS MILITARES":1,"LA CASTELLANA":1,"METROPOLIS INDEPENDENCIA":1,"TORRE KENNEDY ORIENTE":1},
-  5:{"PARQUE ARAUCO":1,"LOS MILITARES":1,"LA CASTELLANA":1,"METROPOLIS INDEPENDENCIA":1,"TORRE KENNEDY ORIENTE":1},
-  6:{"METROPOLIS INDEPENDENCIA":1},
-  7:{"SAN ISIDRO":3},
-  9:{"PARQUE ARAUCO":1,"LOS MILITARES":1,"LA CASTELLANA":1,"METROPOLIS INDEPENDENCIA":1,"TORRE KENNEDY ORIENTE":1},
-};
-
-const EMPRESAS_INFO={
-  "YAKU":    {nombre:"YAKU",    url:"yaku.cl",      logo:"https://i0.wp.com/yaku.cl/wp-content/uploads/2025/04/yaku-firma.png"},
-  "REFIL":   {nombre:"Refil",   url:"refil.cl",     logo:"https://www.refil.cl/web/image/website/1/logo/Refil?unique=2b71a45"},
-  "OBRALINK":{nombre:"ObraLink",url:"obralink.com",  logo:"https://obralink.com/assets/images/logo/logo_light.svg"},
-};
-const EMPRESAS_MAP={1:"YAKU",2:"REFIL",9:"OBRALINK"};
+const BAR={"Digitalización":"#1A6BAF","Sostenibilidad":"#0F6E56","Industrialización":"#C25E1A","—":"#9CA3AF"};
+const HDR={"Digitalización":"#1A6BAF","Sostenibilidad":"#0F6E56","Industrialización":"#C25E1A","—":"#4B5563"};
 
 const HIPOTESIS={
-  1:[{id:"H1",texto:"SI implementamos plantas modulares de tratamiento de aguas grises (PTAG) en obras con alto consumo hídrico, ENTONCES reduciremos el consumo de agua potable de red y la descarga al alcantarillado en al menos un 30% durante la fase de construcción.",kpis:["% de reducción de consumo de agua potable vs. línea base de obra (meta ≥30% mensual)","m³ de aguas grises tratadas y reutilizadas / m³ totales consumidos en obra (meta ≥25%)","Huella hídrica (L/m² construido) antes vs. después del piloto (meta reducción ≥20%)"]},{id:"H2",texto:"SI estandarizamos un protocolo de operación y mantenimiento de PTAG con proveedor y capacitamos al equipo de obra, ENTONCES lograremos continuidad operativa con mínima intervención externa y costos controlados.",kpis:["% de disponibilidad operativa de la PTAG (meta ≥90%)","N° de incidentes críticos / mes con parada mayor a 24 h (meta ≤1)","Costo unitario de operación y mantenimiento (CLP / m³ tratado) vs. meta presupuestada"]},{id:"H3",texto:"SI consolidamos un caso de negocio con VAN positivo y payback menor a 3 años replicable en obras PPEE, ENTONCES habilitamos la inclusión de PTAG como estándar en bases de licitación futuras.",kpis:["Payback del piloto (meses) vs. meta ≤36 meses","Ahorro económico acumulado por reutilización (CLP/mes) vs. costo del agua potable evitada","N° de obras adheridas al estándar PPEE de reutilización de aguas grises (meta ≥3 obras al cierre 2026)"]}],
-  2:[{id:"H1",texto:"SI centralizamos la compra y el despacho de insumos de aseo con un proveedor integrado y con control digital de consumo por obra, ENTONCES reduciremos el gasto total anual en insumos en al menos 15% y las mermas en al menos 20%.",kpis:["Gasto total en insumos de aseo (CLP/mes) vs. línea base (meta reducción ≥15%)","Consumo de insumos / trabajador-obra / mes (meta reducción ≥20%)","N° de obras con consumo sobre el presupuesto estándar (meta <10% del total de obras)"]},{id:"H2",texto:"SI reemplazamos productos convencionales por insumos biodegradables y concentrados, ENTONCES reducimos el volumen de envases y residuos plásticos generados.",kpis:["% de insumos con certificación sustentable sobre total comprado (meta ≥70%)","kg de envases plásticos retirados de obra / mes vs. línea base (meta reducción ≥30%)","Toneladas CO2eq evitadas por cambio de producto"]},{id:"H3",texto:"SI digitalizamos el consumo, stock y reposición mediante un sistema simple, ENTONCES mejoramos la trazabilidad y reducimos los quiebres de stock.",kpis:["% de obras con stock digitalizado y actualizado semanalmente (meta 100%)","N° de quiebres de stock / mes (meta ≤2 por obra)","Tiempo promedio desde solicitud de reposición hasta entrega (meta ≤3 días hábiles)"]}],
-  3:[{id:"H1",texto:"SI escalamos la hoja de ruta digital a todas las obras activas PPEE en un entorno único, ENTONCES reducimos el tiempo de consolidación mensual de información por obra en al menos un 50%.",kpis:["Horas-hombre dedicadas a consolidar la hoja de ruta por obra / mes (meta reducción ≥50%)","% de obras que actualizan la hoja de ruta digital antes del día 5 de cada mes (meta ≥90%)","N° de reportes duplicados eliminados vs. línea base (meta reducción ≥70%)"]},{id:"H2",texto:"SI integramos la hoja de ruta con los sistemas de control de avance, calidad y SSTMA, ENTONCES obtenemos una visión única de desempeño que mejora la toma de decisiones gerencial.",kpis:["% de iniciativas y KPI clave integrados en un solo dashboard (meta ≥80%)","N° de decisiones documentadas tomadas con base en el dashboard / trimestre (meta ≥8)","Tiempo de respuesta a alertas de desviación de hoja de ruta (meta ≤72 h)"]}],
-  4:[{id:"H1",texto:"SI digitalizamos el levantamiento y cierre de hallazgos en obra con una plataforma móvil (app), ENTONCES reduciremos el tiempo de cierre de hallazgo y aumentaremos el volumen de hallazgos levantados y trazados formalmente.",kpis:["Tiempo promedio de cierre de hallazgo (días, meta ≤7 días)","N° de hallazgos digitalizados / mes vs. línea base papel (meta +50%)","% de hallazgos con evidencia fotográfica y responsable asignado (meta 100%)"]},{id:"H2",texto:"SI explotamos la data acumulada de hallazgos para retroalimentar estándares y capacitaciones, ENTONCES reduciremos la reincidencia en un 25%.",kpis:["Tasa de reincidencia de hallazgos críticos / mes (meta reducción ≥25%)","N° de estándares actualizados a partir del análisis de hallazgos / año (meta ≥4)","% de hallazgos clasificados correctamente por tipología (meta ≥90%)"]}],
-  5:[{id:"H1",texto:"SI digitalizamos el programa de liderazgo y gestión SSTMA con registro estructurado de observaciones, caminatas y compromisos, ENTONCES elevaremos la adherencia de líderes y mandos medios sobre el 90%.",kpis:["% de cumplimiento semanal de actividades planificadas por líder (meta ≥90%)","N° de observaciones/caminatas registradas / líder / mes (meta ≥4)","% de compromisos cerrados en plazo acordado (meta ≥85%)"]},{id:"H2",texto:"SI correlacionamos la actividad digital del programa con la accidentabilidad y casi-accidentes, ENTONCES podremos evidenciar el retorno en seguridad del liderazgo activo en terreno.",kpis:["Índice de frecuencia (IF) en obras con programa activo vs. resto de la compañía (meta -15%)","N° de casi-accidentes reportados / mes (meta aumento controlado ≥20%)","Índice de severidad (IS) en obras con programa (meta reducción ≥10%)"]}],
-  6:[{id:"H1",texto:"SI instalamos sensores y/o mediciones no destructivas de madurez del hormigón en losas postensadas, ENTONCES podremos liberar los cables antes de los 7 días estándar sin riesgo estructural.",kpis:["Días promedio entre hormigonado y tesado (meta reducción ≥1,5 días por losa)","% de losas con liberación anticipada validada por sensor (meta ≥80% en obras piloto)","N° de incidentes/rechazos estructurales por tesado prematuro (meta = 0)"]},{id:"H2",texto:"SI documentamos el protocolo y las mediciones en un estándar PPEE replicable, ENTONCES podremos escalar la práctica a todas las obras con losa postensada.",kpis:["N° de obras que adoptan el protocolo estandarizado (meta ≥3 al cierre 2026)","% de mediciones registradas digitalmente en tablero único (meta 100%)","Horas de capacitación ejecutadas a jefes de terreno y laboratorio (meta ≥8 h por obra)"]}],
-  7:[{id:"H1",texto:"SI industrializamos la partida de muebles mediante soluciones modulares basadas en DfMA, ENTONCES aseguraremos el ritmo de terminaciones y reduciremos desviaciones operacionales.",kpis:["Reducción de plazo constructivo en partida de muebles (días, meta ≥15%)","% de obras que adoptan solución modular (meta ≥80%)","Reducción de HH por m² en partidas industrializadas (meta ≥15%)"]}],
-  8:[{id:"H1",texto:"SI reemplazamos el receptáculo de ducha in situ por un prefabricado impermeabilizado industrial, ENTONCES reduciremos el costo unitario por receptáculo en al menos un 20% vs. línea base.",kpis:["Costo unitario por receptáculo (CLP) prefabricado vs. in situ (meta reducción ≥20%)","% de ahorro en subcontratos por receptáculo","Días de ruta crítica liberados por piso (meta ≥0,5 días por piso)"]}],
-  9:[{id:"H1",texto:"SI escalamos el Control de Avance OG como única fuente de verdad del avance de obra gruesa, ENTONCES eliminaremos los reportes paralelos y tendremos avance físico confiable en tiempo real.",kpis:["% de obras activas con Control de Avance OG operando semanalmente (meta 100%)","Desviación entre avance reportado y avance verificado en terreno (pp, meta ≤3 pp)","N° de reportes paralelos eliminados (meta ≥2 por obra)"]},{id:"H2",texto:"SI usamos el avance digital para alimentar estados de pago, curvas S y proyecciones de término, ENTONCES mejoraremos la precisión del pronóstico de término de obra.",kpis:["Error absoluto del pronóstico de fecha de término vs. real (días, meta ≤10 días)","% de estados de pago emitidos con información proveniente del sistema (meta ≥90%)","Tiempo de cierre de estado de pago (días, meta reducción ≥30%)"]}],
+  1:[{id:"H1",texto:"SI implementamos plantas modulares de tratamiento de aguas grises (PTAG), ENTONCES reduciremos el consumo de agua potable en al menos un 30% durante la fase de construcción.",kpis:["% reducción consumo agua potable vs. línea base (meta ≥30%)","m³ aguas grises tratadas / m³ totales consumidos (meta ≥25%)","Huella hídrica L/m² antes vs. después del piloto (meta reducción ≥20%)"]},{id:"H2",texto:"SI estandarizamos un protocolo de O&M de PTAG y capacitamos al equipo de obra, ENTONCES lograremos continuidad operativa con mínima intervención externa.",kpis:["% disponibilidad operativa PTAG (meta ≥90%)","N° incidentes críticos/mes con parada >24h (meta ≤1)","Costo unitario O&M (CLP/m³ tratado) vs. meta presupuestada"]}],
+  2:[{id:"H1",texto:"SI centralizamos la compra con un proveedor integrado y control digital de consumo por obra, ENTONCES reduciremos el gasto en insumos en al menos 15% y las mermas en al menos 20%.",kpis:["Gasto total insumos aseo (CLP/mes) vs. línea base (meta reducción ≥15%)","Consumo insumos/trabajador/mes (meta reducción ≥20%)","N° obras con consumo sobre presupuesto (meta <10%)"]}],
+  3:[{id:"H1",texto:"SI escalamos la hoja de ruta digital a todas las obras en un entorno único, ENTONCES reducimos el tiempo de consolidación mensual en al menos un 50%.",kpis:["HH consolidación hoja de ruta/obra/mes (meta reducción ≥50%)","% obras que actualizan antes del día 5 de cada mes (meta ≥90%)","N° reportes duplicados eliminados (meta reducción ≥70%)"]}],
+  4:[{id:"H1",texto:"SI digitalizamos el levantamiento y cierre de hallazgos con una app móvil, ENTONCES reduciremos el tiempo de cierre y aumentaremos el volumen de hallazgos trazados formalmente.",kpis:["Tiempo promedio cierre hallazgo (días, meta ≤7)","N° hallazgos digitalizados/mes vs. línea base papel (meta +50%)","% hallazgos con evidencia fotográfica y responsable (meta 100%)"]}],
+  5:[{id:"H1",texto:"SI digitalizamos el programa SSTMA con registro estructurado de observaciones y compromisos, ENTONCES elevaremos la adherencia de líderes sobre el 90%.",kpis:["% cumplimiento semanal actividades planificadas por líder (meta ≥90%)","N° observaciones/caminatas por líder/mes (meta ≥4)","% compromisos cerrados en plazo (meta ≥85%)"]}],
+  6:[{id:"H1",texto:"SI instalamos sensores de madurez del hormigón en losas postensadas, ENTONCES podremos liberar los cables antes de los 7 días estándar sin riesgo estructural.",kpis:["Días promedio entre hormigonado y tesado (meta reducción ≥1,5 días/losa)","% losas con liberación anticipada validada (meta ≥80%)","N° incidentes por tesado prematuro (meta = 0)"]}],
+  9:[{id:"H1",texto:"SI escalamos el Control de Avance OG como única fuente de verdad, ENTONCES eliminaremos reportes paralelos y tendremos avance físico confiable en tiempo real.",kpis:["% obras activas con Control OG operando semanalmente (meta 100%)","Desviación avance reportado vs. verificado en terreno (pp, meta ≤3)","N° reportes paralelos eliminados (meta ≥2 por obra)"]}],
 };
-
 const BRECHAS={
-  1:["Falta de autogestión en la operación y mantención del sistema de biofiltro en obra","Ausencia de normativa interna para reutilización de aguas grises en instalaciones de faena","Desconocimiento del potencial de ahorro hídrico y económico por parte de los equipos de terreno","Falta de monitoreo y medición sistemática diaria del consumo de agua en instalaciones de faena","Dependencia de proveedores externos para mantención y calibración del sistema de tratamiento"],
-  2:["Falta de indicadores de consumo y generación de residuos asociados a insumos de aseo en obra","Resistencia al cambio hacia productos de economía circular por parte de los equipos de obra","Ausencia de estándares corporativos para compra sostenible de insumos de aseo","Falta de trazabilidad del impacto ambiental y social de la cadena de suministro de insumos"],
-  3:["Falta de estandarización en los criterios de evaluación de desempeño de subcontratos entre obras","Dependencia de planillas manuales que dificultan la consolidación y comparación de datos","Baja adopción de la plataforma digital por parte de los equipos de terreno","Ausencia de alertas automáticas ante incumplimientos o desviaciones de subcontratos"],
-  4:["Falta de capacidades internas para la autogestión y configuración de la herramienta digital","Baja trazabilidad automática en el ciclo de vida de hallazgos","Reprocesos frecuentes por falta de registro y evidencia","Ausencia de indicadores de gestión que permitan medir tiempos de resolución y recurrencia"],
-  5:["Baja conexión de los líderes con la plataforma para consultar indicadores de gestión SSTMA","Dificultad para registrar evidencia objetiva de las actividades preventivas y de liderazgo en terreno","Ausencia de vinculación con el ecosistema interno de sistemas para extracción automática de datos"],
-  6:["Riesgo de tensado prematuro por falta de control en tiempo real de la resistencia del hormigón","Dependencia de ensayos de laboratorio con tiempos de respuesta que retrasan el análisis productivo","Ausencia de alertas automáticas que indiquen cuándo un sector alcanza la resistencia mínima requerida"],
-  7:["Brecha de continuidad operativa dado que su implementación depende de que cada centro cuente con muebles modulares de forma sostenida","Falta de trazabilidad y mapeo de proveedores locales","Ausencia de una definición formal de la empresa sobre cómo abordar la estrategia DfMA"],
-  8:["Falta de proveedores certificados que ofrezcan soluciones preformadas con garantía de impermeabilidad","Alta incidencia de filtraciones en receptáculos ejecutados con métodos tradicionales en obra","Resistencia a cambiar el método constructivo tradicional por soluciones industrializadas"],
-  9:["Falta de estandarización en la metodología de medición de avance de obra gruesa entre proyectos","Baja visibilidad gerencial universal del control de OOGG","Falta de automatización del control diario que permita aprovechar los datos de ObraLink integrándola con el ecosistema interno"],
+  1:["Falta de autogestión en operación y mantención del biofiltro en obra","Ausencia de normativa interna para reutilización de aguas grises","Desconocimiento del potencial de ahorro hídrico por parte de los equipos de terreno"],
+  2:["Falta de indicadores de consumo y residuos asociados a insumos de aseo","Resistencia al cambio hacia productos de economía circular","Ausencia de estándares corporativos para compra sostenible"],
+  3:["Falta de estandarización en criterios de evaluación de subcontratos","Dependencia de planillas manuales que dificultan la consolidación de datos","Baja adopción de la plataforma por equipos de terreno"],
+  4:["Falta de capacidades internas para autogestión de la herramienta","Baja trazabilidad automática en el ciclo de vida de hallazgos","Reprocesos frecuentes por falta de registro y evidencia"],
+  5:["Baja conexión de líderes con la plataforma para consultar indicadores SSTMA","Dificultad para registrar evidencia objetiva de actividades en terreno","Ausencia de vinculación con ecosistema interno de sistemas"],
+  6:["Riesgo de tesado prematuro por falta de control en tiempo real","Dependencia de ensayos de laboratorio con tiempos que retrasan el análisis","Ausencia de alertas automáticas de resistencia mínima requerida"],
+  7:["Brecha de continuidad operativa en el control y medición de la iniciativa","Falta de trazabilidad y mapeo de proveedores locales de soluciones modulares"],
+  8:["Falta de proveedores certificados con garantía de impermeabilidad","Alta incidencia de filtraciones con métodos tradicionales en obra"],
+  9:["Falta de estandarización en metodología de medición de avance entre proyectos","Baja visibilidad gerencial universal del control de OOGG"],
 };
-
 const DESCRIPCIONES={
-  1:"Sistema de tratamiento que permite capturar y reutilizar aguas provenientes de duchas y lavamanos de la instalación de faena, mediante un proceso de filtración (biofiltro), para su uso en actividades operativas de obra como el lavado de bomba impulsora de hormigón.",
-  2:"Iniciativa que transforma el abastecimiento de insumos de aseo en obra mediante soluciones de economía circular, generando triple impacto: económico, ambiental y social, al reducir costos, residuos y huella de carbono, e incorporar inclusión en su cadena de valor.",
-  3:"Digitalizar y unificar la Hoja de Ruta en una plataforma centralizada, que permita estandarizar el control del desempeño de subcontratos en obra.",
-  4:"Digitalizar el proceso de identificación, registro, gestión y cierre de hallazgos en obra, con el fin de mejorar la trazabilidad, reducir reprocesos y fortalecer la calidad y el control operacional mediante información centralizada y disponible en tiempo real.",
-  5:"Implementar una plataforma digital para centralizar y gestionar el programa de liderazgo y acciones de SSTMA, facilitando el seguimiento, trazabilidad y participación de los equipos en terreno.",
-  6:"Desarrollar una solución digital para controlar y registrar la resistencia del hormigón en losas postensadas, asegurando el tensado oportuno y mejorando la productividad del proceso constructivo.",
-  7:"Industrializar la partida de muebles en obras de edificación mediante soluciones modulares basadas en DfMA, con el fin de asegurar el ritmo de terminaciones, reducir desviaciones operacionales y aumentar la predictibilidad en plazos, calidad y montaje.",
-  8:"Implementar receptáculos preformados con soluciones de impermeabilización de fábrica, que aseguren calidad, reduzcan tiempos de ejecución y errores en obra.",
-  9:"Establecer una metodología digital para registrar y monitorear el avance de la obra gruesa en tiempo real, permitiendo análisis productivo, ajustes tempranos y mayor visibilidad a nivel gerencial.",
+  1:"Sistema de tratamiento que permite capturar y reutilizar aguas provenientes de duchas y lavamanos de la instalación de faena, mediante un proceso de filtración (biofiltro), para su uso en actividades operativas de obra.",
+  2:"Iniciativa que transforma el abastecimiento de insumos de aseo en obra mediante soluciones de economía circular, generando triple impacto: económico, ambiental y social.",
+  3:"Digitalizar y unificar la Hoja de Ruta en una plataforma centralizada para estandarizar el control del desempeño de subcontratos en obra.",
+  4:"Digitalizar el proceso de identificación, registro, gestión y cierre de hallazgos en obra para mejorar la trazabilidad y reducir reprocesos.",
+  5:"Implementar una plataforma digital para centralizar y gestionar el programa de liderazgo y acciones de SSTMA en los equipos en terreno.",
+  6:"Desarrollar una solución digital para controlar y registrar la resistencia del hormigón en losas postensadas, asegurando el tensado oportuno.",
+  7:"Industrializar la partida de muebles en obras de edificación mediante soluciones modulares basadas en DfMA para aumentar la predictibilidad en plazos y calidad.",
+  8:"Implementar receptáculos preformados con soluciones de impermeabilización de fábrica para asegurar calidad y reducir tiempos de ejecución.",
+  9:"Establecer una metodología digital para registrar y monitorear el avance de la obra gruesa en tiempo real, permitiendo mayor visibilidad gerencial.",
 };
 
-const CELULAS=[
-  {id:1,centro:"LOS MILITARES",sponsor:"Lorena Rodríguez",gestor:"Gabriela Fuentes",impl:"Por definir"},
-  {id:1,centro:"METROPOLIS INDEPENDENCIA",sponsor:"Lorena Rodríguez",gestor:"Gabriela Fuentes",impl:"Por definir"},
-  {id:2,centro:"LOS MILITARES",sponsor:"Lorena Rodríguez",gestor:"Gabriela Fuentes",impl:"Por definir"},
-  {id:2,centro:"LA CASTELLANA",sponsor:"Lorena Rodríguez",gestor:"Gabriela Fuentes",impl:"Por definir"},
-  {id:2,centro:"METROPOLIS INDEPENDENCIA",sponsor:"Lorena Rodríguez",gestor:"Gabriela Fuentes",impl:"Por definir"},
-  {id:3,centro:"PARQUE ARAUCO",sponsor:"Marcela Hope",gestor:"Evelyn Fica",impl:"Oscar Araneda"},
-  {id:3,centro:"LOS MILITARES",sponsor:"Marcela Hope",gestor:"Evelyn Fica",impl:"Gianello Valenzuela"},
-  {id:3,centro:"LA CASTELLANA",sponsor:"Marcela Hope",gestor:"Evelyn Fica",impl:"María Jesus Bravo"},
-  {id:3,centro:"METROPOLIS INDEPENDENCIA",sponsor:"Marcela Hope",gestor:"Evelyn Fica",impl:"Jessica Vorphal"},
-  {id:3,centro:"TORRE KENNEDY ORIENTE",sponsor:"Marcela Hope",gestor:"Evelyn Fica",impl:"Fernanda Gonzalez"},
-  {id:4,centro:"OFICINA CENTRAL",sponsor:"Marcela Hope",gestor:"Roberto Concha",impl:"Auditores Int"},
-  {id:4,centro:"PARQUE ARAUCO",sponsor:"Marcela Hope",gestor:"Roberto Concha",impl:"Oscar Araneda"},
-  {id:4,centro:"LOS MILITARES",sponsor:"Marcela Hope",gestor:"Roberto Concha",impl:"Gianello Valenzuela"},
-  {id:4,centro:"LA CASTELLANA",sponsor:"Marcela Hope",gestor:"Roberto Concha",impl:"María Jesus Bravo"},
-  {id:4,centro:"METROPOLIS INDEPENDENCIA",sponsor:"Marcela Hope",gestor:"Roberto Concha",impl:"Jessica Vorphal"},
-  {id:4,centro:"TORRE KENNEDY ORIENTE",sponsor:"Marcela Hope",gestor:"Roberto Concha",impl:"Fernanda Gonzalez"},
-  {id:5,centro:"PARQUE ARAUCO",sponsor:"Raul Aguilera",gestor:"Mayko Ibarra",impl:"Expertos en Prevención de Obra"},
-  {id:5,centro:"LOS MILITARES",sponsor:"Raul Aguilera",gestor:"Mayko Ibarra",impl:"Marcelo Gonzalez"},
-  {id:5,centro:"LA CASTELLANA",sponsor:"Raul Aguilera",gestor:"Mayko Ibarra",impl:"Violeta Reyes"},
-  {id:5,centro:"METROPOLIS INDEPENDENCIA",sponsor:"Raul Aguilera",gestor:"Mayko Ibarra",impl:"Kevin Albornoz Duran"},
-  {id:5,centro:"TORRE KENNEDY ORIENTE",sponsor:"Raul Aguilera",gestor:"Mayko Ibarra",impl:"Kevin Rivano Farias"},
-  {id:6,centro:"METROPOLIS INDEPENDENCIA",sponsor:"Tito Fuentes",gestor:"Roberto Concha",impl:"Victor Araya"},
-  {id:9,centro:"PARQUE ARAUCO",sponsor:"Tito Fuentes",gestor:"Adel Kassar",impl:"Eduardo Muñoz"},
-  {id:9,centro:"LOS MILITARES",sponsor:"Tito Fuentes",gestor:"Adel Kassar",impl:"Javiera García"},
-  {id:9,centro:"LA CASTELLANA",sponsor:"Tito Fuentes",gestor:"Adel Kassar",impl:"Evelyn Ibarra"},
-  {id:9,centro:"METROPOLIS INDEPENDENCIA",sponsor:"Tito Fuentes",gestor:"Adel Kassar",impl:"Carlos Robles"},
-  {id:9,centro:"TORRE KENNEDY ORIENTE",sponsor:"Tito Fuentes",gestor:"Adel Kassar",impl:"Isabel Velasquez"},
-];
+const SPONSORS_MAP={
+  1:"Lorena Rodríguez",2:"Lorena Rodríguez",3:"Marcela Hope",4:"Marcela Hope",
+  5:"Raul Aguilera",6:"Tito Fuentes",7:"Por definir",8:"Por definir",9:"Tito Fuentes",
+  10:"Ivan Matus",11:"Tito Fuentes",12:"Raúl Aguilera",13:"Marcela Hope",14:"Marcela Hope",
+  15:"—",16:"Tito Fuentes",17:"Magdalena Basoalto",18:"Nelson Carrasco",19:"Magdalena Basoalto"
+};
+const GESTORES_MAP={
+  1:"Gabriela Fuentes",2:"Gabriela Fuentes",3:"Evelyn Fica",4:"Roberto Concha",
+  5:"Mayko Ibarra",6:"Roberto Concha",9:"Adel Kassar",
+  13:"Felipe Silva y Jessica Vorphal",14:"Roberto Concha y Adel Kassar"
+};
 
 const DATA=[
-  {id:1, nombre:"Tratamiento y reutilización de aguas grises",anio:2023,estado:"ACTIVA",tipo:"Disruptiva",foco:"Sostenibilidad",etapa:"Pilotear",beneficio:"I3",nueva:false},
-  {id:2, nombre:"Gestión de insumos de aseos",anio:2024,estado:"ACTIVA",tipo:"Incremental",foco:"Sostenibilidad",etapa:"Pilotear",beneficio:"I3",nueva:false},
-  {id:3, nombre:"Digitalización Hoja de Ruta",anio:2023,estado:"ACTIVA",tipo:"Incremental",foco:"Digitalización",etapa:"Escalar",beneficio:"I2",nueva:false},
-  {id:4, nombre:"Digitalización de Hallazgos",anio:2023,estado:"ACTIVA",tipo:"Incremental",foco:"Digitalización",etapa:"Escalar",beneficio:"I2",nueva:false},
-  {id:5, nombre:"Digitalización Programa de Liderazgo y Gestión SSTMA",anio:2023,estado:"ACTIVA",tipo:"Incremental",foco:"Digitalización",etapa:"Escalar",beneficio:"I3",nueva:false},
-  {id:6, nombre:"Control Resistencia en Losas Postensadas",anio:2025,estado:"ACTIVA",tipo:"Incremental",foco:"Digitalización",etapa:"Pilotear",beneficio:"I3",nueva:false},
-  {id:7, nombre:"Muebles Modulares",anio:2023,estado:"ACTIVA",tipo:"Incremental",foco:"Industrialización",etapa:"Escalar",beneficio:"I3",nueva:false},
-  {id:8, nombre:"Receptáculos Preformados Impermeabilizados",anio:2025,estado:"ACTIVA",tipo:"Disruptiva",foco:"Industrialización",etapa:"I+D",beneficio:"—",nueva:false},
-  {id:9, nombre:"Control de Avance OG",anio:2022,estado:"ACTIVA",tipo:"Incremental",foco:"Digitalización",etapa:"Escalar",beneficio:"I2",nueva:false},
-  {id:10,nombre:"Modelo integrado de Armadura (AZA)",anio:2026,estado:"ACTIVA",tipo:"Por definir",foco:"Industrialización",etapa:"Detectar",beneficio:"—",nueva:true,sponsor:"Ivan Matus"},
-  {id:11,nombre:"Adopción y Capacidades para industrializar",anio:2026,estado:"ACTIVA",tipo:"Por definir",foco:"—",etapa:"Detectar",beneficio:"—",nueva:true,sponsor:"Tito Fuentes"},
-  {id:12,nombre:"Desarrollo de construcción en Madera (CENAMAD)",anio:2026,estado:"ACTIVA",tipo:"Por definir",foco:"Industrialización",etapa:"Detectar",beneficio:"—",nueva:true,sponsor:"Raúl Aguilera"},
-  {id:13,nombre:"Mapeo de Subcontratos",anio:2026,estado:"ACTIVA",tipo:"Por definir",foco:"Digitalización",etapa:"Idear",beneficio:"—",nueva:true,sponsor:"Marcela Hope",gestor:"Felipe Silva y Jessica Vorphal"},
-  {id:14,nombre:"Integración de Calidad al Last Planner",anio:2026,estado:"ACTIVA",tipo:"Por definir",foco:"Digitalización",etapa:"Idear",beneficio:"—",nueva:true,sponsor:"Marcela Hope",gestor:"Roberto Concha y Adel Kassar"},
-  {id:15,nombre:"Automatización datos SGC (G.Técnica)",anio:2026,estado:"ACTIVA",tipo:"Por definir",foco:"Digitalización",etapa:"Detectar",beneficio:"—",nueva:true,sponsor:"—"},
-  {id:16,nombre:"Optimización Oficina Técnica",anio:2026,estado:"ACTIVA",tipo:"Por definir",foco:"—",etapa:"Detectar",beneficio:"—",nueva:true,sponsor:"Tito Fuentes"},
-  {id:17,nombre:"Sistema de Extracción Continua de Material en Túneles",anio:2026,estado:"ACTIVA",tipo:"Por definir",foco:"Industrialización",etapa:"Detectar",beneficio:"—",nueva:true,sponsor:"Magdalena Basoalto"},
-  {id:18,nombre:"Iniciativa Área de Estudios",anio:2026,estado:"ACTIVA",tipo:"Por definir",foco:"—",etapa:"Detectar",beneficio:"—",nueva:true,sponsor:"Nelson Carrasco"},
-  {id:19,nombre:"Plataforma de Inteligencia Organizacional",anio:2026,estado:"ACTIVA",tipo:"Por definir",foco:"Digitalización",etapa:"Detectar",beneficio:"—",nueva:true,sponsor:"Magdalena Basoalto"},
+  {id:1,nombre:"Tratamiento y reutilización de aguas grises",foco:"Sostenibilidad",etapa:"Pilotear",estado:"ACTIVA",nueva:false},
+  {id:2,nombre:"Gestión de insumos de aseos",foco:"Sostenibilidad",etapa:"Pilotear",estado:"ACTIVA",nueva:false},
+  {id:3,nombre:"Digitalización Hoja de Ruta",foco:"Digitalización",etapa:"Escalar",estado:"ACTIVA",nueva:false},
+  {id:4,nombre:"Digitalización de Hallazgos",foco:"Digitalización",etapa:"Escalar",estado:"ACTIVA",nueva:false},
+  {id:5,nombre:"Digitalización Programa Liderazgo y Gestión SSTMA",foco:"Digitalización",etapa:"Escalar",estado:"ACTIVA",nueva:false},
+  {id:6,nombre:"Control Resistencia en Losas Postensadas",foco:"Digitalización",etapa:"Pilotear",estado:"ACTIVA",nueva:false},
+  {id:7,nombre:"Muebles Modulares",foco:"Industrialización",etapa:"Escalar",estado:"ACTIVA",nueva:false},
+  {id:8,nombre:"Receptáculos Preformados Impermeabilizados",foco:"Industrialización",etapa:"I+D",estado:"ACTIVA",nueva:false},
+  {id:9,nombre:"Control de Avance OG",foco:"Digitalización",etapa:"Escalar",estado:"ACTIVA",nueva:false},
+  {id:10,nombre:"Modelo integrado de Armadura (AZA)",foco:"Industrialización",etapa:"Detectar",estado:"ACTIVA",nueva:true},
+  {id:11,nombre:"Adopción y Capacidades para industrializar",foco:"—",etapa:"Detectar",estado:"ACTIVA",nueva:true},
+  {id:12,nombre:"Desarrollo de construcción en Madera (CENAMAD)",foco:"Industrialización",etapa:"Detectar",estado:"ACTIVA",nueva:true},
+  {id:13,nombre:"Mapeo de Subcontratos",foco:"Digitalización",etapa:"Idear",estado:"ACTIVA",nueva:true},
+  {id:14,nombre:"Integración de Calidad al Last Planner",foco:"Digitalización",etapa:"Idear",estado:"ACTIVA",nueva:true},
+  {id:15,nombre:"Automatización datos SGC (G.Técnica)",foco:"Digitalización",etapa:"Detectar",estado:"ACTIVA",nueva:true},
+  {id:16,nombre:"Optimización Oficina Técnica",foco:"—",etapa:"Detectar",estado:"ACTIVA",nueva:true},
+  {id:17,nombre:"Sistema de Extracción Continua de Material en Túneles",foco:"Industrialización",etapa:"Detectar",estado:"ACTIVA",nueva:true},
+  {id:18,nombre:"Iniciativa Área de Estudios",foco:"—",etapa:"Detectar",estado:"ACTIVA",nueva:true},
+  {id:19,nombre:"Plataforma de Inteligencia Organizacional",foco:"Digitalización",etapa:"Detectar",estado:"ACTIVA",nueva:true},
 ];
 
-DATA.forEach(f=>{
-  const rows=CELULAS.filter(c=>c.id===f.id);
-  f.sponsors=f.sponsor?[f.sponsor]:[...new Set(rows.map(c=>c.sponsor))];
-  const m=CENTROS_MATRIZ[f.id]||{};
-  f.centrosActivos=Object.keys(m).filter(c=>m[c]===1);
-  f.centrosFinalizados=Object.keys(m).filter(c=>m[c]===2);
-  f.centrosEntregados=Object.keys(m).filter(c=>m[c]===3);
-  f.centrosTodos=[...new Set([...f.centrosActivos,...f.centrosFinalizados,...f.centrosEntregados])];
-  f.empresaKey=EMPRESAS_MAP[f.id]||null;
-  f.empresa=f.empresaKey?EMPRESAS_INFO[f.empresaKey]:null;
-  f.descripcion=DESCRIPCIONES[f.id]||null;
-  f.hipotesis=HIPOTESIS[f.id]||[];
-  f.brechas=BRECHAS[f.id]||[];
+DATA.forEach(f=>{f.sponsor=SPONSORS_MAP[f.id]||"Por definir";f.gestor=GESTORES_MAP[f.id]||"Por definir";});
+
+// Filter state
+const filters={foco:new Set(),etapa:new Set(),sponsor:new Set(),tipo:new Set()};
+let view="grid";
+let openDD=null;
+
+// Build dropdown options
+const focos=[...new Set(DATA.map(f=>f.foco).filter(f=>f!=="—"))];
+const etapas=["Detectar","Idear","Diseñar","Pilotear","Escalar","I+D"].filter(e=>DATA.some(f=>f.etapa===e));
+const sponsors=[...new Set(DATA.map(f=>f.sponsor).filter(s=>s&&s!=="—"&&s!=="Por definir"))].sort();
+const tipos=["Nueva 2026","Continúa 2025"];
+
+function buildDropdown(key,values){
+  const dd=document.getElementById("dd-"+key);
+  const existing=dd.querySelector(".drop-search");
+  values.forEach(val=>{
+    const btn=document.createElement("button");
+    btn.className="drop-item";btn.dataset.val=val;
+    btn.innerHTML=`<div class="drop-check"></div><span>${val}</span>`;
+    btn.onclick=(e)=>{e.stopPropagation();toggleFilter(key,val,btn);};
+    dd.appendChild(btn);
+  });
+}
+
+function filterDropdownItems(key){
+  const q=document.getElementById(key+"-search").value.toLowerCase();
+  document.querySelectorAll(`#dd-${key} .drop-item`).forEach(item=>{
+    item.style.display=item.dataset.val.toLowerCase().includes(q)?"flex":"none";
+  });
+}
+
+function toggleDropdown(key){
+  const dd=document.getElementById("dd-"+key);
+  const isOpen=dd.classList.contains("open");
+  closeAllDropdowns();
+  if(!isOpen){dd.classList.add("open");openDD=key;}
+  else openDD=null;
+}
+
+function closeAllDropdowns(){
+  document.querySelectorAll(".dropdown").forEach(d=>d.classList.remove("open"));
+  openDD=null;
+}
+
+document.addEventListener("click",e=>{
+  if(!e.target.closest(".filter-group")) closeAllDropdowns();
 });
 
-function uniq(arr){return[...new Set(arr.filter(Boolean))].sort()}
-const allFocos=uniq(DATA.map(f=>f.foco).filter(f=>f!=="—"));
-const allEtapas=["Detectar","Diseñar","Pilotear","Escalar","I+D"].filter(e=>DATA.some(f=>f.etapa===e));
-const allEstados=uniq(DATA.map(f=>f.estado));
-const allSponsors=uniq(DATA.flatMap(f=>f.sponsors).filter(s=>s!=="—"&&s!=="Por definir"));
-const filterState={foco:new Set(),etapa:new Set(),estado:new Set(),sponsor:new Set(),nueva:new Set()};
-const FILTER_DEFS=[
-  {key:"foco",   label:"Foco",          values:allFocos},
-  {key:"etapa",  label:"Etapa",         values:allEtapas},
-  {key:"estado", label:"Estado",        values:allEstados},
-  {key:"sponsor",label:"Sponsor",       values:allSponsors},
-  {key:"nueva",  label:"Tipo",          values:["Nueva 2026","Continúa 2025"]},
-];
+function toggleFilter(key,val,btn){
+  if(filters[key].has(val)){filters[key].delete(val);btn.classList.remove("selected");btn.querySelector(".drop-check").innerHTML="";}
+  else{filters[key].add(val);btn.classList.add("selected");btn.querySelector(".drop-check").innerHTML=`<svg width="9" height="9" viewBox="0 0 9 9"><polyline points="1,4.5 3.5,7 8,2" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>`;}
+  updateTrigger(key);
+  updateClearBtn();
+  render();
+}
+
+function updateTrigger(key){
+  const n=filters[key].size;
+  const trig=document.getElementById("trig-"+key);
+  trig.classList.toggle("has-active",n>0);
+  const labels={foco:"Foco",etapa:"Etapa",sponsor:"Sponsor",tipo:"Tipo"};
+  trig.innerHTML=`${n>0?`<span class="count">${n}</span> `:""} ${labels[key]} <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><polyline points="2,3.5 5,6.5 8,3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  trig.onclick=()=>toggleDropdown(key);
+}
+
+function updateClearBtn(){
+  const has=Object.values(filters).some(s=>s.size>0)||document.getElementById("q").value;
+  document.getElementById("clearBtn").classList.toggle("visible",!!has);
+}
+
+function clearAll(){
+  Object.values(filters).forEach(s=>s.clear());
+  document.getElementById("q").value="";
+  document.querySelectorAll(".drop-item").forEach(b=>{b.classList.remove("selected");b.querySelector(".drop-check").innerHTML="";});
+  ["foco","etapa","sponsor","tipo"].forEach(k=>updateTrigger(k));
+  updateClearBtn();render();
+}
+
+function setView(v){view=v;document.getElementById("vgrid").classList.toggle("active",v==="grid");document.getElementById("vlist").classList.toggle("active",v==="list");render();}
 
 function getFiltered(){
-  const q=document.getElementById("searchInput").value.toLowerCase();
+  const q=document.getElementById("q").value.toLowerCase();
   return DATA.filter(f=>{
-    if(q&&!f.nombre.toLowerCase().includes(q)&&!String(f.id).includes(q)) return false;
-    if(filterState.foco.size&&!filterState.foco.has(f.foco)) return false;
-    if(filterState.etapa.size&&!filterState.etapa.has(f.etapa)) return false;
-    if(filterState.estado.size&&!filterState.estado.has(f.estado)) return false;
-    if(filterState.sponsor.size&&!f.sponsors.some(s=>filterState.sponsor.has(s))) return false;
-    if(filterState.nueva.size){
-      const isNueva=filterState.nueva.has("Nueva 2026");
-      const isContinua=filterState.nueva.has("Continúa 2025");
-      if(isNueva&&isContinua){}
-      else if(isNueva&&!f.nueva) return false;
-      else if(isContinua&&f.nueva) return false;
+    if(q&&!f.nombre.toLowerCase().includes(q)&&!String(f.id).includes(q)&&!f.sponsor.toLowerCase().includes(q)) return false;
+    if(filters.foco.size&&!filters.foco.has(f.foco)) return false;
+    if(filters.etapa.size&&!filters.etapa.has(f.etapa)) return false;
+    if(filters.sponsor.size&&!filters.sponsor.has(f.sponsor)) return false;
+    if(filters.tipo.size){
+      const isN=filters.tipo.has("Nueva 2026"),isC=filters.tipo.has("Continúa 2025");
+      if(isN&&!isC&&!f.nueva) return false;
+      if(isC&&!isN&&f.nueva) return false;
     }
     return true;
   });
 }
 
-function countVal(key,val){
-  return DATA.filter(f=>{
-    const q=document.getElementById("searchInput").value.toLowerCase();
-    if(q&&!f.nombre.toLowerCase().includes(q)&&!String(f.id).includes(q)) return false;
-    for(const [k,s] of Object.entries(filterState)){
-      if(k===key||!s.size) continue;
-      if(k==="sponsor"&&!f.sponsors.some(x=>s.has(x))) return false;
-      else if(k==="nueva"){
-        const isN=s.has("Nueva 2026"),isC=s.has("Continúa 2025");
-        if(isN&&isC){}else if(isN&&!f.nueva) return false;else if(isC&&f.nueva) return false;
-      }
-      else if(!["sponsor","nueva"].includes(k)&&!s.has(f[k])) return false;
-    }
-    if(key==="sponsor") return f.sponsors.includes(val);
-    if(key==="nueva") return val==="Nueva 2026"?f.nueva:!f.nueva;
-    return f[key]===val;
-  }).length;
+function tg(label,color,lg){return `<span class="tag${lg?" tag-lg":""} tag-${color}"><span class="tag-dot" style="background:${DOTS[color]||'#888'}"></span>${label}</span>`;}
+
+function render(){
+  const data=getFiltered();
+  const nuevas=data.filter(f=>f.nueva).length;
+  document.getElementById("statsBar").innerHTML=`<strong>${data.length}</strong> iniciativas &nbsp;·&nbsp; <strong>${data.length-nuevas}</strong> continúan del 2025 &nbsp;·&nbsp; <strong>${nuevas}</strong> nuevas 2026`;
+  document.getElementById("headerBadge").textContent=`2026 · ${data.length} iniciativas`;
+  const content=document.getElementById("content");
+  if(!data.length){content.innerHTML=`<div class="no-results">Sin resultados para los filtros seleccionados.</div>`;return;}
+  if(view==="grid"){
+    content.innerHTML=`<div class="grid">${data.map(f=>`
+      <div class="card" onclick="openFicha(${f.id})">
+        <div class="card-bar" style="background:${BAR[f.foco]||'#9CA3AF'}"></div>
+        <div class="card-body">
+          <div class="card-top"><span class="card-id">INN-${String(f.id).padStart(2,"0")}</span>${f.nueva?`<span class="card-new">Nueva</span>`:""}</div>
+          <div class="card-name">${f.nombre}</div>
+          <div class="card-tags">
+            ${f.foco!=="—"?tg(f.foco,FOCO_COLOR[f.foco]||"gray"):""}
+            ${tg(f.etapa,ETAPA_COLOR[f.etapa]||"gray")}
+            ${tg(f.estado,ESTADO_COLOR[f.estado]||"gray")}
+          </div>
+          <div class="card-footer">
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><circle cx="5.5" cy="3.5" r="2" stroke="#6b7280" stroke-width="1.1"/><path d="M1.5 9.5c0-2.2 1.8-4 4-4s4 1.8 4 4" stroke="#6b7280" stroke-width="1.1" stroke-linecap="round" fill="none"/></svg>
+            ${f.sponsor}
+          </div>
+        </div>
+      </div>`).join("")}</div>`;
+  } else {
+    content.innerHTML=`<div class="tbl-wrap"><table class="tbl">
+      <thead><tr><th>ID</th><th>Iniciativa</th><th>Foco</th><th>Etapa</th><th>Estado</th><th>Sponsor</th><th></th></tr></thead>
+      <tbody>${data.map(f=>`<tr onclick="openFicha(${f.id})">
+        <td style="font-weight:600;color:#6b7280;font-size:10px">INN-${String(f.id).padStart(2,"0")}</td>
+        <td style="font-weight:500">${f.nombre}</td>
+        <td>${f.foco!=="—"?tg(f.foco,FOCO_COLOR[f.foco]||"gray"):"-"}</td>
+        <td>${tg(f.etapa,ETAPA_COLOR[f.etapa]||"gray")}</td>
+        <td>${tg(f.estado,ESTADO_COLOR[f.estado]||"gray")}</td>
+        <td style="color:#6b7280">${f.sponsor}</td>
+        <td>${f.nueva?`<span class="card-new">Nueva</span>`:""}</td>
+      </tr>`).join("")}</tbody>
+    </table></div>`;
+  }
 }
-
-function buildFilters(){
-  const panel=document.getElementById("filtersPanel");
-  panel.innerHTML="";
-  FILTER_DEFS.forEach(def=>{
-    const grp=document.createElement("div");grp.className="filter-group";grp.id="grp-"+def.key;
-    const n=filterState[def.key].size;
-    grp.innerHTML=`<div class="filter-group-header" onclick="toggleGroup('${def.key}')"><span class="filter-group-label">${def.label}</span><div class="filter-group-meta"><span class="active-count${n?" visible":""}" id="ac-${def.key}">${n}</span><span class="chevron">▾</span></div></div><div class="filter-group-body" id="body-${def.key}"></div>`;
-    panel.appendChild(grp);renderOpts(def);
-  });
-}
-
-function renderOpts(def){
-  const body=document.getElementById("body-"+def.key);if(!body) return;body.innerHTML="";
-  def.values.forEach(val=>{
-    const sel=filterState[def.key].has(val);const cnt=countVal(def.key,val);
-    const btn=document.createElement("button");btn.className="filter-opt"+(sel?" selected":"");
-    btn.innerHTML=`<div class="filter-opt-check">${sel?`<svg width="9" height="9" viewBox="0 0 9 9"><polyline points="1,4.5 3.5,7 8,2" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>`:""}</div><span class="filter-opt-label">${val}</span><span class="filter-opt-count">${cnt}</span>`;
-    btn.onclick=()=>{filterState[def.key].has(val)?filterState[def.key].delete(val):filterState[def.key].add(val);applyFilters();};
-    body.appendChild(btn);
-  });
-}
-
-function toggleGroup(key){document.getElementById("grp-"+key).classList.toggle("collapsed")}
-
-function tagH(label,color,lg){return `<span class="tag${lg?" tag-lg":""} tag-${color}"><span class="tag-dot" style="background:${DOTS[color]||'#888'}"></span>${label}</span>`;}
 
 function stepperH(etapa){
-  if(etapa==="I+D") return `<div style="display:inline-flex;align-items:center;gap:6px;padding:5px 11px;background:#EEEDFE;border-radius:7px;font-size:11px;font-family:'Poppins',sans-serif;color:#3C3489;border:0.5px solid #AFA9EC;margin-bottom:16px">Fase I+D — exploración temprana</div>`;
+  if(etapa==="I+D") return `<div style="display:inline-flex;align-items:center;gap:6px;padding:5px 11px;background:#EEEDFE;border-radius:7px;font-size:11px;color:#3C3489;border:0.5px solid #AFA9EC;margin-bottom:16px">Fase I+D — exploración temprana</div>`;
   const paso=ETAPA_STEP[etapa]??0;
   return `<div class="stepper">${STEPS.map((s,i)=>{
     const done=i<paso,active=i===paso;
     const cls=done?"done":active?"active":"pending";
     const icon=done?`<svg width="13" height="13" viewBox="0 0 13 13" fill="none"><polyline points="2,6.5 5.5,10 11,3" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`:`${i+1}`;
-    const conn=i<4?`<div class="step-connector${done?" done":""}"></div>`:"";
-    return `<div class="step"><div class="step-circle ${cls}">${icon}</div><div class="step-label${active?" active-label":""}">${s}</div></div>${conn}`;
+    const conn=i<4?`<div class="step-conn${done?" done":""}"></div>`:"";
+    return `<div class="step"><div class="step-circle ${cls}">${icon}</div><div class="step-lbl${active?" active-lbl":""}">${s}</div></div>${conn}`;
   }).join("")}</div>`;
 }
 
-function centrosTableH(f){
-  const m=CENTROS_MATRIZ[f.id]||{};
-  const activos=ALL_CENTROS.filter(c=>m[c]);
-  if(!activos.length) return `<div class="placeholder-box">Sin centros de trabajo asignados aún.</div>`;
-  const rows=activos.map(c=>{
-    const est=m[c];const cel=CELULAS.find(r=>r.id===f.id&&r.centro===c);const impl=cel?cel.impl:"—";
-    let badge="";
-    if(est===1) badge=`<div class="estado-activo"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><polyline points="2,6 5,9 10,3" stroke="#3B6D11" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>`;
-    if(est===2) badge=`<div class="estado-finalizado"><svg width="11" height="11" viewBox="0 0 11 11" fill="none"><circle cx="5.5" cy="5.5" r="4.5" stroke="#185FA5" stroke-width="1.2"/><line x1="5.5" y1="3" x2="5.5" y2="5.5" stroke="#185FA5" stroke-width="1.2" stroke-linecap="round"/><circle cx="5.5" cy="7.5" r="0.7" fill="#185FA5"/></svg></div>`;
-    if(est===3) badge=`<div class="estado-entregado"><svg width="11" height="11" viewBox="0 0 11 11" fill="none"><rect x="1" y="1" width="9" height="9" rx="2" stroke="#888780" stroke-width="1.2"/><polyline points="3,5.5 5,7.5 8,3.5" stroke="#888780" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>`;
-    const nota=est===3?` <span style="font-size:9px;color:#888780;font-style:italic">(obra entregada)</span>`:est===2?` <span style="font-size:9px;color:#185FA5;font-style:italic">(finalizada)</span>`:"";
-    return `<tr><td class="left">${CENTRO_SHORT[c]||c}${nota}</td><td>${badge}</td><td style="text-align:left;font-size:10px;color:#6b7280;font-family:'Poppins',sans-serif">${impl}</td></tr>`;
-  }).join("");
-  return `<div class="legend"><div class="legend-item"><div class="estado-activo" style="width:16px;height:16px"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><polyline points="1.5,5 4,7.5 8.5,2.5" stroke="#3B6D11" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Activa</div><div class="legend-item"><div class="estado-finalizado" style="width:16px;height:16px"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><circle cx="5" cy="5" r="4" stroke="#185FA5" stroke-width="1.2"/><line x1="5" y1="2.5" x2="5" y2="5" stroke="#185FA5" stroke-width="1.2" stroke-linecap="round"/><circle cx="5" cy="7" r="0.7" fill="#185FA5"/></svg></div>Finalizada</div><div class="legend-item"><div class="estado-entregado" style="width:16px;height:16px"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><rect x="1" y="1" width="8" height="8" rx="1.5" stroke="#888780" stroke-width="1.2"/><polyline points="2.5,5 4.5,7 7.5,3" stroke="#888780" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Obra entregada</div></div><table class="centros-table"><thead><tr><th class="left">Centro</th><th>Estado</th><th class="left">Implementador</th></tr></thead><tbody>${rows}</tbody></table>`;
-}
-
-function hipSec(f){
-  if(!f.hipotesis.length) return `<div class="section"><div class="section-label">Hipótesis y KPIs</div><div class="placeholder-box">Por definir.</div></div>`;
-  const items=f.hipotesis.map(h=>`<div class="hip-item"><div class="hip-header"><span class="hip-badge">${h.id}</span><span class="hip-text">${h.texto}</span></div>${h.kpis.length?`<div class="kpi-row">${h.kpis.map((k,i)=>`<div class="kpi-pill"><span class="kpi-num">KPI ${i+1}</span><span class="kpi-text">${k}</span></div>`).join("")}</div>`:""}</div>`).join("");
-  return `<div class="section"><div class="section-label">Hipótesis y KPIs</div><div class="hip-block">${items}</div></div>`;
-}
-
-function downloadFicha(nombre,id){
-  const el=document.getElementById("ficha-content");if(!el) return;
-  const btn=document.getElementById("download-btn");if(btn) btn.style.display="none";
-  html2pdf().set({margin:10,filename:`INN-${String(id).padStart(2,"0")}_${nombre.replace(/[^a-zA-Z0-9]/g,"_")}.pdf`,image:{type:"jpeg",quality:0.98},html2canvas:{scale:2,useCORS:true,logging:false},jsPDF:{unit:"mm",format:"a4",orientation:"portrait"}}).from(el).save().then(()=>{if(btn) btn.style.display="inline-flex";});
-}
-
-function renderFicha(f){
-  const rows=CELULAS.filter(c=>c.id===f.id);
-  const sponsors=[...new Set(rows.map(c=>c.sponsor))];
-  const gestores=[...new Set(rows.map(c=>c.gestor).filter(g=>g&&g!=="-"))];
-  const hdr=HDR_COLOR[f.foco]||"#4B5563";
-  const ei=f.empresa;
-  const eHdr=ei?`<img src="${ei.logo}" class="empresa-logo" alt="${ei.nombre}" onerror="this.style.display='none'">`:"";
-  const eSec=ei?`<div class="section"><div class="section-label">Empresa asociada</div><div class="empresa-card"><img src="${ei.logo}" class="empresa-card-logo" alt="${ei.nombre}" onerror="this.style.display='none'"><div><div class="empresa-card-name">${ei.nombre}</div><a href="https://${ei.url}" target="_blank" class="empresa-card-url">${ei.url}</a></div></div></div>`:"";
-
-  const sponsorDisplay=f.nueva?(f.sponsor||"Por definir"):sponsors.join(", ")||"—";
-  const gestorDisplay=f.nueva?(f.gestor||"Por definir"):gestores.join(", ")||"Por definir";
-  const nCentros=f.centrosTodos.length;
-
-  const cSec=`<div class="section"><div class="section-label">Célula de innovación</div><div class="celula-grid"><div class="celula-card"><div class="celula-role">Sponsor</div><div class="celula-name">${sponsorDisplay}</div></div><div class="celula-card"><div class="celula-role">Gestor</div><div class="celula-name">${gestorDisplay}</div></div><div class="celula-card"><div class="celula-role">N° de centros</div><div class="celula-name">${nCentros>0?nCentros+" centro"+(nCentros!==1?"s":""):"Por definir"}</div></div></div></div>`;
-
-  const bSec=f.brechas.length?`<div class="section"><div class="section-label">Brechas / Oportunidades de mejora</div><div class="brechas-list">${f.brechas.map(b=>`<div class="brecha-item"><div class="brecha-dot"></div><div class="brecha-text">${b}</div></div>`).join("")}</div></div>`:"";
-
-  const nuevaBadge=f.nueva?`<span style="display:inline-block;font-size:10px;font-weight:600;background:rgba(255,255,255,0.2);color:#fff;border:1px solid rgba(255,255,255,0.4);border-radius:10px;padding:2px 8px;font-family:'Poppins',sans-serif">Nueva 2026</span>`:"";
-
-  document.getElementById("main").innerHTML=`
-  <div class="ficha-wrap"><div class="ficha" id="ficha-content">
-    <div class="ficha-header" style="background:${hdr}">
-      <div class="fh-top"><div class="fh-id">INN-${String(f.id).padStart(2,"0")} · ${f.anio} ${nuevaBadge}</div>${eHdr}</div>
+function openFicha(id){
+  const f=DATA.find(d=>d.id===id);if(!f) return;
+  const hdr=HDR[f.foco]||"#4B5563";
+  const desc=DESCRIPCIONES[f.id]||null;
+  const hips=HIPOTESIS[f.id]||[];
+  const brechas=BRECHAS[f.id]||[];
+  const hipSec=hips.length?`<div class="sec"><div class="sec-lbl">Hipótesis y KPIs</div><div class="hip-block">${hips.map(h=>`<div class="hip-item"><div class="hip-hdr"><span class="hip-badge">${h.id}</span><span class="hip-txt">${h.texto}</span></div>${h.kpis.length?`<div class="kpi-row">${h.kpis.map((k,i)=>`<div class="kpi-pill"><span class="kpi-num">KPI ${i+1}</span><span class="kpi-txt">${k}</span></div>`).join("")}</div>`:""}</div>`).join("")}</div></div>`:`<div class="sec"><div class="sec-lbl">Hipótesis y KPIs</div><div class="placeholder">Por definir.</div></div>`;
+  const brechasSec=brechas.length?`<div class="sec"><div class="sec-lbl">Brechas / Oportunidades de mejora</div><div class="brecha-list">${brechas.map(b=>`<div class="brecha-item"><div class="brecha-dot"></div><div class="brecha-txt">${b}</div></div>`).join("")}</div></div>`:"";
+  document.getElementById("fichaContent").innerHTML=`
+    <div class="fh" style="background:${hdr}">
+      <div class="fh-id">INN-${String(f.id).padStart(2,"0")} · ${f.nueva?2026:2023}</div>
       <div class="fh-title">${f.nombre}</div>
-      <button id="download-btn" class="download-btn" onclick="downloadFicha('${f.nombre.replace(/'/g,"\\'").replace(/"/g,"&quot;")}',${f.id})">
-        <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 1v7M3.5 5.5l3 3 3-3M1 10h11" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Descargar ficha
-      </button>
+      ${f.nueva?`<span class="fh-new">Nueva 2026</span>`:""}
     </div>
-    <div class="ficha-body">
-      <div class="tags-row-lg">
-        ${f.foco!=="—"?tagH(f.foco,FOCO_COLOR[f.foco]||"gray",true):""}
-        ${tagH(f.etapa,ETAPA_COLOR[f.etapa]||"gray",true)}
-        ${tagH(f.estado,ESTADO_COLOR[f.estado]||"gray",true)}
-        ${f.tipo!=="Por definir"?tagH(f.tipo,f.tipo==="Disruptiva"?"purple":"gray",true):tagH("Tipo por definir","gray",true)}
-        ${f.beneficio!=="—"?tagH("Beneficio "+f.beneficio,"blue",true):""}
+    <div class="fb">
+      <div class="tags-lg">
+        ${f.foco!=="—"?tg(f.foco,FOCO_COLOR[f.foco]||"gray",true):""}
+        ${tg(f.etapa,ETAPA_COLOR[f.etapa]||"gray",true)}
+        ${tg(f.estado,ESTADO_COLOR[f.estado]||"gray",true)}
       </div>
       ${stepperH(f.etapa)}
-      <div class="section"><div class="section-label">Descripción de la solución</div><div class="desc-box">${f.descripcion||`<span style="color:#6b7280;font-style:italic">Por definir — descripción de la iniciativa pendiente.</span>`}</div></div>
-      ${eSec}
-      ${cSec}
-      <div class="section"><div class="section-label">Centros de trabajo</div>${centrosTableH(f)}</div>
-      ${hipSec(f)}
-      ${bSec}
-    </div>
-  </div></div>`;
+      <div class="sec"><div class="sec-lbl">Descripción de la solución</div><div class="desc">${desc||`<span style="color:#6b7280;font-style:italic">Por definir.</span>`}</div></div>
+      <div class="sec"><div class="sec-lbl">Célula de innovación</div><div class="celula-grid">
+        <div class="cel-card"><div class="cel-role">Sponsor</div><div class="cel-name">${f.sponsor}</div></div>
+        <div class="cel-card"><div class="cel-role">Gestor</div><div class="cel-name">${f.gestor}</div></div>
+        <div class="cel-card"><div class="cel-role">Estado</div><div class="cel-name">${f.estado}</div></div>
+      </div></div>
+      ${hipSec}${brechasSec}
+    </div>`;
+  document.getElementById("listView").style.display="none";
+  document.getElementById("fichaView").style.display="block";
+  document.getElementById("backBtn").style.display="inline-flex";
+  document.getElementById("headerTitle").textContent=f.nombre;
+  document.getElementById("headerBadge").textContent=`INN-${String(f.id).padStart(2,"0")}`;
 }
 
-let activeBtn=null;
-function applyFilters(){
-  FILTER_DEFS.forEach(def=>{renderOpts(def);const n=filterState[def.key].size;const el=document.getElementById("ac-"+def.key);if(el){el.textContent=n;el.classList.toggle("visible",n>0);}});
-  document.getElementById("clearBtn").classList.toggle("visible",Object.values(filterState).some(s=>s.size>0)||!!document.getElementById("searchInput").value);
-  const filtered=getFiltered();
-  document.getElementById("resultsLabel").textContent=`${filtered.length} iniciativa${filtered.length!==1?"s":""}`;
-  const list=document.getElementById("list");list.innerHTML="";
-  if(!filtered.length){list.innerHTML=`<div class="no-results">Sin resultados</div>`;return;}
-  filtered.forEach(f=>{
-    const btn=document.createElement("button");btn.className="item-btn";
-    const ec=ETAPA_COLOR[f.etapa]||"gray";
-    const nA=f.centrosActivos.length,nF=f.centrosFinalizados.length,nE=f.centrosEntregados.length;
-    let ci="";if(nA>0) ci+=`${nA} activo${nA!==1?"s":""}`;if(nF>0) ci+=(ci?" · ":"")+`${nF} finalizado${nF!==1?"s":""}`;if(nE>0) ci+=(ci?" · ":"")+`${nE} entregado${nE!==1?"s":""}`;
-    btn.innerHTML=`<div class="item-top">
-      <span class="item-id">INN-${String(f.id).padStart(2,"0")}</span>
-      <span class="tag tag-${ec}">${f.etapa}</span>
-      ${f.nueva?`<span class="new-badge">Nueva</span>`:""}
-    </div>
-    <div class="item-name">${f.nombre}</div>
-    <div class="item-sub">
-      <span>${f.foco!=="—"?f.foco:"Sin foco"} · ${f.anio}</span>
-      ${ci?`<span style="font-size:9px">${ci}</span>`:""}
-    </div>`;
-    btn.onclick=()=>{if(activeBtn) activeBtn.classList.remove("active");btn.classList.add("active");activeBtn=btn;renderFicha(f);};
-    list.appendChild(btn);
-  });
+function goBack(){
+  document.getElementById("fichaView").style.display="none";
+  document.getElementById("listView").style.display="block";
+  document.getElementById("backBtn").style.display="none";
+  document.getElementById("headerTitle").textContent="Portafolio PPEE";
+  render();
 }
-function clearAll(){Object.values(filterState).forEach(s=>s.clear());document.getElementById("searchInput").value="";applyFilters();}
-buildFilters();applyFilters();
+
+// Init
+buildDropdown("foco",focos);
+buildDropdown("etapa",etapas);
+buildDropdown("tipo",tipos);
+// Sponsors go after the search input in the dropdown
+sponsors.forEach(val=>{
+  const dd=document.getElementById("dd-sponsor");
+  const btn=document.createElement("button");
+  btn.className="drop-item";btn.dataset.val=val;
+  btn.innerHTML=`<div class="drop-check"></div><span>${val}</span>`;
+  btn.onclick=(e)=>{e.stopPropagation();toggleFilter("sponsor",val,btn);};
+  dd.appendChild(btn);
+});
+["foco","etapa","sponsor","tipo"].forEach(k=>updateTrigger(k));
+render();
 </script>
-</body>
-</html>
