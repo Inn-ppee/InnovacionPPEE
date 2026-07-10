@@ -101,6 +101,22 @@ body{font-family:'Segoe UI',sans-serif;background:#eef0f4;min-height:500px}
 .kpi-num{font-size:9px;font-weight:600;color:#888780;flex-shrink:0;margin-top:1px;min-width:24px}
 .kpi-txt{font-size:11px;color:#6b7280;line-height:1.45}
 .no-results{text-align:center;padding:40px;color:#6b7280;font-size:12px}
+
+.header-actions{display:flex;align-items:center;gap:8px}
+.header-action-btn{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.16);border:1px solid rgba(255,255,255,0.32);color:#fff;border-radius:8px;padding:6px 11px;font-size:11px;cursor:pointer;font-family:inherit}
+.header-action-btn:hover,.header-action-btn.active{background:#fff;color:#185FA5}
+.desafios-view{display:none;padding:14px 16px;overflow-y:auto;max-height:430px}
+.desafios-intro{background:#fff;border-radius:12px;border:0.5px solid rgba(0,0,0,0.08);padding:14px 16px;margin-bottom:12px}
+.desafios-intro h2{font-size:15px;color:#123B6D;margin-bottom:4px}
+.desafios-intro p{font-size:11px;color:#6b7280;line-height:1.5}
+.desafios-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px}
+.desafio-card{background:#fff;border-radius:10px;border:0.5px solid rgba(0,0,0,0.08);overflow:hidden}
+.desafio-head{display:flex;align-items:center;gap:9px;padding:10px 12px;background:#F7FAFD;border-bottom:0.5px solid rgba(0,0,0,0.06)}
+.desafio-num{width:34px;height:34px;border-radius:8px;background:#123B6D;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.desafio-title{font-size:12px;font-weight:600;color:#123B6D;line-height:1.3}
+.desafio-body{padding:10px 12px 12px;font-size:11px;color:#374151;line-height:1.58}
+@media (max-width:700px){.desafios-grid{grid-template-columns:1fr}.header{align-items:flex-start}.header-actions{flex-wrap:wrap;justify-content:flex-end}}
+
 </style>
 
 <div id="app">
@@ -112,6 +128,10 @@ body{font-family:'Segoe UI',sans-serif;background:#eef0f4;min-height:500px}
       </button>
       <h1 id="headerTitle">Portafolio PPEE</h1>
       <span class="header-badge" id="headerBadge">2026 · 19 iniciativas</span>
+    </div>
+    <div class="header-actions">
+      <button class="header-action-btn" id="btnPortafolio" onclick="showPortfolio()">Portafolio</button>
+      <button class="header-action-btn" id="btnDesafios" onclick="showDesafios()">Desafíos estratégicos</button>
     </div>
   </div>
 
@@ -168,6 +188,14 @@ body{font-family:'Segoe UI',sans-serif;background:#eef0f4;min-height:500px}
   <div class="ficha-view" id="fichaView">
     <div class="ficha-card" id="fichaContent"></div>
   </div>
+
+  <div class="desafios-view" id="desafiosView">
+    <div class="desafios-intro">
+      <h2>Desafíos Estratégicos PPEE</h2>
+      <p>Focos de productividad, innovación y excelencia operacional para orientar el portafolio de iniciativas.</p>
+    </div>
+    <div class="desafios-grid" id="desafiosGrid"></div>
+  </div>
 </div>
 
 <script>
@@ -179,6 +207,19 @@ const ESTADO_COLOR={"ACTIVA":"green","PAUSA":"red"};
 const DOTS={blue:"#185FA5",amber:"#BA7517",green:"#3B6D11",red:"#A32D2D",gray:"#5F5E5A",purple:"#3C3489",teal:"#085041",orange:"#C04A10"};
 const BAR={"Digitalización":"#1A6BAF","Sostenibilidad":"#0F6E56","Industrialización":"#C25E1A","—":"#9CA3AF"};
 const HDR={"Digitalización":"#1A6BAF","Sostenibilidad":"#0F6E56","Industrialización":"#C25E1A","—":"#4B5563"};
+
+const DESAFIOS=[
+  {id:"D1",nombre:"Mano de Obra",final:"¿Cómo podríamos atraer, retener y estabilizar la mano de obra directa e indirecta calificada para asegurar productividad y calidad en los proyectos de construcción?"},
+  {id:"D2",nombre:"Gobierno de Datos",final:"¿Cómo podríamos implementar un Gobierno de Datos robusto y transversal que asegure calidad, trazabilidad y disponibilidad de la información, reduciendo la carga manual y habilitando decisiones estratégicas y operativas basadas en datos confiables?"},
+  {id:"D3",nombre:"Cultura de Aprendizaje",final:"¿Cómo podríamos construir una cultura de aprendizaje continuo y gestión del conocimiento que fortalezca nuestra capacidad de gestionar el cambio, capturando y transfiriendo aprendizajes a lo largo de todo el ciclo de vida del proceso productivo, para mejorar sostenidamente la eficiencia, calidad y toma de decisiones en la ejecución de los proyectos?"},
+  {id:"D4",nombre:"Integración Digital",final:"¿Cómo podríamos integrar y digitalizar los procesos críticos del ciclo del proyecto —planificación, control operacional, gestión de cambios, entre otros— estandarizando flujos físicos e informativos mediante herramientas como BIM y/o modelos integrados de planificación y control, para reducir variabilidad, anticipar desviaciones de plazo y costo, y asegurar la predictibilidad de la ejecución?"},
+  {id:"D5",nombre:"Integración de Equipos",final:"¿Cómo podríamos preparar e integrar a los equipos MOD y MOI en obra desde el primer día, asegurando competencias técnicas y digitales que reduzcan reprocesos y aumenten la productividad?"},
+  {id:"D6",nombre:"Industrialización Integral",final:"¿Cómo podríamos transformar la industrialización en una práctica confiable y aceptada por equipos y clientes, no solo entendida como una actividad o elemento industrializado, sino como una estrategia integral que exige adaptar el sistema de construcción antes, durante y después de su incorporación, reduciendo la resistencia al cambio, aumentando su impacto en productividad y dependiendo menos de mano de obra calificada?"},
+  {id:"D7",nombre:"Digitalización de Origen",final:"¿Cómo podríamos mejorar la productividad mediante la digitalización y captura de información en origen —avance, calidad, restricciones y compromisos operativos— para anticipar problemas, reducir reprocesos y optimizar la operación en terreno?"},
+  {id:"D8",nombre:"Valor al Cliente",final:"¿Cómo podríamos garantizar que nuestras propuestas respondan a necesidades reales de los clientes y del mercado, para ser percibidos internamente como un socio diferenciador y no solo como un ejecutor de proyectos?"},
+  {id:"D9",nombre:"Infraestructura Tecnológica",final:"¿Cómo podríamos fortalecer y consolidar la infraestructura tecnológica y el modelo de soporte digital de PPEE, asegurando continuidad operativa y automatizando la obtención de datos?"},
+  {id:"D10",nombre:"Escalamiento Industrializado",final:"¿Cómo podríamos escalar la industrialización constructiva por componentes —muebles modulares, prefabricados de hormigón, sistemas en madera, receptáculos preformados, entre otros— mediante metodologías DfMA, para reducir plazos críticos, mejorar calidad, disminuir riesgos operacionales y bajar la dependencia de mano de obra calificada en faena?"}
+];
 
 const HIPOTESIS={
   1:[{id:"H1",texto:"SI implementamos plantas modulares de tratamiento de aguas grises (PTAG), ENTONCES reduciremos el consumo de agua potable en al menos un 30% durante la fase de construcción.",kpis:["% reducción consumo agua potable vs. línea base (meta ≥30%)","m³ aguas grises tratadas / m³ totales consumidos (meta ≥25%)","Huella hídrica L/m² antes vs. después del piloto (meta reducción ≥20%)"]},{id:"H2",texto:"SI estandarizamos un protocolo de O&M de PTAG y capacitamos al equipo de obra, ENTONCES lograremos continuidad operativa con mínima intervención externa.",kpis:["% disponibilidad operativa PTAG (meta ≥90%)","N° incidentes críticos/mes con parada >24h (meta ≤1)","Costo unitario O&M (CLP/m³ tratado) vs. meta presupuestada"]}],
@@ -428,14 +469,50 @@ function openFicha(id){
       ${hipSec}${brechasSec}
     </div>`;
   document.getElementById("listView").style.display="none";
+  document.getElementById("desafiosView").style.display="none";
   document.getElementById("fichaView").style.display="block";
+  document.getElementById("btnPortafolio").classList.add("active");
+  document.getElementById("btnDesafios").classList.remove("active");
   document.getElementById("backBtn").style.display="inline-flex";
   document.getElementById("headerTitle").textContent=f.nombre;
   document.getElementById("headerBadge").textContent=`INN-${String(f.id).padStart(2,"0")}`;
 }
 
+function renderDesafios(){
+  const grid=document.getElementById("desafiosGrid");
+  grid.innerHTML=DESAFIOS.map(d=>`<div class="desafio-card">
+    <div class="desafio-head"><div class="desafio-num">${d.id}</div><div class="desafio-title">${d.nombre}</div></div>
+    <div class="desafio-body">${d.final}</div>
+  </div>`).join("");
+}
+
+function showDesafios(){
+  closeAllDropdowns();
+  document.getElementById("listView").style.display="none";
+  document.getElementById("fichaView").style.display="none";
+  document.getElementById("desafiosView").style.display="block";
+  document.getElementById("backBtn").style.display="none";
+  document.getElementById("headerTitle").textContent="Desafíos Estratégicos PPEE";
+  document.getElementById("headerBadge").textContent="10 desafíos clave";
+  document.getElementById("btnDesafios").classList.add("active");
+  document.getElementById("btnPortafolio").classList.remove("active");
+  renderDesafios();
+}
+
+function showPortfolio(){
+  document.getElementById("desafiosView").style.display="none";
+  document.getElementById("fichaView").style.display="none";
+  document.getElementById("listView").style.display="block";
+  document.getElementById("backBtn").style.display="none";
+  document.getElementById("headerTitle").textContent="Portafolio PPEE";
+  document.getElementById("btnPortafolio").classList.add("active");
+  document.getElementById("btnDesafios").classList.remove("active");
+  render();
+}
+
 function goBack(){
   document.getElementById("fichaView").style.display="none";
+  document.getElementById("desafiosView").style.display="none";
   document.getElementById("listView").style.display="block";
   document.getElementById("backBtn").style.display="none";
   document.getElementById("headerTitle").textContent="Portafolio PPEE";
@@ -456,5 +533,7 @@ sponsors.forEach(val=>{
   dd.appendChild(btn);
 });
 ["foco","etapa","sponsor","tipo"].forEach(k=>updateTrigger(k));
+document.getElementById("btnPortafolio").classList.add("active");
+renderDesafios();
 render();
 </script>
