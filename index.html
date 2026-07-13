@@ -1,3 +1,10 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Portafolio de iniciativas y desafíos estratégicos PPEE 2026">
+<title>Portafolio PPEE 2026</title>
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -146,11 +153,13 @@ body{font-family:'Segoe UI',sans-serif;background:#eef0f4;min-height:500px}
 @media (max-width:700px){.desafios-grid{grid-template-columns:1fr}.header{align-items:flex-start}.header-actions{flex-wrap:wrap;justify-content:flex-end}}
 
 </style>
+</head>
+<body>
 
 <div id="app">
   <div class="header">
     <div class="header-left">
-      <button class="back-btn" id="backBtn" onclick="goBack()">
+      <button type="button" class="back-btn" id="backBtn" onclick="goBack()">
         <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><polyline points="8,2 4,6 8,10" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         Volver
       </button>
@@ -158,8 +167,8 @@ body{font-family:'Segoe UI',sans-serif;background:#eef0f4;min-height:500px}
       <span class="header-badge" id="headerBadge">2026 · 19 iniciativas</span>
     </div>
     <div class="header-actions">
-      <button class="header-action-btn" id="btnPortafolio" onclick="showPortfolio()">Portafolio</button>
-      <button class="header-action-btn" id="btnDesafios" onclick="showDesafios()">Desafíos estratégicos</button>
+      <button type="button" class="header-action-btn" id="btnPortafolio" onclick="showPortfolio()">Portafolio</button>
+      <button type="button" class="header-action-btn" id="btnDesafios" onclick="showDesafios()">Desafíos estratégicos</button>
     </div>
   </div>
 
@@ -170,7 +179,7 @@ body{font-family:'Segoe UI',sans-serif;background:#eef0f4;min-height:500px}
 
       <!-- Foco dropdown -->
       <div class="filter-group" id="grp-foco">
-        <button class="filter-trigger" id="trig-foco" onclick="toggleDropdown('foco')">
+        <button type="button" class="filter-trigger" id="trig-foco" onclick="toggleDropdown('foco')">
           Foco <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><polyline points="2,3.5 5,6.5 8,3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
         <div class="dropdown" id="dd-foco"></div>
@@ -178,7 +187,7 @@ body{font-family:'Segoe UI',sans-serif;background:#eef0f4;min-height:500px}
 
       <!-- Desafío estratégico dropdown -->
       <div class="filter-group" id="grp-desafio">
-        <button class="filter-trigger" id="trig-desafio" onclick="toggleDropdown('desafio')">
+        <button type="button" class="filter-trigger" id="trig-desafio" onclick="toggleDropdown('desafio')">
           Desafío <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><polyline points="2,3.5 5,6.5 8,3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
         <div class="dropdown" id="dd-desafio"></div>
@@ -186,7 +195,7 @@ body{font-family:'Segoe UI',sans-serif;background:#eef0f4;min-height:500px}
 
       <!-- Etapa dropdown -->
       <div class="filter-group" id="grp-etapa">
-        <button class="filter-trigger" id="trig-etapa" onclick="toggleDropdown('etapa')">
+        <button type="button" class="filter-trigger" id="trig-etapa" onclick="toggleDropdown('etapa')">
           Etapa <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><polyline points="2,3.5 5,6.5 8,3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
         <div class="dropdown" id="dd-etapa"></div>
@@ -194,7 +203,7 @@ body{font-family:'Segoe UI',sans-serif;background:#eef0f4;min-height:500px}
 
       <!-- Sponsor dropdown -->
       <div class="filter-group" id="grp-sponsor">
-        <button class="filter-trigger" id="trig-sponsor" onclick="toggleDropdown('sponsor')">
+        <button type="button" class="filter-trigger" id="trig-sponsor" onclick="toggleDropdown('sponsor')">
           Sponsor <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><polyline points="2,3.5 5,6.5 8,3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
         <div class="dropdown" id="dd-sponsor">
@@ -204,7 +213,7 @@ body{font-family:'Segoe UI',sans-serif;background:#eef0f4;min-height:500px}
 
       <!-- Tipo dropdown -->
       <div class="filter-group" id="grp-tipo">
-        <button class="filter-trigger" id="trig-tipo" onclick="toggleDropdown('tipo')">
+        <button type="button" class="filter-trigger" id="trig-tipo" onclick="toggleDropdown('tipo')">
           Tipo <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><polyline points="2,3.5 5,6.5 8,3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
         <div class="dropdown" id="dd-tipo"></div>
@@ -212,10 +221,10 @@ body{font-family:'Segoe UI',sans-serif;background:#eef0f4;min-height:500px}
 
       <div class="sep"></div>
       <div class="view-toggle">
-        <button class="vbtn active" id="vgrid" onclick="setView('grid')">⊞</button>
-        <button class="vbtn" id="vlist" onclick="setView('list')">☰</button>
+        <button type="button" class="vbtn active" id="vgrid" onclick="setView('grid')">⊞</button>
+        <button type="button" class="vbtn" id="vlist" onclick="setView('list')">☰</button>
       </div>
-      <button class="clear-link" id="clearBtn" onclick="clearAll()">✕ Limpiar filtros</button>
+      <button type="button" class="clear-link" id="clearBtn" onclick="clearAll()">✕ Limpiar filtros</button>
     </div>
     <div class="stats-bar" id="statsBar"></div>
     <div class="content" id="content"></div>
@@ -233,8 +242,8 @@ body{font-family:'Segoe UI',sans-serif;background:#eef0f4;min-height:500px}
     <div class="desafios-toolbar">
       <div class="desafios-toolbar-title">Distribución de iniciativas por desafío: cada bloque representa una iniciativa asociada.</div>
       <div class="desafios-toggle">
-        <button class="vbtn active" id="desafiosCardsBtn" onclick="setDesafiosView('cards')">Tarjetas</button>
-        <button class="vbtn" id="desafiosTrainBtn" onclick="setDesafiosView('train')">Carga</button>
+        <button type="button" class="vbtn active" id="desafiosCardsBtn" onclick="setDesafiosView('cards')">Tarjetas</button>
+        <button type="button" class="vbtn" id="desafiosTrainBtn" onclick="setDesafiosView('train')">Carga</button>
       </div>
     </div>
     <div class="desafios-grid" id="desafiosGrid"></div>
@@ -346,6 +355,7 @@ DATA.forEach(f=>{f.sponsor=SPONSORS_MAP[f.id]||"Por definir";f.gestor=GESTORES_M
 const filters={foco:new Set(),desafio:new Set(),etapa:new Set(),sponsor:new Set(),tipo:new Set()};
 let view="grid";
 let desafiosView="cards";
+let previousView="portfolio";
 let openDD=null;
 
 // Build dropdown options
@@ -360,6 +370,7 @@ function buildDropdown(key,values){
   const existing=dd.querySelector(".drop-search");
   values.forEach(val=>{
     const btn=document.createElement("button");
+    btn.type="button";
     btn.className="drop-item";btn.dataset.val=val;
     btn.innerHTML=`<div class="drop-check"></div><span>${val}</span>`;
     btn.onclick=(e)=>{e.stopPropagation();toggleFilter(key,val,btn);};
@@ -499,6 +510,7 @@ function stepperH(etapa){
 
 function openFicha(id){
   const f=DATA.find(d=>d.id===id);if(!f) return;
+  previousView=document.getElementById("desafiosView").style.display==="block"?"desafios":"portfolio";
   const hdr=HDR[f.foco]||"#4B5563";
   const desc=DESCRIPCIONES[f.id]||null;
   const hips=HIPOTESIS[f.id]||[];
@@ -507,7 +519,7 @@ function openFicha(id){
   const brechasSec=brechas.length?`<div class="sec"><div class="sec-lbl">Brechas / Oportunidades de mejora</div><div class="brecha-list">${brechas.map(b=>`<div class="brecha-item"><div class="brecha-dot"></div><div class="brecha-txt">${b}</div></div>`).join("")}</div></div>`:"";
   document.getElementById("fichaContent").innerHTML=`
     <div class="fh" style="background:${hdr}">
-      <div class="fh-id">INN-${String(f.id).padStart(2,"0")} · ${f.nueva?2026:2023}</div>
+      <div class="fh-id">INN-${String(f.id).padStart(2,"0")} · ${f.nueva?"2026 · Nueva":"2025 · Continuidad"}</div>
       <div class="fh-title">${f.nombre}</div>
       ${f.nueva?`<span class="fh-new">Nueva 2026</span>`:""}
     </div>
@@ -540,17 +552,18 @@ function openFicha(id){
 
 function renderDesafios(){
   const grid=document.getElementById("desafiosGrid");
-  const maxCarga=Math.max(...DESAFIOS.map(d=>DATA.filter(f=>f.desafio===d.id).length),1);
+  const grupos=[...DESAFIOS,{id:"Por Definir",nombre:"Por Definir",final:"Iniciativas pendientes de clasificación estratégica."}];
+  const maxCarga=Math.max(...grupos.map(d=>DATA.filter(f=>f.desafio===d.id).length),1);
   if(desafiosView==="train"){
     grid.className="desafios-train";
-    grid.innerHTML=DESAFIOS.map(d=>{
+    grid.innerHTML=grupos.map(d=>{
       const iniciativas=DATA.filter(f=>f.desafio===d.id).sort((a,b)=>a.id-b.id);
       const hot=iniciativas.length===maxCarga&&iniciativas.length>0?" hot":"";
       const pills=iniciativas.length
-        ? iniciativas.map(f=>`<button class="train-pill" title="${f.nombre}" onclick="openFicha(${f.id})">INN-${String(f.id).padStart(2,"0")}</button>`).join("")
+        ? iniciativas.map(f=>`<button type="button" class="train-pill" title="${f.nombre}" onclick="openFicha(${f.id})">INN-${String(f.id).padStart(2,"0")}</button>`).join("")
         : `<span class="train-empty" title="Sin iniciativas asociadas">—</span>`;
       return `<div class="train-row${hot}">
-        <div class="train-head"><div class="train-num">${d.id}</div><div class="train-title">${d.nombre}</div></div>
+        <div class="train-head"><div class="train-num">${d.id==="Por Definir"?"?":d.id}</div><div class="train-title">${d.nombre}</div></div>
         <div class="train-track">${pills}</div>
         <div class="train-count">${iniciativas.length}<span>iniciativas</span></div>
       </div>`;
@@ -558,13 +571,13 @@ function renderDesafios(){
     return;
   }
   grid.className="desafios-grid";
-  grid.innerHTML=DESAFIOS.map(d=>{
+  grid.innerHTML=grupos.map(d=>{
     const iniciativas=DATA.filter(f=>f.desafio===d.id).sort((a,b)=>a.id-b.id);
     const lista=iniciativas.length
       ? `<div class="desafio-list">${iniciativas.map(f=>`<div class="desafio-inn" onclick="openFicha(${f.id})"><span class="desafio-inn-id">INN-${String(f.id).padStart(2,"0")}</span><span>${f.nombre}</span></div>`).join("")}</div>`
       : `<div class="desafio-empty">Sin iniciativas asociadas en el portafolio 2026.</div>`;
     return `<div class="desafio-card">
-      <div class="desafio-head"><div class="desafio-num">${d.id}</div><div class="desafio-title">${d.nombre}</div></div>
+      <div class="desafio-head"><div class="desafio-num">${d.id==="Por Definir"?"?":d.id}</div><div class="desafio-title">${d.nombre}</div></div>
       <div class="desafio-body">${d.final}${lista}</div>
     </div>`;
   }).join("");
@@ -602,12 +615,11 @@ function showPortfolio(){
 }
 
 function goBack(){
-  document.getElementById("fichaView").style.display="none";
-  document.getElementById("desafiosView").style.display="none";
-  document.getElementById("listView").style.display="block";
-  document.getElementById("backBtn").style.display="none";
-  document.getElementById("headerTitle").textContent="Portafolio PPEE";
-  render();
+  if(previousView==="desafios"){
+    showDesafios();
+    return;
+  }
+  showPortfolio();
 }
 
 // Init
@@ -619,6 +631,7 @@ buildDropdown("tipo",tipos);
 sponsors.forEach(val=>{
   const dd=document.getElementById("dd-sponsor");
   const btn=document.createElement("button");
+  btn.type="button";
   btn.className="drop-item";btn.dataset.val=val;
   btn.innerHTML=`<div class="drop-check"></div><span>${val}</span>`;
   btn.onclick=(e)=>{e.stopPropagation();toggleFilter("sponsor",val,btn);};
@@ -629,3 +642,5 @@ document.getElementById("btnPortafolio").classList.add("active");
 renderDesafios();
 render();
 </script>
+</body>
+</html>
