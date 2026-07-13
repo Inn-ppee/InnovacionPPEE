@@ -115,6 +115,13 @@ body{font-family:'Segoe UI',sans-serif;background:#eef0f4;min-height:500px}
 .desafio-num{width:34px;height:34px;border-radius:8px;background:#123B6D;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
 .desafio-title{font-size:12px;font-weight:600;color:#123B6D;line-height:1.3}
 .desafio-body{padding:10px 12px 12px;font-size:11px;color:#374151;line-height:1.58}
+
+.desafio-list{margin-top:10px;border-top:0.5px solid rgba(0,0,0,0.07);padding-top:8px;display:flex;flex-direction:column;gap:5px}
+.desafio-inn{display:flex;gap:6px;align-items:flex-start;background:#F5F7FA;border:0.5px solid rgba(0,0,0,0.06);border-radius:7px;padding:6px 8px;font-size:10.5px;color:#374151;line-height:1.35}
+.desafio-inn-id{font-weight:700;color:#123B6D;flex-shrink:0}
+.desafio-empty{font-size:10.5px;color:#888780;background:#F5F6F8;border:0.5px dashed rgba(0,0,0,0.12);border-radius:7px;padding:7px 8px;margin-top:8px}
+.desafio-main-box{background:#EBF3FB;border:0.5px solid #B5D4F4;border-radius:8px;padding:9px 11px;font-size:12px;color:#123B6D;line-height:1.5}
+.desafio-main-box strong{display:block;font-size:13px;margin-bottom:2px}
 @media (max-width:700px){.desafios-grid{grid-template-columns:1fr}.header{align-items:flex-start}.header-actions{flex-wrap:wrap;justify-content:flex-end}}
 
 </style>
@@ -146,6 +153,14 @@ body{font-family:'Segoe UI',sans-serif;background:#eef0f4;min-height:500px}
           Foco <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><polyline points="2,3.5 5,6.5 8,3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
         <div class="dropdown" id="dd-foco"></div>
+      </div>
+
+      <!-- Desafío estratégico dropdown -->
+      <div class="filter-group" id="grp-desafio">
+        <button class="filter-trigger" id="trig-desafio" onclick="toggleDropdown('desafio')">
+          Desafío <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><polyline points="2,3.5 5,6.5 8,3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="dropdown" id="dd-desafio"></div>
       </div>
 
       <!-- Etapa dropdown -->
@@ -215,11 +230,21 @@ const DESAFIOS=[
   {id:"D4",nombre:"Integración Digital",final:"¿Cómo podríamos integrar y digitalizar los procesos críticos del ciclo del proyecto —planificación, control operacional, gestión de cambios, entre otros— estandarizando flujos físicos e informativos mediante herramientas como BIM y/o modelos integrados de planificación y control, para reducir variabilidad, anticipar desviaciones de plazo y costo, y asegurar la predictibilidad de la ejecución?"},
   {id:"D5",nombre:"Integración de Equipos",final:"¿Cómo podríamos preparar e integrar a los equipos MOD y MOI en obra desde el primer día, asegurando competencias técnicas y digitales que reduzcan reprocesos y aumenten la productividad?"},
   {id:"D6",nombre:"Industrialización Integral",final:"¿Cómo podríamos transformar la industrialización en una práctica confiable y aceptada por equipos y clientes, no solo entendida como una actividad o elemento industrializado, sino como una estrategia integral que exige adaptar el sistema de construcción antes, durante y después de su incorporación, reduciendo la resistencia al cambio, aumentando su impacto en productividad y dependiendo menos de mano de obra calificada?"},
-  {id:"D7",nombre:"Digitalización de Origen",final:"¿Cómo podríamos mejorar la productividad mediante la digitalización y captura de información en origen —avance, calidad, restricciones y compromisos operativos— para anticipar problemas, reducir reprocesos y optimizar la operación en terreno?"},
+  {id:"D7",nombre:"Digitalización en Origen",final:"¿Cómo podríamos mejorar la productividad mediante la digitalización y captura de información en origen —avance, calidad, restricciones y compromisos operativos— para anticipar problemas, reducir reprocesos y optimizar la operación en terreno?"},
   {id:"D8",nombre:"Valor al Cliente",final:"¿Cómo podríamos garantizar que nuestras propuestas respondan a necesidades reales de los clientes y del mercado, para ser percibidos internamente como un socio diferenciador y no solo como un ejecutor de proyectos?"},
   {id:"D9",nombre:"Infraestructura Tecnológica",final:"¿Cómo podríamos fortalecer y consolidar la infraestructura tecnológica y el modelo de soporte digital de PPEE, asegurando continuidad operativa y automatizando la obtención de datos?"},
   {id:"D10",nombre:"Escalamiento Industrializado",final:"¿Cómo podríamos escalar la industrialización constructiva por componentes —muebles modulares, prefabricados de hormigón, sistemas en madera, receptáculos preformados, entre otros— mediante metodologías DfMA, para reducir plazos críticos, mejorar calidad, disminuir riesgos operacionales y bajar la dependencia de mano de obra calificada en faena?"}
 ];
+
+const DESAFIO_ASOCIADO={
+  1:"D8",2:"D8",3:"D7",4:"D7",5:"D7",6:"D4",7:"D10",8:"D10",9:"D7",10:"D6",
+  11:"D6",12:"D6",13:"D7",14:"D7",15:"D2",16:"D5",17:"D6",18:"Por Definir",19:"D2"
+};
+function desafioLabel(id){
+  if(!id||id==="Por Definir") return "Por Definir";
+  const d=DESAFIOS.find(x=>x.id===id);
+  return d?`${d.id} ${d.nombre}`:id;
+}
 
 const HIPOTESIS={
   1:[{id:"H1",texto:"SI implementamos plantas modulares de tratamiento de aguas grises (PTAG), ENTONCES reduciremos el consumo de agua potable en al menos un 30% durante la fase de construcción.",kpis:["% reducción consumo agua potable vs. línea base (meta ≥30%)","m³ aguas grises tratadas / m³ totales consumidos (meta ≥25%)","Huella hídrica L/m² antes vs. después del piloto (meta reducción ≥20%)"]},{id:"H2",texto:"SI estandarizamos un protocolo de O&M de PTAG y capacitamos al equipo de obra, ENTONCES lograremos continuidad operativa con mínima intervención externa.",kpis:["% disponibilidad operativa PTAG (meta ≥90%)","N° incidentes críticos/mes con parada >24h (meta ≤1)","Costo unitario O&M (CLP/m³ tratado) vs. meta presupuestada"]}],
@@ -270,7 +295,7 @@ const DATA=[
   {id:2,nombre:"Gestión de insumos de aseos",foco:"Sostenibilidad",etapa:"Pilotear",estado:"ACTIVA",nueva:false},
   {id:3,nombre:"Digitalización Hoja de Ruta",foco:"Digitalización",etapa:"Escalar",estado:"ACTIVA",nueva:false},
   {id:4,nombre:"Digitalización de Hallazgos",foco:"Digitalización",etapa:"Escalar",estado:"ACTIVA",nueva:false},
-  {id:5,nombre:"Digitalización Programa Liderazgo y Gestión SSTMA",foco:"Digitalización",etapa:"Escalar",estado:"ACTIVA",nueva:false},
+  {id:5,nombre:"Digitalización Programa de Liderazgo y Gestión SSTMA",foco:"Digitalización",etapa:"Escalar",estado:"ACTIVA",nueva:false},
   {id:6,nombre:"Control Resistencia en Losas Postensadas",foco:"Digitalización",etapa:"Pilotear",estado:"ACTIVA",nueva:false},
   {id:7,nombre:"Muebles Modulares",foco:"Industrialización",etapa:"Escalar",estado:"ACTIVA",nueva:false},
   {id:8,nombre:"Receptáculos Preformados Impermeabilizados",foco:"Industrialización",etapa:"I+D",estado:"ACTIVA",nueva:false},
@@ -280,22 +305,23 @@ const DATA=[
   {id:12,nombre:"Desarrollo de construcción en Madera (CENAMAD)",foco:"Industrialización",etapa:"Detectar",estado:"ACTIVA",nueva:true},
   {id:13,nombre:"Mapeo de Subcontratos",foco:"Digitalización",etapa:"Idear",estado:"ACTIVA",nueva:true},
   {id:14,nombre:"Integración de Calidad al Last Planner",foco:"Digitalización",etapa:"Idear",estado:"ACTIVA",nueva:true},
-  {id:15,nombre:"Automatización datos SGC (G.Técnica)",foco:"Digitalización",etapa:"Detectar",estado:"ACTIVA",nueva:true},
+  {id:15,nombre:"Automatización datos SGC (G. Técnica)",foco:"Digitalización",etapa:"Detectar",estado:"ACTIVA",nueva:true},
   {id:16,nombre:"Optimización Oficina Técnica",foco:"—",etapa:"Detectar",estado:"ACTIVA",nueva:true},
   {id:17,nombre:"Sistema de Extracción Continua de Material en Túneles",foco:"Industrialización",etapa:"Detectar",estado:"ACTIVA",nueva:true},
   {id:18,nombre:"Iniciativa Área de Estudios",foco:"—",etapa:"Detectar",estado:"ACTIVA",nueva:true},
   {id:19,nombre:"Plataforma de Inteligencia Organizacional",foco:"Digitalización",etapa:"Detectar",estado:"ACTIVA",nueva:true},
 ];
 
-DATA.forEach(f=>{f.sponsor=SPONSORS_MAP[f.id]||"Por definir";f.gestor=GESTORES_MAP[f.id]||"Por definir";});
+DATA.forEach(f=>{f.sponsor=SPONSORS_MAP[f.id]||"Por definir";f.gestor=GESTORES_MAP[f.id]||"Por definir";f.desafio=DESAFIO_ASOCIADO[f.id]||"Por Definir";f.desafioNombre=desafioLabel(f.desafio);});
 
 // Filter state
-const filters={foco:new Set(),etapa:new Set(),sponsor:new Set(),tipo:new Set()};
+const filters={foco:new Set(),desafio:new Set(),etapa:new Set(),sponsor:new Set(),tipo:new Set()};
 let view="grid";
 let openDD=null;
 
 // Build dropdown options
 const focos=[...new Set(DATA.map(f=>f.foco).filter(f=>f!=="—"))];
+const desafiosOpciones=[...new Set(DATA.map(f=>f.desafioNombre))];
 const etapas=["Detectar","Idear","Diseñar","Pilotear","Escalar","I+D"].filter(e=>DATA.some(f=>f.etapa===e));
 const sponsors=[...new Set(DATA.map(f=>f.sponsor).filter(s=>s&&s!=="—"&&s!=="Por definir"))].sort();
 const tipos=["Nueva 2026","Continúa 2025"];
@@ -348,7 +374,7 @@ function updateTrigger(key){
   const n=filters[key].size;
   const trig=document.getElementById("trig-"+key);
   trig.classList.toggle("has-active",n>0);
-  const labels={foco:"Foco",etapa:"Etapa",sponsor:"Sponsor",tipo:"Tipo"};
+  const labels={foco:"Foco",desafio:"Desafío",etapa:"Etapa",sponsor:"Sponsor",tipo:"Tipo"};
   trig.innerHTML=`${n>0?`<span class="count">${n}</span> `:""} ${labels[key]} <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><polyline points="2,3.5 5,6.5 8,3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
   trig.onclick=()=>toggleDropdown(key);
 }
@@ -362,7 +388,7 @@ function clearAll(){
   Object.values(filters).forEach(s=>s.clear());
   document.getElementById("q").value="";
   document.querySelectorAll(".drop-item").forEach(b=>{b.classList.remove("selected");b.querySelector(".drop-check").innerHTML="";});
-  ["foco","etapa","sponsor","tipo"].forEach(k=>updateTrigger(k));
+  ["foco","desafio","etapa","sponsor","tipo"].forEach(k=>updateTrigger(k));
   updateClearBtn();render();
 }
 
@@ -371,8 +397,9 @@ function setView(v){view=v;document.getElementById("vgrid").classList.toggle("ac
 function getFiltered(){
   const q=document.getElementById("q").value.toLowerCase();
   return DATA.filter(f=>{
-    if(q&&!f.nombre.toLowerCase().includes(q)&&!String(f.id).includes(q)&&!f.sponsor.toLowerCase().includes(q)) return false;
+    if(q&&!f.nombre.toLowerCase().includes(q)&&!String(f.id).includes(q)&&!f.sponsor.toLowerCase().includes(q)&&!f.desafioNombre.toLowerCase().includes(q)) return false;
     if(filters.foco.size&&!filters.foco.has(f.foco)) return false;
+    if(filters.desafio.size&&!filters.desafio.has(f.desafioNombre)) return false;
     if(filters.etapa.size&&!filters.etapa.has(f.etapa)) return false;
     if(filters.sponsor.size&&!filters.sponsor.has(f.sponsor)) return false;
     if(filters.tipo.size){
@@ -402,6 +429,7 @@ function render(){
           <div class="card-name">${f.nombre}</div>
           <div class="card-tags">
             ${f.foco!=="—"?tg(f.foco,FOCO_COLOR[f.foco]||"gray"):""}
+            ${tg(f.desafioNombre,"purple")}
             ${tg(f.etapa,ETAPA_COLOR[f.etapa]||"gray")}
             ${tg(f.estado,ESTADO_COLOR[f.estado]||"gray")}
           </div>
@@ -413,11 +441,12 @@ function render(){
       </div>`).join("")}</div>`;
   } else {
     content.innerHTML=`<div class="tbl-wrap"><table class="tbl">
-      <thead><tr><th>ID</th><th>Iniciativa</th><th>Foco</th><th>Etapa</th><th>Estado</th><th>Sponsor</th><th></th></tr></thead>
+      <thead><tr><th>ID</th><th>Iniciativa</th><th>Foco</th><th>Desafío</th><th>Etapa</th><th>Estado</th><th>Sponsor</th><th></th></tr></thead>
       <tbody>${data.map(f=>`<tr onclick="openFicha(${f.id})">
         <td style="font-weight:600;color:#6b7280;font-size:10px">INN-${String(f.id).padStart(2,"0")}</td>
         <td style="font-weight:500">${f.nombre}</td>
         <td>${f.foco!=="—"?tg(f.foco,FOCO_COLOR[f.foco]||"gray"):"-"}</td>
+        <td>${tg(f.desafioNombre,"purple")}</td>
         <td>${tg(f.etapa,ETAPA_COLOR[f.etapa]||"gray")}</td>
         <td>${tg(f.estado,ESTADO_COLOR[f.estado]||"gray")}</td>
         <td style="color:#6b7280">${f.sponsor}</td>
@@ -456,10 +485,12 @@ function openFicha(id){
     <div class="fb">
       <div class="tags-lg">
         ${f.foco!=="—"?tg(f.foco,FOCO_COLOR[f.foco]||"gray",true):""}
+        ${tg(f.desafioNombre,"purple",true)}
         ${tg(f.etapa,ETAPA_COLOR[f.etapa]||"gray",true)}
         ${tg(f.estado,ESTADO_COLOR[f.estado]||"gray",true)}
       </div>
       ${stepperH(f.etapa)}
+      <div class="sec"><div class="sec-lbl">Desafío estratégico asociado</div><div class="desafio-main-box"><strong>${f.desafioNombre}</strong>${f.desafio==="Por Definir"?"Pendiente de clasificación estratégica.":"Clasificación principal dentro de los Desafíos Estratégicos PPEE 2025–2028."}</div></div>
       <div class="sec"><div class="sec-lbl">Descripción de la solución</div><div class="desc">${desc||`<span style="color:#6b7280;font-style:italic">Por definir.</span>`}</div></div>
       <div class="sec"><div class="sec-lbl">Célula de innovación</div><div class="celula-grid">
         <div class="cel-card"><div class="cel-role">Sponsor</div><div class="cel-name">${f.sponsor}</div></div>
@@ -480,10 +511,16 @@ function openFicha(id){
 
 function renderDesafios(){
   const grid=document.getElementById("desafiosGrid");
-  grid.innerHTML=DESAFIOS.map(d=>`<div class="desafio-card">
-    <div class="desafio-head"><div class="desafio-num">${d.id}</div><div class="desafio-title">${d.nombre}</div></div>
-    <div class="desafio-body">${d.final}</div>
-  </div>`).join("");
+  grid.innerHTML=DESAFIOS.map(d=>{
+    const iniciativas=DATA.filter(f=>f.desafio===d.id);
+    const lista=iniciativas.length
+      ? `<div class="desafio-list">${iniciativas.map(f=>`<div class="desafio-inn" onclick="openFicha(${f.id})"><span class="desafio-inn-id">INN-${String(f.id).padStart(2,"0")}</span><span>${f.nombre}</span></div>`).join("")}</div>`
+      : `<div class="desafio-empty">Sin iniciativas asociadas en el portafolio 2026.</div>`;
+    return `<div class="desafio-card">
+      <div class="desafio-head"><div class="desafio-num">${d.id}</div><div class="desafio-title">${d.nombre}</div></div>
+      <div class="desafio-body">${d.final}${lista}</div>
+    </div>`;
+  }).join("");
 }
 
 function showDesafios(){
@@ -521,6 +558,7 @@ function goBack(){
 
 // Init
 buildDropdown("foco",focos);
+buildDropdown("desafio",desafiosOpciones);
 buildDropdown("etapa",etapas);
 buildDropdown("tipo",tipos);
 // Sponsors go after the search input in the dropdown
@@ -532,7 +570,7 @@ sponsors.forEach(val=>{
   btn.onclick=(e)=>{e.stopPropagation();toggleFilter("sponsor",val,btn);};
   dd.appendChild(btn);
 });
-["foco","etapa","sponsor","tipo"].forEach(k=>updateTrigger(k));
+["foco","desafio","etapa","sponsor","tipo"].forEach(k=>updateTrigger(k));
 document.getElementById("btnPortafolio").classList.add("active");
 renderDesafios();
 render();
