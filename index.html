@@ -193,6 +193,18 @@ tbody tr:hover td{background:#F2F7FC}
 .empty{padding:35px;text-align:center;color:#758094;font-size:11px}
 @media(max-width:1100px){.kpis{grid-template-columns:repeat(3,1fr)}.focus-grid{grid-template-columns:repeat(2,1fr)}.health-grid{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:780px){.header{align-items:flex-start}.nav{max-width:55%}.two-col{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}.focus-grid{grid-template-columns:1fr}.health-grid{grid-template-columns:1fr}.benefit-grid{grid-template-columns:1fr}.challenge-load{grid-template-columns:repeat(2,1fr)}.load-row{grid-template-columns:155px minmax(220px,1fr) 45px}.ficha-grid{grid-template-columns:1fr}.matrix th:first-child,.matrix td:first-child{min-width:220px}}
+
+.deploy.finalized{background:#6B7280}
+.center-meta{font-size:9px;color:#6B7280;line-height:1.45;margin-top:5px}
+.center-detail{background:#fff;border:1px solid #E1E6EC;border-radius:12px;padding:13px;margin-bottom:11px}
+.center-detail-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:10px}
+.center-detail .info{min-height:58px}
+.center-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+.map-link{display:inline-flex;align-items:center;gap:5px;border:1px solid #B5D4F4;background:#EBF3FB;color:#185FA5;border-radius:8px;padding:6px 9px;font-size:10px;text-decoration:none}
+.center-initiatives{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px}
+.center-initiative{border:0;background:#F2F6FA;color:#185FA5;border-radius:7px;padding:5px 7px;font-size:9px;font-weight:700}
+@media(max-width:780px){.center-detail-grid{grid-template-columns:1fr 1fr}}
+
 </style>
 </head>
 <body>
@@ -234,6 +246,7 @@ tbody tr:hover td{background:#F2F7FC}
       <h2>Iniciativas por Centros de Trabajo</h2>
       <p>Vista de cobertura y despliegue del portafolio. La matriz utiliza únicamente los centros y asociaciones configurados en el código.</p>
     </div>
+    <div id="centerDetail"></div>
     <div id="centerCards" class="centers-cards"></div>
     <div id="centerMatrix"></div>
   </div>
@@ -289,7 +302,16 @@ const CHALLENGES=[
 {id:"D9",name:"Infraestructura Tecnológica",text:"¿Cómo podríamos fortalecer y consolidar la infraestructura tecnológica y el modelo de soporte digital de PPEE, asegurando continuidad operativa y automatizando la obtención de datos?"},
 {id:"D10",name:"Escalamiento Industrializado",text:"¿Cómo podríamos escalar la industrialización constructiva por componentes mediante metodologías DfMA, para reducir plazos críticos, mejorar calidad, disminuir riesgos operacionales y bajar la dependencia de mano de obra calificada en faena?"}
 ];
-const CENTERS=["Oficina Central","San Isidro","Parque Arauco","Los Militares","La Castellana","Metrópolis Independencia","Torre Kennedy Oriente"];
+const CENTERS_DATA=[
+  {name:"Oficina Central",costAccount:"—",m2:"—",projectManager:"—",administrator:"—",workStatus:"Corporativo",address:"—",lat:null,lng:null},
+  {name:"San Isidro",costAccount:"1566",m2:10388,projectManager:"Tito Fuentes",administrator:"Felipe Silva",workStatus:"Terminada",address:"San Isidro 513, Santiago",lat:null,lng:null},
+  {name:"Parque Arauco",costAccount:"1567",m2:71905,projectManager:"Iván Matus",administrator:"Mauricio Moraga",workStatus:"En Ejecución",address:"Cerro Colorado con Rosario Norte — Las Condes, Santiago, Chile",lat:-33.4018,lng:-70.5745},
+  {name:"Los Militares",costAccount:"1568",m2:36800,projectManager:"Tito Fuentes",administrator:"Luis Álvarez",workStatus:"En Ejecución",address:"Los Militares 4635, Las Condes, Santiago, Chile",lat:-33.4041,lng:-70.5662},
+  {name:"La Castellana",costAccount:"1570",m2:18549,projectManager:"Tito Fuentes",administrator:"Cristian Aballay",workStatus:"En Ejecución",address:"La Castellana Norte 70, Las Condes, Santiago, Chile",lat:-33.4114,lng:-70.5773},
+  {name:"Metrópolis Independencia",costAccount:"1571",m2:31032,projectManager:"Tito Fuentes",administrator:"Jorge Ocares",workStatus:"En Ejecución",address:"Av. Independencia N° 780, Santiago",lat:-33.4239,lng:-70.6529},
+  {name:"Torre Kennedy Oriente",costAccount:"1573",m2:34000,projectManager:"Tito Fuentes",administrator:"Mauricio Moraga",workStatus:"En Ejecución",address:"Avenida Kennedy con Rosario Norte, Las Condes",lat:-33.4021,lng:-70.5751}
+];
+const CENTERS=CENTERS_DATA.map(c=>c.name);
 const DATA=[
 {id:1,name:"Tratamiento y reutilización de aguas grises",focus:"Sostenibilidad",challenge:"D8",stage:"Pilotear",sponsor:"Lorena Rodríguez",manager:"Gabriela Fuentes",year:"Continuidad 2025",status:"ACTIVA",innovationType:"Por definir",benefit:"Por definir",description:"Sistema de tratamiento que permite capturar y reutilizar aguas provenientes de duchas y lavamanos de la instalación de faena, mediante un proceso de filtración, para su uso en actividades operativas de obra."},
 {id:2,name:"Gestión de insumos de aseos",focus:"Sostenibilidad",challenge:"D8",stage:"Pilotear",sponsor:"Lorena Rodríguez",manager:"Gabriela Fuentes",year:"Continuidad 2025",status:"ACTIVA",innovationType:"Por definir",benefit:"Por definir",description:"Iniciativa que transforma el abastecimiento de insumos de aseo mediante soluciones de economía circular y control de consumo, generando impacto económico, ambiental y social."},
@@ -312,8 +334,15 @@ const DATA=[
 {id:19,name:"Plataforma de Inteligencia Organizacional",focus:"Digitalización",challenge:"D2",stage:"Detectar",sponsor:"Magdalena Basoalto",manager:"Claudia Arre",year:"Nueva 2026",status:"ACTIVA",innovationType:"Por definir",benefit:"Por definir",description:"Desarrollar una plataforma de inteligencia organizacional que centralice información relevante para la toma de decisiones y gestión del conocimiento."}
 ];
 const DEPLOYMENTS={
-  1:{"Los Militares":"Activo","Metrópolis Independencia":"Activo"},
-  2:{"Oficina Central":"Activo","San Isidro":"Activo","Parque Arauco":"Activo","Los Militares":"Activo","La Castellana":"Activo","Metrópolis Independencia":"Activo","Torre Kennedy Oriente":"Activo"}
+  1:{"Los Militares":"Finalizada","Metrópolis Independencia":"Activa"},
+  2:{"Parque Arauco":"Activa","Los Militares":"Activa","La Castellana":"Activa","Metrópolis Independencia":"Activa","Torre Kennedy Oriente":"Activa"},
+  3:{"Parque Arauco":"Activa","Los Militares":"Activa","La Castellana":"Activa","Metrópolis Independencia":"Activa","Torre Kennedy Oriente":"Activa"},
+  4:{"Oficina Central":"Activa","Parque Arauco":"Activa","Los Militares":"Activa","La Castellana":"Activa","Metrópolis Independencia":"Activa","Torre Kennedy Oriente":"Activa"},
+  5:{"Parque Arauco":"Activa","Los Militares":"Activa","La Castellana":"Activa","Metrópolis Independencia":"Activa","Torre Kennedy Oriente":"Activa"},
+  6:{"La Castellana":"Activa"},
+  7:{"San Isidro":"Activa"},
+  8:{},
+  9:{"Parque Arauco":"Activa","Los Militares":"Activa","La Castellana":"Activa","Metrópolis Independencia":"Activa","Torre Kennedy Oriente":"Activa"}
 };
 const filters={focus:new Set(),challenge:new Set(),stage:new Set(),sponsor:new Set()};
 let portfolioMode="grid",challengeMode="cards",previousView="portfolio";
@@ -496,15 +525,68 @@ function renderChallenges(){
 function setChallengeMode(m){challengeMode=m;renderChallenges()}
 
 function renderCenters(){
+ const detail=document.getElementById("centerDetail");
+ if(detail&&!detail.dataset.initialized){detail.innerHTML="";detail.dataset.initialized="1"}
  const cards=document.getElementById("centerCards");
- cards.innerHTML=CENTERS.map(c=>{const n=DATA.filter(d=>DEPLOYMENTS[d.id]?.[c]).length;return `<div class="center-card" onclick="highlightCenter('${c}')"><div class="center-icon">⌂</div><div class="center-name">${c}</div><div class="center-count">${n} <small>iniciativas</small></div></div>`}).join("");
- const rows=DATA.filter(d=>DEPLOYMENTS[d.id]).map(d=>`<tr><td><strong>${inn(d.id)}</strong> · ${esc(d.name)}</td>${CENTERS.map(c=>`<td>${deploymentBadge(DEPLOYMENTS[d.id]?.[c])}</td>`).join("")}</tr>`).join("");
- document.getElementById("centerMatrix").innerHTML=`<div class="matrix-wrap"><table class="matrix"><thead><tr><th>Iniciativa</th>${CENTERS.map(c=>`<th>${c}</th>`).join("")}</tr></thead><tbody>${rows||'<tr><td colspan="8">Sin despliegues configurados.</td></tr>'}</tbody></table></div><div class="legend"><span><i class="deploy active">✓</i> Activo</span><span><i class="deploy pilot">P</i> Pilotaje</span><span><i class="deploy plan">○</i> Planificado</span></div>`;
+ cards.innerHTML=CENTERS_DATA.map(c=>{
+  const deployments=DATA.filter(d=>DEPLOYMENTS[d.id]?.[c.name]);
+  const active=deployments.filter(d=>DEPLOYMENTS[d.id][c.name]==="Activa").length;
+  const finalized=deployments.filter(d=>DEPLOYMENTS[d.id][c.name]==="Finalizada").length;
+  return `<div class="center-card" onclick="showCenterDetail('${c.name.replace(/'/g,"\'")}')">
+    <div class="center-icon">⌂</div>
+    <div class="center-name">${c.name}</div>
+    <div class="center-count">${deployments.length} <small>iniciativas</small></div>
+    <div class="center-meta">${active} activas · ${finalized} finalizadas<br>${c.workStatus}${c.m2!=="—"?` · ${Number(c.m2).toLocaleString("es-CL")} m²`:""}</div>
+  </div>`;
+ }).join("");
+
+ const rows=DATA.filter(d=>DEPLOYMENTS[d.id]&&Object.keys(DEPLOYMENTS[d.id]).length).map(d=>
+  `<tr><td><strong>${inn(d.id)}</strong> · ${esc(d.name)}</td>${CENTERS.map(c=>`<td>${deploymentBadge(DEPLOYMENTS[d.id]?.[c])}</td>`).join("")}</tr>`
+ ).join("");
+
+ document.getElementById("centerMatrix").innerHTML=`
+ <div class="matrix-wrap"><table class="matrix"><thead><tr><th>Iniciativa</th>${CENTERS.map(c=>`<th>${c}</th>`).join("")}</tr></thead>
+ <tbody>${rows||'<tr><td colspan="8">Sin despliegues configurados.</td></tr>'}</tbody></table></div>
+ <div class="legend">
+   <span><i class="deploy active">1</i> Activa en el centro</span>
+   <span><i class="deploy finalized">2</i> Finalizada en la obra</span>
+ </div>`;
 }
-function deploymentBadge(v){if(!v)return "";const cls=v==="Activo"?"active":v==="Pilotaje"?"pilot":"plan";return `<span class="deploy ${cls}" title="${v}">${v==="Activo"?"✓":v==="Pilotaje"?"P":"○"}</span>`}
-function highlightCenter(c){
- const ids=DATA.filter(d=>DEPLOYMENTS[d.id]?.[c]).map(d=>inn(d.id));
- alert(`${c}\n\n${ids.length?ids.join(", "):"Sin iniciativas configuradas."}`);
+
+function deploymentBadge(v){
+ if(!v)return "";
+ if(v==="Activa")return `<span class="deploy active" title="Activa en este centro de trabajo">1</span>`;
+ if(v==="Finalizada")return `<span class="deploy finalized" title="Finalizada en esta obra">2</span>`;
+ return "";
+}
+
+function showCenterDetail(name){
+ const c=CENTERS_DATA.find(x=>x.name===name);
+ if(!c)return;
+ const deployments=DATA.filter(d=>DEPLOYMENTS[d.id]?.[name]);
+ const active=deployments.filter(d=>DEPLOYMENTS[d.id][name]==="Activa");
+ const finalized=deployments.filter(d=>DEPLOYMENTS[d.id][name]==="Finalizada");
+ const coords=(Number.isFinite(c.lat)&&Number.isFinite(c.lng))?`${c.lat},${c.lng}`:null;
+ const map=coords?`<a class="map-link" href="https://www.google.com/maps?q=${coords}" target="_blank" rel="noopener noreferrer">Ver ubicación en mapa ↗</a>`:"";
+ document.getElementById("centerDetail").innerHTML=`
+ <div class="center-detail">
+  <div class="section-head"><div><div class="section-title">${c.name}</div><div class="section-sub">${c.address}</div></div></div>
+  <div class="center-detail-grid">
+   <div class="info"><div class="info-label">Cuenta de costos</div><div class="info-value">${c.costAccount}</div></div>
+   <div class="info"><div class="info-label">Superficie</div><div class="info-value">${c.m2==="—"?"—":Number(c.m2).toLocaleString("es-CL")+" m²"}</div></div>
+   <div class="info"><div class="info-label">Gerente de proyecto</div><div class="info-value">${c.projectManager}</div></div>
+   <div class="info"><div class="info-label">Administrador</div><div class="info-value">${c.administrator}</div></div>
+   <div class="info"><div class="info-label">Estado de la obra</div><div class="info-value">${c.workStatus}</div></div>
+   <div class="info"><div class="info-label">Iniciativas activas</div><div class="info-value">${active.length}</div></div>
+   <div class="info"><div class="info-label">Iniciativas finalizadas</div><div class="info-value">${finalized.length}</div></div>
+   <div class="info"><div class="info-label">Coordenadas</div><div class="info-value">${coords||"No informadas"}</div></div>
+  </div>
+  <div class="center-actions">${map}</div>
+  <div class="center-initiatives">
+   ${deployments.length?deployments.map(d=>`<button class="center-initiative" onclick="openFicha(${d.id})">${inn(d.id)} · ${DEPLOYMENTS[d.id][name]}</button>`).join(""):'<span style="font-size:10px;color:#758094">Sin iniciativas asociadas.</span>'}
+  </div>
+ </div>`;
+ document.getElementById("centerDetail").scrollIntoView({behavior:"smooth",block:"start"});
 }
 
 function renderLibrary(){
