@@ -194,7 +194,7 @@ tbody tr:hover td{background:#F2F7FC}
 @media(max-width:1100px){.kpis{grid-template-columns:repeat(3,1fr)}.focus-grid{grid-template-columns:repeat(2,1fr)}.health-grid{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:780px){.header{align-items:flex-start}.nav{max-width:55%}.two-col{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}.focus-grid{grid-template-columns:1fr}.health-grid{grid-template-columns:1fr}.benefit-grid{grid-template-columns:1fr}.challenge-load{grid-template-columns:repeat(2,1fr)}.load-row{grid-template-columns:155px minmax(220px,1fr) 45px}.ficha-grid{grid-template-columns:1fr}.matrix th:first-child,.matrix td:first-child{min-width:220px}}
 
-.deploy.finalized{background:#6B7280}
+.deploy.finalized{background:#6B7280;color:#fff}
 .center-meta{font-size:9px;color:#6B7280;line-height:1.45;margin-top:5px}
 .center-detail{background:#fff;border:1px solid #E1E6EC;border-radius:12px;padding:13px;margin-bottom:11px}
 .center-detail-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:10px}
@@ -548,15 +548,15 @@ function renderCenters(){
  <div class="matrix-wrap"><table class="matrix"><thead><tr><th>Iniciativa</th>${CENTERS.map(c=>`<th>${c}</th>`).join("")}</tr></thead>
  <tbody>${rows||'<tr><td colspan="8">Sin despliegues configurados.</td></tr>'}</tbody></table></div>
  <div class="legend">
-   <span><i class="deploy active">1</i> Activa en el centro</span>
-   <span><i class="deploy finalized">2</i> Finalizada en la obra</span>
+   <span><i class="deploy active">✓</i> Iniciativa activa en el centro de trabajo</span>
+   <span><i class="deploy finalized">✓</i> Iniciativa finalizada en la obra</span>
  </div>`;
 }
 
 function deploymentBadge(v){
- if(!v)return "";
- if(v==="Activa")return `<span class="deploy active" title="Activa en este centro de trabajo">1</span>`;
- if(v==="Finalizada")return `<span class="deploy finalized" title="Finalizada en esta obra">2</span>`;
+ if(!v) return "";
+ if(v==="Activa") return `<span class="deploy active" title="Iniciativa activa en este centro de trabajo">✓</span>`;
+ if(v==="Finalizada") return `<span class="deploy finalized" title="Iniciativa finalizada en esta obra">✓</span>`;
  return "";
 }
 
@@ -583,7 +583,7 @@ function showCenterDetail(name){
   </div>
   <div class="center-actions">${map}</div>
   <div class="center-initiatives">
-   ${deployments.length?deployments.map(d=>`<button class="center-initiative" onclick="openFicha(${d.id})">${inn(d.id)} · ${DEPLOYMENTS[d.id][name]}</button>`).join(""):'<span style="font-size:10px;color:#758094">Sin iniciativas asociadas.</span>'}
+   ${deployments.length?deployments.map(d=>`<button class="center-initiative" onclick="openFicha(${d.id})">${inn(d.id)} ${DEPLOYMENTS[d.id][name]==="Activa"?"🟢":"⚪"}</button>`).join(""):'<span style="font-size:10px;color:#758094">Sin iniciativas asociadas.</span>'}
   </div>
  </div>`;
  document.getElementById("centerDetail").scrollIntoView({behavior:"smooth",block:"start"});
