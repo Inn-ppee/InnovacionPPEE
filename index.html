@@ -8,14 +8,15 @@
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Segoe UI',sans-serif;background:#eef0f4;min-height:500px}
+body{font-family:'Segoe UI',sans-serif;background:#eef0f4;min-height:500px;overflow:hidden}
 .header{background:#1A6BAF;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px}
 .header-left{display:flex;align-items:center;gap:10px}
 .header h1{font-size:15px;font-weight:600;color:#fff}
 .header-badge{font-size:10px;background:rgba(255,255,255,0.2);color:#fff;border-radius:10px;padding:2px 8px;border:1px solid rgba(255,255,255,0.3)}
 .back-btn{display:none;align-items:center;gap:5px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:#fff;border-radius:8px;padding:5px 11px;font-size:11px;cursor:pointer;font-family:inherit}
 .back-btn:hover{background:rgba(255,255,255,0.25)}
-.filters-bar{background:#fff;padding:10px 16px;border-bottom:0.5px solid rgba(0,0,0,0.08);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+#listView{height:calc(100vh - 52px);display:flex;flex-direction:column;min-height:0}
+.filters-bar{background:#fff;padding:10px 16px;border-bottom:0.5px solid rgba(0,0,0,0.08);display:flex;align-items:center;gap:8px;flex-wrap:wrap;flex-shrink:0}
 .search-input{padding:6px 11px;font-size:11px;border:0.5px solid rgba(0,0,0,0.12);border-radius:7px;background:#f5f6f8;color:#1a1a1a;outline:none;width:160px;font-family:inherit}
 .filter-group{position:relative}
 .filter-trigger{display:flex;align-items:center;gap:5px;padding:5px 11px;border-radius:20px;border:1px solid rgba(0,0,0,0.12);background:#f5f6f8;cursor:pointer;font-size:11px;color:#6b7280;font-family:inherit;transition:all 0.1s}
@@ -32,13 +33,14 @@ body{font-family:'Segoe UI',sans-serif;background:#eef0f4;min-height:500px}
 .drop-search{width:100%;padding:5px 8px;font-size:11px;border:0.5px solid rgba(0,0,0,0.1);border-radius:6px;margin-bottom:4px;outline:none;font-family:inherit}
 .sep{width:1px;height:20px;background:rgba(0,0,0,0.1);flex-shrink:0}
 .view-toggle{display:flex;gap:3px;background:#f1f1f1;border-radius:7px;padding:2px}
-.vbtn{padding:4px 9px;border-radius:5px;border:none;background:none;cursor:pointer;font-size:11px;color:#6b7280}
+.vbtn{padding:4px 9px;border-radius:5px;border:none;background:none;cursor:pointer;font-size:11px;color:#6b7280;display:inline-flex;align-items:center;justify-content:center;min-width:31px;min-height:27px}
+.vbtn svg{display:block}
 .vbtn.active{background:#fff;color:#185FA5;box-shadow:0 1px 3px rgba(0,0,0,0.08)}
 .clear-link{font-size:10px;color:#185FA5;background:none;border:none;cursor:pointer;font-family:inherit;display:none;white-space:nowrap}
 .clear-link.visible{display:block}
-.stats-bar{padding:8px 16px;background:#f9fafb;border-bottom:0.5px solid rgba(0,0,0,0.06);display:flex;align-items:center;gap:10px;font-size:10px;color:#6b7280;flex-wrap:wrap}
+.stats-bar{padding:8px 16px;background:#f9fafb;border-bottom:0.5px solid rgba(0,0,0,0.06);display:flex;align-items:center;gap:10px;font-size:10px;color:#6b7280;flex-wrap:wrap;flex-shrink:0}
 .stats-bar strong{color:#1a1a1a}
-.content{padding:14px 16px;overflow-y:auto;max-height:390px}
+.content{padding:14px 16px;overflow-y:auto;max-height:none;flex:1;min-height:0}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px}
 .card{background:#fff;border-radius:10px;border:0.5px solid rgba(0,0,0,0.08);overflow:hidden;cursor:pointer;transition:box-shadow 0.15s,transform 0.12s}
 .card:hover{box-shadow:0 4px 16px rgba(0,0,0,0.1);transform:translateY(-2px)}
@@ -125,7 +127,7 @@ body{font-family:'Segoe UI',sans-serif;background:#eef0f4;min-height:500px}
 .desafio-title{font-size:12px;font-weight:600;color:#123B6D;line-height:1.3}
 .desafio-body{padding:10px 12px 12px;font-size:11px;color:#374151;line-height:1.58}
 
-.dashboard-view{display:none;padding:14px 16px 22px;overflow-y:auto;max-height:440px}
+.dashboard-view{display:none;padding:14px 16px 22px;overflow-y:auto;max-height:none;height:calc(100vh - 52px)}
 .dashboard-intro{background:#fff;border-radius:12px;border:0.5px solid rgba(0,0,0,0.08);padding:14px 16px;margin-bottom:12px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
 .dashboard-intro h2{font-size:15px;color:#123B6D;margin-bottom:4px}
 .dashboard-intro p{font-size:11px;color:#6b7280;line-height:1.5}
@@ -191,7 +193,7 @@ body{font-family:'Segoe UI',sans-serif;background:#eef0f4;min-height:500px}
 .desafios-view.compact-load .desafios-train{height:calc(100vh - 190px);justify-content:space-between}
 @media (max-width:700px){.train-row{grid-template-columns:150px minmax(220px,1fr) 42px}.train-title{font-size:10px}.train-track{overflow-x:auto}}
 
-@media (max-width:700px){.desafios-grid{grid-template-columns:1fr}.header{align-items:flex-start}.header-actions{flex-wrap:wrap;justify-content:flex-end}}
+@media (max-width:700px){body{overflow:auto}#listView,.dashboard-view,.desafios-view{height:auto;min-height:calc(100vh - 52px)}.desafios-grid{grid-template-columns:1fr}.header{align-items:flex-start}.header-actions{flex-wrap:wrap;justify-content:flex-end}}
 
 </style>
 </head>
@@ -209,7 +211,6 @@ body{font-family:'Segoe UI',sans-serif;background:#eef0f4;min-height:500px}
     </div>
     <div class="header-actions">
       <button type="button" class="header-action-btn" id="btnPortafolio" onclick="showPortfolio()">Portafolio</button>
-      <button type="button" class="header-action-btn" id="btnDashboard" onclick="showDashboard()">Panel de estado</button>
       <button type="button" class="header-action-btn" id="btnDesafios" onclick="showDesafios()">Desafíos estratégicos</button>
     </div>
   </div>
@@ -262,9 +263,16 @@ body{font-family:'Segoe UI',sans-serif;background:#eef0f4;min-height:500px}
       </div>
 
       <div class="sep"></div>
-      <div class="view-toggle">
-        <button type="button" class="vbtn active" id="vgrid" onclick="setView('grid')">⊞</button>
-        <button type="button" class="vbtn" id="vlist" onclick="setView('list')">☰</button>
+      <div class="view-toggle" aria-label="Vistas del portafolio">
+        <button type="button" class="vbtn active" id="vgrid" onclick="setView('grid')" title="Vista de tarjetas" aria-label="Vista de tarjetas">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="2" y="2" width="5" height="5" rx=".7" stroke="currentColor"/><rect x="9" y="2" width="5" height="5" rx=".7" stroke="currentColor"/><rect x="2" y="9" width="5" height="5" rx=".7" stroke="currentColor"/><rect x="9" y="9" width="5" height="5" rx=".7" stroke="currentColor"/></svg>
+        </button>
+        <button type="button" class="vbtn" id="vlist" onclick="setView('list')" title="Vista de lista" aria-label="Vista de lista">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><line x1="4" y1="4" x2="14" y2="4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><line x1="4" y1="8" x2="14" y2="8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><line x1="4" y1="12" x2="14" y2="12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="2" cy="4" r=".8" fill="currentColor"/><circle cx="2" cy="8" r=".8" fill="currentColor"/><circle cx="2" cy="12" r=".8" fill="currentColor"/></svg>
+        </button>
+        <button type="button" class="vbtn" id="vdashboard" onclick="showDashboard()" title="Panel de estado" aria-label="Panel de estado">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="2" y="8.5" width="2.5" height="5.5" rx=".6" fill="currentColor"/><rect x="6.75" y="5.5" width="2.5" height="8.5" rx=".6" fill="currentColor"/><rect x="11.5" y="2" width="2.5" height="12" rx=".6" fill="currentColor"/></svg>
+        </button>
       </div>
       <button type="button" class="clear-link" id="clearBtn" onclick="clearAll()">✕ Limpiar filtros</button>
     </div>
@@ -277,6 +285,11 @@ body{font-family:'Segoe UI',sans-serif;background:#eef0f4;min-height:500px}
       <div>
         <h2>Panel de estado del portafolio</h2>
         <p>Lectura ejecutiva de la distribución de las 19 iniciativas por foco, etapa, desafío estratégico y continuidad.</p>
+      </div>
+      <div class="view-toggle" aria-label="Vistas del portafolio">
+        <button type="button" class="vbtn" onclick="showPortfolio();setView('grid')" title="Vista de tarjetas" aria-label="Vista de tarjetas"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="2" y="2" width="5" height="5" rx=".7" stroke="currentColor"/><rect x="9" y="2" width="5" height="5" rx=".7" stroke="currentColor"/><rect x="2" y="9" width="5" height="5" rx=".7" stroke="currentColor"/><rect x="9" y="9" width="5" height="5" rx=".7" stroke="currentColor"/></svg></button>
+        <button type="button" class="vbtn" onclick="showPortfolio();setView('list')" title="Vista de lista" aria-label="Vista de lista"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><line x1="4" y1="4" x2="14" y2="4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><line x1="4" y1="8" x2="14" y2="8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><line x1="4" y1="12" x2="14" y2="12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="2" cy="4" r=".8" fill="currentColor"/><circle cx="2" cy="8" r=".8" fill="currentColor"/><circle cx="2" cy="12" r=".8" fill="currentColor"/></svg></button>
+        <button type="button" class="vbtn active" title="Panel de estado" aria-label="Panel de estado"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="2" y="8.5" width="2.5" height="5.5" rx=".6" fill="currentColor"/><rect x="6.75" y="5.5" width="2.5" height="8.5" rx=".6" fill="currentColor"/><rect x="11.5" y="2" width="2.5" height="12" rx=".6" fill="currentColor"/></svg></button>
       </div>
     </div>
     <div class="dashboard-kpis" id="dashboardKpis"></div>
@@ -300,9 +313,13 @@ body{font-family:'Segoe UI',sans-serif;background:#eef0f4;min-height:500px}
     </div>
     <div class="desafios-toolbar">
       <div class="desafios-toolbar-title">Distribución de iniciativas por desafío: cada bloque representa una iniciativa asociada.</div>
-      <div class="desafios-toggle">
-        <button type="button" class="vbtn active" id="desafiosCardsBtn" onclick="setDesafiosView('cards')">Tarjetas</button>
-        <button type="button" class="vbtn" id="desafiosTrainBtn" onclick="setDesafiosView('train')">Carga</button>
+      <div class="desafios-toggle" aria-label="Vistas de desafíos estratégicos">
+        <button type="button" class="vbtn active" id="desafiosCardsBtn" onclick="setDesafiosView('cards')" title="Vista de tarjetas" aria-label="Vista de tarjetas">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="2" y="2" width="5" height="5" rx=".7" stroke="currentColor"/><rect x="9" y="2" width="5" height="5" rx=".7" stroke="currentColor"/><rect x="2" y="9" width="5" height="5" rx=".7" stroke="currentColor"/><rect x="9" y="9" width="5" height="5" rx=".7" stroke="currentColor"/></svg>
+        </button>
+        <button type="button" class="vbtn" id="desafiosTrainBtn" onclick="setDesafiosView('train')" title="Vista de carga" aria-label="Vista de carga">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><line x1="4" y1="4" x2="14" y2="4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><line x1="4" y1="8" x2="14" y2="8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><line x1="4" y1="12" x2="14" y2="12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="2" cy="4" r=".8" fill="currentColor"/><circle cx="2" cy="8" r=".8" fill="currentColor"/><circle cx="2" cy="12" r=".8" fill="currentColor"/></svg>
+        </button>
       </div>
     </div>
     <div class="desafios-grid" id="desafiosGrid"></div>
@@ -500,7 +517,7 @@ function clearAll(){
   updateClearBtn();render();
 }
 
-function setView(v){view=v;document.getElementById("vgrid").classList.toggle("active",v==="grid");document.getElementById("vlist").classList.toggle("active",v==="list");render();}
+function setView(v){view=v;document.getElementById("vgrid").classList.toggle("active",v==="grid");document.getElementById("vlist").classList.toggle("active",v==="list");const dashBtn=document.getElementById("vdashboard");if(dashBtn)dashBtn.classList.remove("active");render();}
 
 function getFiltered(){
   const q=document.getElementById("q").value.toLowerCase();
@@ -620,7 +637,7 @@ function openFicha(id){
   document.getElementById("dashboardView").style.display="none";
   document.getElementById("fichaView").style.display="block";
   document.getElementById("btnPortafolio").classList.toggle("active",previousView==="portfolio");
-  document.getElementById("btnDashboard").classList.toggle("active",previousView==="dashboard");
+  
   document.getElementById("btnDesafios").classList.toggle("active",previousView==="desafios");
   document.getElementById("backBtn").style.display="inline-flex";
   document.getElementById("headerTitle").textContent=f.nombre;
@@ -732,9 +749,10 @@ function showDashboard(){
   document.getElementById("backBtn").style.display="none";
   document.getElementById("headerTitle").textContent="Panel de Estado PPEE";
   document.getElementById("headerBadge").textContent="2026 · Vista ejecutiva";
-  document.getElementById("btnDashboard").classList.add("active");
+  
   document.getElementById("btnPortafolio").classList.remove("active");
   document.getElementById("btnDesafios").classList.remove("active");
+  const dashBtn=document.getElementById("vdashboard"); if(dashBtn) dashBtn.classList.add("active");
   renderDashboard();
 }
 
@@ -749,7 +767,7 @@ function showDesafios(){
   document.getElementById("headerBadge").textContent="10 desafíos clave";
   document.getElementById("btnDesafios").classList.add("active");
   document.getElementById("btnPortafolio").classList.remove("active");
-  document.getElementById("btnDashboard").classList.remove("active");
+  
   renderDesafios();
 }
 
@@ -761,8 +779,9 @@ function showPortfolio(){
   document.getElementById("backBtn").style.display="none";
   document.getElementById("headerTitle").textContent="Portafolio PPEE";
   document.getElementById("btnPortafolio").classList.add("active");
-  document.getElementById("btnDashboard").classList.remove("active");
+  
   document.getElementById("btnDesafios").classList.remove("active");
+  const dashBtn=document.getElementById("vdashboard"); if(dashBtn) dashBtn.classList.remove("active");
   render();
 }
 
