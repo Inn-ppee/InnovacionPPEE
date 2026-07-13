@@ -122,6 +122,27 @@ body{font-family:'Segoe UI',sans-serif;background:#eef0f4;min-height:500px}
 .desafio-empty{font-size:10.5px;color:#888780;background:#F5F6F8;border:0.5px dashed rgba(0,0,0,0.12);border-radius:7px;padding:7px 8px;margin-top:8px}
 .desafio-main-box{background:#EBF3FB;border:0.5px solid #B5D4F4;border-radius:8px;padding:9px 11px;font-size:12px;color:#123B6D;line-height:1.5}
 .desafio-main-box strong{display:block;font-size:13px;margin-bottom:2px}
+
+.desafios-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.desafios-toolbar-title{font-size:11px;color:#6b7280;line-height:1.4}
+.desafios-toggle{display:flex;gap:3px;background:#e9edf3;border-radius:8px;padding:3px;border:0.5px solid rgba(0,0,0,0.08)}
+.desafios-toggle .vbtn{padding:5px 10px;font-size:11px}
+.desafios-train{display:flex;flex-direction:column;gap:8px}
+.train-row{background:#fff;border-bottom:1px solid #E5EAF0;display:grid;grid-template-columns:220px minmax(0,1fr) 54px;align-items:center;gap:0;min-height:46px;padding:0;overflow:hidden}
+.train-row:first-child{border-top:1px solid #E5EAF0}
+.train-head{display:flex;align-items:center;gap:9px;min-width:0;padding:6px 12px 6px 6px}
+.train-num{width:36px;height:34px;border-radius:4px;background:#123B6D;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.train-title{font-size:11.5px;font-weight:600;color:#123B6D;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.train-track{display:flex;align-items:stretch;gap:0;min-height:34px;position:relative;flex-wrap:nowrap;overflow-x:auto;background-image:linear-gradient(to right,#DDE5ED 1px,transparent 1px),linear-gradient(to bottom,#DDE5ED 1px,transparent 1px);background-size:58px 34px;background-color:#F8FAFC;border-left:1px solid #DDE5ED;border-right:1px solid #DDE5ED}
+.train-pill{width:58px;min-width:58px;height:34px;border:none;border-radius:0;background:#1A6BAF;color:#fff;border-right:1px solid rgba(255,255,255,.55);font-size:9.5px;font-weight:700;padding:0 3px;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .12s,transform .12s}
+.train-pill:hover{background:#123B6D;transform:translateY(-1px)}
+.train-empty{width:58px;height:34px;color:#9CA3AF;font-size:16px;display:inline-flex;align-items:center;justify-content:center}
+.train-count{font-size:17px;font-weight:700;color:#123B6D;text-align:center;padding-left:8px}
+.train-count span{display:block;font-size:8.5px;font-weight:500;color:#6b7280;margin-top:-2px}
+.train-row.hot{background:#F4F9FE}
+.train-row.hot .train-pill{background:#123B6D}
+@media (max-width:700px){.train-row{grid-template-columns:150px minmax(220px,1fr) 42px}.train-title{font-size:10px}.train-track{overflow-x:auto}}
+
 @media (max-width:700px){.desafios-grid{grid-template-columns:1fr}.header{align-items:flex-start}.header-actions{flex-wrap:wrap;justify-content:flex-end}}
 
 </style>
@@ -208,6 +229,13 @@ body{font-family:'Segoe UI',sans-serif;background:#eef0f4;min-height:500px}
     <div class="desafios-intro">
       <h2>Desafíos Estratégicos PPEE</h2>
       <p>Focos de productividad, innovación y excelencia operacional para orientar el portafolio de iniciativas.</p>
+    </div>
+    <div class="desafios-toolbar">
+      <div class="desafios-toolbar-title">Distribución de iniciativas por desafío: cada bloque representa una iniciativa asociada.</div>
+      <div class="desafios-toggle">
+        <button class="vbtn active" id="desafiosCardsBtn" onclick="setDesafiosView('cards')">Tarjetas</button>
+        <button class="vbtn" id="desafiosTrainBtn" onclick="setDesafiosView('train')">Carga</button>
+      </div>
     </div>
     <div class="desafios-grid" id="desafiosGrid"></div>
   </div>
@@ -317,6 +345,7 @@ DATA.forEach(f=>{f.sponsor=SPONSORS_MAP[f.id]||"Por definir";f.gestor=GESTORES_M
 // Filter state
 const filters={foco:new Set(),desafio:new Set(),etapa:new Set(),sponsor:new Set(),tipo:new Set()};
 let view="grid";
+let desafiosView="cards";
 let openDD=null;
 
 // Build dropdown options
@@ -511,8 +540,26 @@ function openFicha(id){
 
 function renderDesafios(){
   const grid=document.getElementById("desafiosGrid");
+  const maxCarga=Math.max(...DESAFIOS.map(d=>DATA.filter(f=>f.desafio===d.id).length),1);
+  if(desafiosView==="train"){
+    grid.className="desafios-train";
+    grid.innerHTML=DESAFIOS.map(d=>{
+      const iniciativas=DATA.filter(f=>f.desafio===d.id).sort((a,b)=>a.id-b.id);
+      const hot=iniciativas.length===maxCarga&&iniciativas.length>0?" hot":"";
+      const pills=iniciativas.length
+        ? iniciativas.map(f=>`<button class="train-pill" title="${f.nombre}" onclick="openFicha(${f.id})">INN-${String(f.id).padStart(2,"0")}</button>`).join("")
+        : `<span class="train-empty" title="Sin iniciativas asociadas">—</span>`;
+      return `<div class="train-row${hot}">
+        <div class="train-head"><div class="train-num">${d.id}</div><div class="train-title">${d.nombre}</div></div>
+        <div class="train-track">${pills}</div>
+        <div class="train-count">${iniciativas.length}<span>iniciativas</span></div>
+      </div>`;
+    }).join("");
+    return;
+  }
+  grid.className="desafios-grid";
   grid.innerHTML=DESAFIOS.map(d=>{
-    const iniciativas=DATA.filter(f=>f.desafio===d.id);
+    const iniciativas=DATA.filter(f=>f.desafio===d.id).sort((a,b)=>a.id-b.id);
     const lista=iniciativas.length
       ? `<div class="desafio-list">${iniciativas.map(f=>`<div class="desafio-inn" onclick="openFicha(${f.id})"><span class="desafio-inn-id">INN-${String(f.id).padStart(2,"0")}</span><span>${f.nombre}</span></div>`).join("")}</div>`
       : `<div class="desafio-empty">Sin iniciativas asociadas en el portafolio 2026.</div>`;
@@ -521,6 +568,13 @@ function renderDesafios(){
       <div class="desafio-body">${d.final}${lista}</div>
     </div>`;
   }).join("");
+}
+
+function setDesafiosView(v){
+  desafiosView=v;
+  document.getElementById("desafiosCardsBtn").classList.toggle("active",v==="cards");
+  document.getElementById("desafiosTrainBtn").classList.toggle("active",v==="train");
+  renderDesafios();
 }
 
 function showDesafios(){
