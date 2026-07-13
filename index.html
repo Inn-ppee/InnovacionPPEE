@@ -3,814 +3,563 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Portafolio de iniciativas y desafíos estratégicos PPEE 2026">
-<title>Portafolio PPEE 2026</title>
-
+<meta name="description" content="Portal de Gestión del Portafolio de Innovación PPEE 2026">
+<title>Portal de Innovación PPEE</title>
 <style>
+:root{
+  --blue:#1A6BAF;--navy:#123B6D;--bg:#EEF1F5;--card:#fff;--muted:#6B7280;
+  --dig:#4663F0;--ind:#FF6C35;--sus:#97CB39;--undef:#8A94A3;
+  --focus:#4B5D78;--detect:#062B63;--ideate:#1774C5;--design:#3FD3CA;--pilot:#FFB900;--scale:#F23846;
+}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Segoe UI',sans-serif;background:#eef0f4;min-height:500px;overflow:hidden}
-.header{background:#1A6BAF;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px}
-.header-left{display:flex;align-items:center;gap:10px}
-.header h1{font-size:15px;font-weight:600;color:#fff}
-.header-badge{font-size:10px;background:rgba(255,255,255,0.2);color:#fff;border-radius:10px;padding:2px 8px;border:1px solid rgba(255,255,255,0.3)}
-.back-btn{display:none;align-items:center;gap:5px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:#fff;border-radius:8px;padding:5px 11px;font-size:11px;cursor:pointer;font-family:inherit}
-.back-btn:hover{background:rgba(255,255,255,0.25)}
-#listView{height:calc(100vh - 52px);display:flex;flex-direction:column;min-height:0}
-.filters-bar{background:#fff;padding:10px 16px;border-bottom:0.5px solid rgba(0,0,0,0.08);display:flex;align-items:center;gap:8px;flex-wrap:wrap;flex-shrink:0}
-.search-input{padding:6px 11px;font-size:11px;border:0.5px solid rgba(0,0,0,0.12);border-radius:7px;background:#f5f6f8;color:#1a1a1a;outline:none;width:160px;font-family:inherit}
-.filter-group{position:relative}
-.filter-trigger{display:flex;align-items:center;gap:5px;padding:5px 11px;border-radius:20px;border:1px solid rgba(0,0,0,0.12);background:#f5f6f8;cursor:pointer;font-size:11px;color:#6b7280;font-family:inherit;transition:all 0.1s}
-.filter-trigger:hover{background:#eef0f4}
-.filter-trigger.has-active{background:#EBF3FB;border-color:#B5D4F4;color:#185FA5;font-weight:500}
-.filter-trigger .count{font-size:10px;background:#185FA5;color:#fff;border-radius:8px;padding:0px 5px;font-weight:600}
-.dropdown{position:absolute;top:calc(100% + 6px);left:0;background:#fff;border:0.5px solid rgba(0,0,0,0.12);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,0.12);z-index:100;min-width:200px;padding:6px;display:none;max-height:240px;overflow-y:auto}
+html{min-height:100%;scroll-behavior:smooth}
+body{font-family:"Segoe UI",Arial,sans-serif;background:var(--bg);color:#172033;min-height:100vh;overflow-x:hidden}
+button,input{font:inherit}
+button{cursor:pointer}
+.header{position:sticky;top:0;z-index:500;background:var(--blue);padding:12px 18px;display:flex;justify-content:space-between;align-items:center;gap:12px;box-shadow:0 2px 10px rgba(18,59,109,.14)}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.back-btn{display:none;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.14);color:#fff;border-radius:8px;padding:6px 10px}
+.brand h1{font-size:16px;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.badge{font-size:10px;color:#fff;border:1px solid rgba(255,255,255,.32);background:rgba(255,255,255,.14);padding:3px 8px;border-radius:14px;white-space:nowrap}
+.nav{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}
+.nav-btn{border:1px solid rgba(255,255,255,.32);background:rgba(255,255,255,.12);color:#fff;border-radius:9px;padding:7px 11px;font-size:11px}
+.nav-btn.active,.nav-btn:hover{background:#fff;color:var(--blue)}
+.view{display:none;min-height:calc(100vh - 56px)}
+.view.active{display:block}
+.toolbar{background:#fff;border-bottom:1px solid #E3E8EF;padding:9px 14px;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.search{width:180px;padding:7px 10px;border:1px solid #D8DEE7;background:#F6F8FA;border-radius:8px;font-size:11px;outline:none}
+.filter{position:relative}
+.filter-btn{border:1px solid #D8DEE7;background:#F6F8FA;border-radius:18px;padding:6px 10px;font-size:11px;color:#657085;display:flex;align-items:center;gap:5px}
+.filter-btn.active{background:#EBF3FB;color:#185FA5;border-color:#B5D4F4;font-weight:600}
+.filter-count{background:#185FA5;color:#fff;border-radius:9px;padding:0 5px;font-size:9px}
+.dropdown{position:absolute;left:0;top:calc(100% + 5px);min-width:210px;max-height:260px;overflow:auto;background:#fff;border:1px solid #D8DEE7;border-radius:9px;box-shadow:0 10px 28px rgba(0,0,0,.14);padding:5px;display:none;z-index:600}
 .dropdown.open{display:block}
-.drop-item{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;cursor:pointer;border:none;background:none;width:100%;text-align:left;font-family:inherit;font-size:11px;color:#1a1a1a;transition:background 0.1s}
-.drop-item:hover{background:#f5f6f8}
+.drop-item{width:100%;display:flex;align-items:center;gap:7px;border:0;background:transparent;padding:7px 8px;border-radius:6px;text-align:left;font-size:11px}
+.drop-item:hover{background:#F2F5F8}
 .drop-item.selected{background:#EBF3FB;color:#185FA5}
-.drop-check{width:14px;height:14px;border-radius:3px;border:1.5px solid rgba(0,0,0,0.2);flex-shrink:0;display:flex;align-items:center;justify-content:center}
-.drop-item.selected .drop-check{background:#185FA5;border-color:#185FA5}
-.drop-search{width:100%;padding:5px 8px;font-size:11px;border:0.5px solid rgba(0,0,0,0.1);border-radius:6px;margin-bottom:4px;outline:none;font-family:inherit}
-.sep{width:1px;height:20px;background:rgba(0,0,0,0.1);flex-shrink:0}
-.view-toggle{display:flex;gap:3px;background:#f1f1f1;border-radius:7px;padding:2px}
-.vbtn{padding:4px 9px;border-radius:5px;border:none;background:none;cursor:pointer;font-size:11px;color:#6b7280;display:inline-flex;align-items:center;justify-content:center;min-width:31px;min-height:27px}
-.vbtn svg{display:block}
-.vbtn.active{background:#fff;color:#185FA5;box-shadow:0 1px 3px rgba(0,0,0,0.08)}
-.clear-link{font-size:10px;color:#185FA5;background:none;border:none;cursor:pointer;font-family:inherit;display:none;white-space:nowrap}
-.clear-link.visible{display:block}
-.stats-bar{padding:8px 16px;background:#f9fafb;border-bottom:0.5px solid rgba(0,0,0,0.06);display:flex;align-items:center;gap:10px;font-size:10px;color:#6b7280;flex-wrap:wrap;flex-shrink:0}
-.stats-bar strong{color:#1a1a1a}
-.content{padding:14px 16px;overflow-y:auto;max-height:none;flex:1;min-height:0}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px}
-.card{background:#fff;border-radius:10px;border:0.5px solid rgba(0,0,0,0.08);overflow:hidden;cursor:pointer;transition:box-shadow 0.15s,transform 0.12s}
-.card:hover{box-shadow:0 4px 16px rgba(0,0,0,0.1);transform:translateY(-2px)}
-.card-bar{height:4px}
-.card-body{padding:10px 12px 12px}
-.card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px}
-.card-id{font-size:10px;font-weight:600;color:#6b7280}
-.card-new{font-size:9px;font-weight:600;background:#EAF3DE;color:#3B6D11;border-radius:8px;padding:1px 6px}
-.card-name{font-size:12px;font-weight:500;color:#1a1a1a;line-height:1.4;margin-bottom:8px;min-height:34px}
-.card-tags{display:flex;gap:3px;flex-wrap:wrap;margin-bottom:8px}
-.tag{display:inline-flex;align-items:center;gap:2px;padding:2px 6px;border-radius:20px;font-size:9px;font-weight:500;border:1px solid}
-.tag-lg{padding:4px 10px;font-size:11px;border-width:1.5px}
-.tag-blue{background:#EBF3FB;color:#185FA5;border-color:#B5D4F4}
-.tag-amber{background:#FAEEDA;color:#854F0B;border-color:#FAC775}
-.tag-green{background:#EAF3DE;color:#3B6D11;border-color:#C0DD97}
-.tag-red{background:#FCEBEB;color:#A32D2D;border-color:#F7C1C1}
-.tag-gray{background:#F1EFE8;color:#5F5E5A;border-color:#D3D1C7}
-.tag-purple{background:#EEEDFE;color:#3C3489;border-color:#AFA9EC}
-.tag-teal{background:#E1F5EE;color:#085041;border-color:#9FE1CB}
-.tag-orange{background:#FEF0E7;color:#7A3010;border-color:#F0997B}
-.tag-dot{width:4px;height:4px;border-radius:50%;flex-shrink:0}
-.tag-stage{color:#fff;border-color:transparent;font-weight:700}
-.tag-stage-light{color:#132A44;border-color:transparent;font-weight:700}
-.card-footer{border-top:0.5px solid rgba(0,0,0,0.06);padding-top:7px;font-size:10px;color:#6b7280;display:flex;align-items:center;gap:4px}
-.tbl-wrap{background:#fff;border-radius:10px;border:0.5px solid rgba(0,0,0,0.08);overflow:hidden}
-.tbl{width:100%;border-collapse:collapse}
-.tbl th{font-size:9px;text-transform:uppercase;letter-spacing:0.06em;color:#6b7280;font-weight:600;padding:8px 12px;text-align:left;border-bottom:0.5px solid rgba(0,0,0,0.08);background:#f9fafb}
-.tbl td{padding:8px 12px;font-size:11px;color:#1a1a1a;border-bottom:0.5px solid rgba(0,0,0,0.06);cursor:pointer}
-.tbl tr:last-child td{border-bottom:none}
-.tbl tr:hover td{background:#f0f4ff}
-.ficha-view{display:none;padding:14px 16px;overflow-y:auto;max-height:430px}
-.ficha-card{background:#fff;border-radius:12px;overflow:hidden;border:0.5px solid rgba(0,0,0,0.08)}
-.fh{padding:16px 18px 14px}
-.fh-id{font-size:11px;color:rgba(255,255,255,0.65);margin-bottom:3px}
-.fh-title{font-size:17px;font-weight:600;color:#fff;line-height:1.3}
-.fh-new{display:inline-block;font-size:10px;font-weight:600;background:rgba(255,255,255,0.2);color:#fff;border:1px solid rgba(255,255,255,0.35);border-radius:10px;padding:2px 8px;margin-top:6px}
-.fb{padding:14px 18px}
-.tags-lg{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px}
-.stepper{display:flex;align-items:flex-start;margin-bottom:18px;overflow-x:auto;padding:4px 2px 8px}
-.step{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:64px}
-.step-conn{flex:1;min-width:24px;height:3px;margin-top:17px;background:#D8DEE7;border-radius:3px}
-.step-conn.done{background:var(--conn-color,#185FA5)}
-.step-circle{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;transition:transform .15s,box-shadow .15s}
-.step-circle.done{color:#fff}
-.step-circle.active{color:#fff;transform:scale(1.08);box-shadow:0 0 0 4px rgba(255,255,255,.95),0 0 0 6px var(--stage-color,#185FA5)}
-.step-circle.pending{background:#F3F5F8;color:#8A94A3;border:1px solid #D8DEE7}
-.step-lbl{font-size:9.5px;color:#6b7280;text-align:center;line-height:1.3;font-weight:600;text-transform:uppercase;white-space:nowrap}
-.step-lbl.active-lbl{color:var(--stage-color,#185FA5);font-weight:700}
-.sec{margin-bottom:14px;padding-bottom:14px;border-bottom:0.5px solid rgba(0,0,0,0.08)}
-.sec:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
-.sec-lbl{font-size:9.5px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:#6b7280;margin-bottom:7px}
-.desc{font-size:13px;color:#1a1a1a;line-height:1.7}
-.placeholder{background:#f5f6f8;border-radius:7px;padding:9px 11px;font-size:12px;color:#6b7280;font-style:italic;border:0.5px solid rgba(0,0,0,0.08)}
-.celula-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
-.cel-card{background:#f5f6f8;border-radius:7px;padding:7px 9px;border:0.5px solid rgba(0,0,0,0.08)}
-.cel-role{font-size:10px;color:#6b7280;margin-bottom:2px}
-.cel-name{font-size:11px;font-weight:600;color:#1a1a1a}
-.brecha-list{display:flex;flex-direction:column;gap:5px}
-.brecha-item{display:flex;align-items:flex-start;gap:8px;background:#FAEEDA;border:0.5px solid #FAC775;border-radius:7px;padding:8px 11px}
-.brecha-dot{width:6px;height:6px;border-radius:50%;background:#BA7517;flex-shrink:0;margin-top:4px}
-.brecha-txt{font-size:12px;color:#633806;line-height:1.55}
-.hip-block{display:flex;flex-direction:column;gap:8px}
-.hip-item{background:#f5f6f8;border-radius:8px;border:0.5px solid rgba(0,0,0,0.08);overflow:hidden}
-.hip-hdr{display:flex;align-items:flex-start;gap:8px;padding:8px 11px}
-.hip-badge{font-size:10px;font-weight:600;color:#185FA5;background:#EBF3FB;border-radius:5px;padding:2px 6px;flex-shrink:0;margin-top:1px}
-.hip-txt{font-size:12px;color:#1a1a1a;line-height:1.55}
-.kpi-row{display:flex;flex-direction:column;gap:3px;padding:0 11px 8px;margin-top:-2px}
-.kpi-pill{display:flex;align-items:flex-start;gap:6px;background:#fff;border:0.5px solid rgba(0,0,0,0.08);border-radius:6px;padding:5px 8px}
-.kpi-num{font-size:9px;font-weight:600;color:#888780;flex-shrink:0;margin-top:1px;min-width:24px}
-.kpi-txt{font-size:11px;color:#6b7280;line-height:1.45}
-.no-results{text-align:center;padding:40px;color:#6b7280;font-size:12px}
-
-.header-actions{display:flex;align-items:center;gap:8px}
-.header-action-btn{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.16);border:1px solid rgba(255,255,255,0.32);color:#fff;border-radius:8px;padding:6px 11px;font-size:11px;cursor:pointer;font-family:inherit}
-.header-action-btn:hover,.header-action-btn.active{background:#fff;color:#185FA5}
-.desafios-view{display:none;padding:12px 16px 16px;overflow-y:auto;max-height:none;height:calc(100vh - 72px)}
-.desafios-intro{background:#fff;border-radius:12px;border:0.5px solid rgba(0,0,0,0.08);padding:11px 16px;margin-bottom:8px}
-.desafios-intro h2{font-size:15px;color:#123B6D;margin-bottom:4px}
-.desafios-intro p{font-size:11px;color:#6b7280;line-height:1.5}
-.desafios-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px}
-.desafio-card{background:#fff;border-radius:10px;border:0.5px solid rgba(0,0,0,0.08);overflow:hidden}
-.desafio-head{display:flex;align-items:center;gap:9px;padding:10px 12px;background:#F7FAFD;border-bottom:0.5px solid rgba(0,0,0,0.06)}
-.desafio-num{width:34px;height:34px;border-radius:8px;background:#123B6D;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
-.desafio-title{font-size:12px;font-weight:600;color:#123B6D;line-height:1.3}
-.desafio-body{padding:10px 12px 12px;font-size:11px;color:#374151;line-height:1.58}
-
-.dashboard-view{display:none;padding:14px 16px 22px;overflow-y:auto;max-height:none;height:calc(100vh - 52px)}
-.dashboard-intro{background:#fff;border-radius:12px;border:0.5px solid rgba(0,0,0,0.08);padding:14px 16px;margin-bottom:12px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
-.dashboard-intro h2{font-size:15px;color:#123B6D;margin-bottom:4px}
-.dashboard-intro p{font-size:11px;color:#6b7280;line-height:1.5}
-.dashboard-kpis{display:grid;grid-template-columns:repeat(4,minmax(150px,1fr));gap:10px;margin-bottom:12px}
-.kpi-card{background:#fff;border-radius:10px;border:0.5px solid rgba(0,0,0,0.08);padding:12px 14px;position:relative;overflow:hidden}
-.kpi-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:#1A6BAF}
-.kpi-card .kpi-label{font-size:9.5px;text-transform:uppercase;letter-spacing:.06em;color:#6b7280;font-weight:600;margin-bottom:5px}
-.kpi-card .kpi-value{font-size:25px;line-height:1;font-weight:700;color:#123B6D}
-.kpi-card .kpi-sub{font-size:10px;color:#6b7280;margin-top:5px;line-height:1.35}
-.dashboard-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.dashboard-panel{background:#fff;border-radius:12px;border:0.5px solid rgba(0,0,0,0.08);padding:13px 14px;min-width:0}
-.dashboard-panel.wide{grid-column:1/-1}
-.panel-title{font-size:12px;font-weight:700;color:#123B6D;margin-bottom:2px}
-.panel-subtitle{font-size:9.5px;color:#6b7280;margin-bottom:11px}
-.metric-list{display:flex;flex-direction:column;gap:8px}
-.metric-row{display:grid;grid-template-columns:minmax(115px,170px) minmax(0,1fr) 30px;gap:8px;align-items:center}
-.metric-label{font-size:10.5px;color:#374151;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.metric-track{height:12px;background:#EEF1F5;border-radius:6px;overflow:hidden}
-.metric-fill{height:100%;border-radius:6px;min-width:0;transition:width .25s ease}
-.metric-value{font-size:11px;font-weight:700;color:#123B6D;text-align:right}
+.check{width:14px;height:14px;border:1.5px solid #B6BEC9;border-radius:3px;display:grid;place-items:center;flex:0 0 auto}
+.drop-item.selected .check{background:#185FA5;border-color:#185FA5;color:#fff}
+.sep{width:1px;height:23px;background:#D8DEE7}
+.toggle{display:flex;background:#EEF1F5;padding:3px;border-radius:9px;gap:3px}
+.icon-btn{width:33px;height:29px;border:0;background:transparent;border-radius:7px;color:#647084;display:grid;place-items:center}
+.icon-btn.active,.icon-btn:hover{background:#fff;color:#185FA5;box-shadow:0 1px 4px rgba(0,0,0,.1)}
+.clear{border:0;background:transparent;color:#185FA5;font-size:10px;display:none}
+.clear.show{display:inline}
+.stats{background:#FAFBFC;border-bottom:1px solid #E7EBF0;padding:7px 14px;color:#6B7280;font-size:10px;display:flex;gap:12px;flex-wrap:wrap}
+.stats strong{color:#172033}
+.content{padding:13px 14px 26px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:10px}
+.card{background:#fff;border:1px solid #E2E7ED;border-radius:11px;overflow:hidden;transition:.15s;cursor:pointer}
+.card:hover{transform:translateY(-2px);box-shadow:0 5px 18px rgba(18,59,109,.1)}
+.card-bar{height:5px}
+.card-body{padding:11px 12px}
+.card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.card-id{font-size:10px;color:#687488;font-weight:700}
+.new{font-size:9px;color:#3B6D11;background:#EAF3DE;padding:2px 6px;border-radius:8px;font-weight:700}
+.card-name{font-size:12px;line-height:1.4;font-weight:650;min-height:34px;margin-bottom:8px}
+.tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px}
+.tag{font-size:9px;border-radius:15px;padding:3px 7px;border:1px solid;display:inline-flex;align-items:center;gap:4px;font-weight:600}
+.dot{width:5px;height:5px;border-radius:50%}
+.challenge-tag{background:#EBF3FB;border-color:#B5D4F4;color:#185FA5}
+.status-tag{background:#EAF3DE;border-color:#C0DD97;color:#3B6D11}
+.undefined-tag{background:#F1F3F5;border-color:#D4D8DE;color:#697386}
+.card-footer{border-top:1px solid #EEF1F4;padding-top:7px;font-size:10px;color:#6B7280}
+.table-wrap{background:#fff;border:1px solid #E2E7ED;border-radius:11px;overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+th{font-size:9px;text-transform:uppercase;letter-spacing:.05em;color:#687488;background:#FAFBFC;padding:9px 11px;text-align:left;border-bottom:1px solid #E2E7ED;white-space:nowrap}
+td{font-size:11px;padding:8px 11px;border-bottom:1px solid #EEF1F4;white-space:nowrap}
+tbody tr:hover td{background:#F2F7FC}
+.dashboard{padding:13px 14px 28px}
+.intro{background:#fff;border:1px solid #E2E7ED;border-radius:12px;padding:13px 15px;margin-bottom:11px}
+.intro h2{font-size:16px;color:var(--navy);margin-bottom:3px}
+.intro p{font-size:11px;color:#687488;line-height:1.45}
+.kpis{display:grid;grid-template-columns:repeat(5,minmax(135px,1fr));gap:9px;margin-bottom:11px}
+.kpi{background:#fff;border:1px solid #E2E7ED;border-radius:10px;padding:11px 12px;position:relative;overflow:hidden}
+.kpi:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--blue)}
+.kpi-label{font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:#687488;font-weight:700}
+.kpi-value{font-size:25px;color:var(--navy);font-weight:800;line-height:1.15;margin-top:4px}
+.kpi-sub{font-size:9.5px;color:#7C8797;margin-top:3px}
+.section{background:#fff;border:1px solid #E2E7ED;border-radius:12px;padding:13px 14px;margin-bottom:11px}
+.section-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px}
+.section-title{font-size:13px;color:var(--navy);font-weight:800}
+.section-sub{font-size:9.5px;color:#758094;margin-top:2px}
+.focus-grid{display:grid;grid-template-columns:repeat(4,minmax(190px,1fr));gap:9px}
+.focus-card{border-radius:14px;overflow:hidden;border:1px solid;cursor:pointer;transition:.15s}
+.focus-card:hover{transform:translateY(-2px);box-shadow:0 5px 15px rgba(0,0,0,.08)}
+.focus-head{color:#fff;padding:12px 13px;text-align:center;font-size:12px;font-weight:800}
+.focus-body{background:#fff;margin:0 6px 6px;border-radius:10px;padding:10px 11px;min-height:158px}
+.focus-count{text-align:center;font-size:30px;font-weight:800;line-height:1}
+.focus-count small{display:block;font-size:9px;color:#6B7280;margin-top:3px;font-weight:600}
+.focus-def{font-size:9.4px;color:#667085;line-height:1.45;margin:9px 0;border-top:1px solid #E7EBEF;padding-top:8px}
+.focus-meta{font-size:9px;color:#6B7280;line-height:1.5}
+.two-col{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.panel{background:#fff;border:1px solid #E2E7ED;border-radius:12px;padding:13px 14px}
+.panel h3{font-size:12px;color:var(--navy);margin-bottom:2px}
+.panel-note{font-size:9.5px;color:#758094;margin-bottom:10px}
+.metric{display:grid;grid-template-columns:145px minmax(0,1fr) 42px;gap:8px;align-items:center;margin:8px 0}
+.metric-label{font-size:10px;color:#465266}
+.track{height:13px;background:#EDF1F5;border-radius:7px;overflow:hidden}
+.fill{height:100%;border-radius:7px}
+.metric-val{font-size:10px;text-align:right;font-weight:700;color:var(--navy)}
+.theory-box{background:#F7F9FB;border:1px solid #E4E8ED;border-radius:9px;padding:9px;margin-top:9px;font-size:9px;color:#677286;line-height:1.45}
+.funnel-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}
+.funnel-col h4{text-align:center;font-size:10px;color:#687488;margin-bottom:7px}
+.funnel{display:flex;flex-direction:column;align-items:center;gap:4px}
+.funnel-bar{height:26px;color:#fff;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;border-radius:3px}
+.health-grid{display:grid;grid-template-columns:repeat(5,minmax(120px,1fr));gap:8px}
+.health{background:#F9FAFB;border:1px solid #E5E9EE;border-radius:9px;padding:9px}
+.health-top{display:flex;justify-content:space-between;gap:5px;align-items:flex-start}
+.health-name{font-size:9.5px;font-weight:700;color:#3F4A5A}
+.health-state{font-size:8px;padding:2px 5px;border-radius:10px;font-weight:700}
+.good{background:#EAF3DE;color:#3B6D11}.warn{background:#FAEEDA;color:#854F0B}.risk{background:#FCEBEB;color:#A32D2D}
+.health-value{font-size:20px;color:var(--navy);font-weight:800;margin-top:5px}
+.health-desc{font-size:8.7px;color:#758094;line-height:1.35;margin-top:3px}
+.health-track{height:5px;background:#E5E9EE;border-radius:5px;margin-top:7px;overflow:hidden}
+.health-fill{height:100%}
+.benefit-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.benefit{border:1px solid #E1E6EC;border-radius:10px;padding:10px}
+.benefit-code{font-size:25px;font-weight:900}
+.benefit h4{font-size:10px;margin:3px 0}
+.benefit p{font-size:8.8px;color:#697386;line-height:1.4}
 .challenge-load{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px}
-.challenge-cell{border:0.5px solid rgba(0,0,0,.08);background:#F8FAFC;border-radius:8px;padding:8px;min-height:68px}
-.challenge-cell .challenge-id{font-size:10px;font-weight:700;color:#123B6D}
-.challenge-cell .challenge-count{font-size:20px;font-weight:700;color:#1A6BAF;line-height:1.1;margin:3px 0 1px}
-.challenge-cell .challenge-name{font-size:8.8px;color:#6b7280;line-height:1.25}
-.focus-legend{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
-.focus-chip{display:inline-flex;align-items:center;gap:5px;font-size:9.5px;color:#374151}
-.focus-chip i{width:8px;height:8px;border-radius:2px;display:inline-block}
-@media (max-width:850px){.dashboard-kpis{grid-template-columns:repeat(2,minmax(140px,1fr))}.challenge-load{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media (max-width:700px){.dashboard-grid{grid-template-columns:1fr}.dashboard-panel.wide{grid-column:auto}.metric-row{grid-template-columns:105px minmax(0,1fr) 25px}}
-
-.desafio-list{margin-top:10px;border-top:0.5px solid rgba(0,0,0,0.07);padding-top:8px;display:flex;flex-direction:column;gap:5px}
-.desafio-inn{display:flex;gap:6px;align-items:flex-start;background:#F5F7FA;border:0.5px solid rgba(0,0,0,0.06);border-radius:7px;padding:6px 8px;font-size:10.5px;color:#374151;line-height:1.35}
-.desafio-inn-id{font-weight:700;color:#123B6D;flex-shrink:0}
-.desafio-empty{font-size:10.5px;color:#888780;background:#F5F6F8;border:0.5px dashed rgba(0,0,0,0.12);border-radius:7px;padding:7px 8px;margin-top:8px}
-.desafio-main-box{background:#EBF3FB;border:0.5px solid #B5D4F4;border-radius:8px;padding:9px 11px;font-size:12px;color:#123B6D;line-height:1.5}
-.desafio-main-box strong{display:block;font-size:13px;margin-bottom:2px}
-
-.desafios-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px;flex-wrap:wrap}
-.desafios-toolbar-title{font-size:11px;color:#6b7280;line-height:1.4}
-.desafios-toggle{display:flex;gap:3px;background:#e9edf3;border-radius:8px;padding:3px;border:0.5px solid rgba(0,0,0,0.08)}
-.desafios-toggle .vbtn{padding:5px 10px;font-size:11px}
-.desafios-train{display:flex;flex-direction:column;gap:5px}
-.train-row{background:#fff;border:1px solid #E5EAF0;display:grid;grid-template-columns:220px minmax(0,1fr) 54px;align-items:center;gap:0;min-height:40px;height:40px;padding:0;overflow:hidden}
-.train-row:first-child{border-top:1px solid #E5EAF0}
-.train-head{display:flex;align-items:center;gap:8px;min-width:0;padding:3px 10px 3px 5px}
-.train-num{width:34px;height:32px;border-radius:4px;background:#123B6D;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
-.train-title{font-size:11.5px;font-weight:600;color:#123B6D;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.train-track{display:flex;align-items:stretch;gap:0;min-height:32px;height:32px;position:relative;flex-wrap:nowrap;overflow-x:auto;background-image:linear-gradient(to right,#DDE5ED 1px,transparent 1px),linear-gradient(to bottom,#DDE5ED 1px,transparent 1px);background-size:58px 32px;background-color:#F8FAFC;border-left:1px solid #DDE5ED;border-right:1px solid #DDE5ED}
-.train-pill{width:58px;min-width:58px;height:32px;border:none;border-radius:0;background:#1A6BAF;color:#fff;border-right:1px solid rgba(255,255,255,.55);font-size:9.5px;font-weight:700;padding:0 3px;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .12s,transform .12s}
-.train-pill:hover{background:#123B6D;transform:translateY(-1px)}
-.train-empty{width:58px;height:32px;color:#9CA3AF;font-size:16px;display:inline-flex;align-items:center;justify-content:center}
-.train-count{font-size:17px;font-weight:700;color:#123B6D;text-align:center;padding-left:8px}
-.train-count span{display:block;font-size:8.5px;font-weight:500;color:#6b7280;margin-top:-2px}
-.train-row.hot{background:#F4F9FE}
-.train-row.hot .train-pill{background:#123B6D}
-
-.desafios-view.compact-load{overflow:hidden}
-.desafios-view.compact-load .desafios-intro{padding:8px 14px;margin-bottom:6px}
-.desafios-view.compact-load .desafios-intro h2{font-size:14px;margin-bottom:2px}
-.desafios-view.compact-load .desafios-intro p{font-size:10px}
-.desafios-view.compact-load .desafios-toolbar{margin-bottom:6px}
-.desafios-view.compact-load .desafios-train{height:calc(100vh - 190px);justify-content:space-between}
-@media (max-width:700px){.train-row{grid-template-columns:150px minmax(220px,1fr) 42px}.train-title{font-size:10px}.train-track{overflow-x:auto}}
-
-@media (max-width:700px){body{overflow:auto}#listView,.dashboard-view,.desafios-view{height:auto;min-height:calc(100vh - 52px)}.desafios-grid{grid-template-columns:1fr}.header{align-items:flex-start}.header-actions{flex-wrap:wrap;justify-content:flex-end}}
-
+.challenge-cell{background:#F8FAFC;border:1px solid #E1E6EC;border-radius:8px;padding:8px;min-height:68px}
+.challenge-id{font-size:10px;color:var(--navy);font-weight:800}
+.challenge-count{font-size:21px;color:var(--blue);font-weight:800}
+.challenge-name{font-size:8.7px;color:#697386}
+.desafios{padding:12px 14px 28px}
+.desafios-toolbar{display:flex;justify-content:space-between;align-items:center;margin:8px 0;gap:9px}
+.desafios-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(285px,1fr));gap:9px}
+.desafio-card{background:#fff;border:1px solid #E1E6EC;border-radius:11px;overflow:hidden}
+.desafio-head{background:#F7FAFD;border-bottom:1px solid #E5EAF0;padding:10px;display:flex;gap:8px;align-items:center}
+.desafio-id{width:36px;height:36px;border-radius:8px;background:var(--navy);color:#fff;display:grid;place-items:center;font-size:11px;font-weight:800}
+.desafio-title{font-size:12px;color:var(--navy);font-weight:800}
+.desafio-body{padding:10px 11px;font-size:10px;color:#4B5563;line-height:1.5}
+.inn-list{margin-top:8px;border-top:1px solid #E8ECF0;padding-top:7px;display:flex;flex-direction:column;gap:4px}
+.inn-item{background:#F5F7FA;border-radius:6px;padding:5px 7px;font-size:9.5px;display:flex;gap:5px;cursor:pointer}
+.inn-item strong{color:var(--navy)}
+.load-view{display:flex;flex-direction:column;gap:5px}
+.load-row{background:#fff;border:1px solid #E1E6EC;display:grid;grid-template-columns:270px minmax(0,1fr) 55px;min-height:40px;align-items:center}
+.load-label{padding:3px 8px;display:flex;align-items:center;gap:8px;min-width:0}
+.load-label .desafio-id{width:38px;height:32px;border-radius:5px}
+.load-label span{font-size:11px;color:var(--navy);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.load-track{height:32px;display:flex;align-items:stretch;background-color:#F8FAFC;background-image:linear-gradient(to right,#DDE5ED 1px,transparent 1px);background-size:62px 32px;border-left:1px solid #DDE5ED;border-right:1px solid #DDE5ED;overflow-x:auto}
+.load-block{width:62px;min-width:62px;border:0;border-right:1px solid rgba(255,255,255,.6);background:var(--blue);color:#fff;font-size:9.5px;font-weight:800}
+.load-empty{width:62px;display:grid;place-items:center;color:#A1A9B4}
+.load-count{text-align:center;color:var(--navy);font-size:16px;font-weight:800}
+.load-count small{display:block;font-size:8px;color:#687488;font-weight:500}
+.centros{padding:12px 14px 28px}
+.centers-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:9px;margin-bottom:11px}
+.center-card{background:#fff;border:1px solid #E1E6EC;border-radius:11px;padding:11px;cursor:pointer;transition:.15s}
+.center-card:hover{transform:translateY(-2px);box-shadow:0 5px 15px rgba(0,0,0,.08)}
+.center-icon{width:34px;height:34px;border-radius:9px;background:#EBF3FB;color:#185FA5;display:grid;place-items:center;font-size:18px}
+.center-name{font-size:11px;font-weight:800;color:var(--navy);margin-top:7px}
+.center-count{font-size:22px;color:var(--blue);font-weight:800;margin-top:3px}
+.center-count small{font-size:9px;color:#6B7280;font-weight:600}
+.matrix-wrap{background:#fff;border:1px solid #E1E6EC;border-radius:11px;overflow:auto}
+.matrix th,.matrix td{text-align:center;min-width:105px}
+.matrix th:first-child,.matrix td:first-child{text-align:left;position:sticky;left:0;background:#fff;z-index:2;min-width:280px}
+.matrix th:first-child{background:#FAFBFC;z-index:3}
+.deploy{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;color:#fff;font-size:10px;font-weight:800}
+.deploy.active{background:#3C9B80}.deploy.pilot{background:#E5A400}.deploy.plan{background:#2176B9}
+.legend{display:flex;gap:10px;flex-wrap:wrap;font-size:9px;color:#687488;margin-top:8px}
+.legend span{display:flex;align-items:center;gap:4px}
+.ficha{padding:13px 14px 30px}
+.ficha-card{background:#fff;border:1px solid #E1E6EC;border-radius:12px;overflow:hidden}
+.ficha-head{padding:17px 18px;color:#fff}
+.ficha-head small{opacity:.75;font-size:10px}
+.ficha-head h2{font-size:18px;line-height:1.3;margin-top:3px}
+.ficha-body{padding:14px 17px}
+.stepper{display:flex;align-items:flex-start;overflow-x:auto;padding:5px 2px 10px;margin-bottom:14px}
+.step{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:68px}
+.step-circle{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-size:10px;font-weight:800}
+.conn{height:3px;flex:1;min-width:24px;background:#D7DEE7;margin-top:17px}
+.step-label{font-size:8.7px;font-weight:700;text-transform:uppercase;color:#758094}
+.ficha-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.info{background:#F7F9FB;border:1px solid #E4E8ED;border-radius:8px;padding:8px}
+.info-label{font-size:8.5px;text-transform:uppercase;letter-spacing:.06em;color:#758094;font-weight:700}
+.info-value{font-size:11px;color:#263244;font-weight:700;margin-top:3px;line-height:1.35}
+.sec{padding:13px 0;border-bottom:1px solid #E8ECF0}
+.sec:last-child{border-bottom:0}
+.sec h3{font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:#687488;margin-bottom:7px}
+.sec p{font-size:12px;line-height:1.65;color:#263244}
+.library{padding:12px 14px 28px}
+.library-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:10px}
+.library-card{background:#fff;border:1px solid #E1E6EC;border-radius:12px;padding:13px}
+.library-card h3{font-size:13px;color:var(--navy);margin-bottom:5px}
+.library-card p{font-size:10px;color:#596579;line-height:1.55}
+.focus-definition{border-left:5px solid;padding-left:10px;margin-top:9px}
+.method-row{display:grid;grid-template-columns:90px 1fr;gap:8px;align-items:center;margin:7px 0}
+.method-pill{color:#fff;border-radius:14px;padding:5px 8px;text-align:center;font-size:9px;font-weight:800}
+.empty{padding:35px;text-align:center;color:#758094;font-size:11px}
+@media(max-width:1100px){.kpis{grid-template-columns:repeat(3,1fr)}.focus-grid{grid-template-columns:repeat(2,1fr)}.health-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:780px){.header{align-items:flex-start}.nav{max-width:55%}.two-col{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}.focus-grid{grid-template-columns:1fr}.health-grid{grid-template-columns:1fr}.benefit-grid{grid-template-columns:1fr}.challenge-load{grid-template-columns:repeat(2,1fr)}.load-row{grid-template-columns:155px minmax(220px,1fr) 45px}.ficha-grid{grid-template-columns:1fr}.matrix th:first-child,.matrix td:first-child{min-width:220px}}
 </style>
 </head>
 <body>
-
-<div id="app">
-  <div class="header">
-    <div class="header-left">
-      <button type="button" class="back-btn" id="backBtn" onclick="goBack()">
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><polyline points="8,2 4,6 8,10" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        Volver
-      </button>
-      <h1 id="headerTitle">Portafolio PPEE</h1>
-      <span class="header-badge" id="headerBadge">2026 · 19 iniciativas</span>
-    </div>
-    <div class="header-actions">
-      <button type="button" class="header-action-btn" id="btnPortafolio" onclick="showPortfolio()">Portafolio</button>
-      <button type="button" class="header-action-btn" id="btnDesafios" onclick="showDesafios()">Desafíos estratégicos</button>
-    </div>
+<header class="header">
+  <div class="brand">
+    <button id="backBtn" class="back-btn" onclick="goBack()">← Volver</button>
+    <h1 id="headerTitle">Portal de Innovación PPEE</h1>
+    <span class="badge" id="headerBadge">2026 · 19 iniciativas</span>
   </div>
+  <nav class="nav">
+    <button class="nav-btn active" id="navPortfolio" onclick="showView('portfolio')">Portafolio</button>
+    <button class="nav-btn" id="navChallenges" onclick="showView('challenges')">Desafíos estratégicos</button>
+    <button class="nav-btn" id="navLibrary" onclick="showView('library')">Biblioteca estratégica</button>
+  </nav>
+</header>
 
-  <div id="listView">
-    <div class="filters-bar">
-      <input class="search-input" id="q" placeholder="Buscar…" oninput="render()">
-      <div class="sep"></div>
-
-      <!-- Foco dropdown -->
-      <div class="filter-group" id="grp-foco">
-        <button type="button" class="filter-trigger" id="trig-foco" onclick="toggleDropdown('foco')">
-          Foco <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><polyline points="2,3.5 5,6.5 8,3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
-        <div class="dropdown" id="dd-foco"></div>
-      </div>
-
-      <!-- Desafío estratégico dropdown -->
-      <div class="filter-group" id="grp-desafio">
-        <button type="button" class="filter-trigger" id="trig-desafio" onclick="toggleDropdown('desafio')">
-          Desafío <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><polyline points="2,3.5 5,6.5 8,3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
-        <div class="dropdown" id="dd-desafio"></div>
-      </div>
-
-      <!-- Etapa dropdown -->
-      <div class="filter-group" id="grp-etapa">
-        <button type="button" class="filter-trigger" id="trig-etapa" onclick="toggleDropdown('etapa')">
-          Etapa <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><polyline points="2,3.5 5,6.5 8,3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
-        <div class="dropdown" id="dd-etapa"></div>
-      </div>
-
-      <!-- Sponsor dropdown -->
-      <div class="filter-group" id="grp-sponsor">
-        <button type="button" class="filter-trigger" id="trig-sponsor" onclick="toggleDropdown('sponsor')">
-          Sponsor <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><polyline points="2,3.5 5,6.5 8,3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
-        <div class="dropdown" id="dd-sponsor">
-          <input class="drop-search" id="sponsor-search" placeholder="Buscar sponsor…" oninput="filterDropdownItems('sponsor')" onclick="event.stopPropagation()">
-        </div>
-      </div>
-
-      <!-- Tipo dropdown -->
-      <div class="filter-group" id="grp-tipo">
-        <button type="button" class="filter-trigger" id="trig-tipo" onclick="toggleDropdown('tipo')">
-          Tipo <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><polyline points="2,3.5 5,6.5 8,3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
-        <div class="dropdown" id="dd-tipo"></div>
-      </div>
-
-      <div class="sep"></div>
-      <div class="view-toggle" aria-label="Vistas del portafolio">
-        <button type="button" class="vbtn active" id="vgrid" onclick="setView('grid')" title="Vista de tarjetas" aria-label="Vista de tarjetas">
-          <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="2" y="2" width="5" height="5" rx=".7" stroke="currentColor"/><rect x="9" y="2" width="5" height="5" rx=".7" stroke="currentColor"/><rect x="2" y="9" width="5" height="5" rx=".7" stroke="currentColor"/><rect x="9" y="9" width="5" height="5" rx=".7" stroke="currentColor"/></svg>
-        </button>
-        <button type="button" class="vbtn" id="vlist" onclick="setView('list')" title="Vista de lista" aria-label="Vista de lista">
-          <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><line x1="4" y1="4" x2="14" y2="4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><line x1="4" y1="8" x2="14" y2="8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><line x1="4" y1="12" x2="14" y2="12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="2" cy="4" r=".8" fill="currentColor"/><circle cx="2" cy="8" r=".8" fill="currentColor"/><circle cx="2" cy="12" r=".8" fill="currentColor"/></svg>
-        </button>
-        <button type="button" class="vbtn" id="vdashboard" onclick="showDashboard()" title="Panel de estado" aria-label="Panel de estado">
-          <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="2" y="8.5" width="2.5" height="5.5" rx=".6" fill="currentColor"/><rect x="6.75" y="5.5" width="2.5" height="8.5" rx=".6" fill="currentColor"/><rect x="11.5" y="2" width="2.5" height="12" rx=".6" fill="currentColor"/></svg>
-        </button>
-      </div>
-      <button type="button" class="clear-link" id="clearBtn" onclick="clearAll()">✕ Limpiar filtros</button>
+<section id="portfolioView" class="view active">
+  <div class="toolbar">
+    <input id="search" class="search" placeholder="Buscar iniciativa…" oninput="renderPortfolio()">
+    <div class="sep"></div>
+    <div class="filter"><button class="filter-btn" id="focusBtn" onclick="toggleDD('focus')">Foco ▾</button><div class="dropdown" id="focusDD"></div></div>
+    <div class="filter"><button class="filter-btn" id="challengeBtn" onclick="toggleDD('challenge')">Desafío ▾</button><div class="dropdown" id="challengeDD"></div></div>
+    <div class="filter"><button class="filter-btn" id="stageBtn" onclick="toggleDD('stage')">Etapa ▾</button><div class="dropdown" id="stageDD"></div></div>
+    <div class="filter"><button class="filter-btn" id="sponsorBtn" onclick="toggleDD('sponsor')">Sponsor ▾</button><div class="dropdown" id="sponsorDD"></div></div>
+    <div class="sep"></div>
+    <div class="toggle">
+      <button class="icon-btn active" id="gridBtn" title="Tarjetas" onclick="setPortfolioMode('grid')">⊞</button>
+      <button class="icon-btn" id="listBtn" title="Lista" onclick="setPortfolioMode('list')">☰</button>
+      <button class="icon-btn" id="dashBtn" title="Panel de estado" onclick="setPortfolioMode('dashboard')">▦</button>
+      <button class="icon-btn" id="centersBtn" title="Centros de trabajo" onclick="setPortfolioMode('centers')">⌂</button>
     </div>
-    <div class="stats-bar" id="statsBar"></div>
-    <div class="content" id="content"></div>
+    <button id="clearBtn" class="clear" onclick="clearFilters()">✕ Limpiar filtros</button>
   </div>
-
-  <div class="dashboard-view" id="dashboardView">
-    <div class="dashboard-intro">
-      <div>
-        <h2>Panel de estado del portafolio</h2>
-        <p>Lectura ejecutiva de la distribución de las 19 iniciativas por foco, etapa, desafío estratégico y continuidad.</p>
-      </div>
-      <div class="view-toggle" aria-label="Vistas del portafolio">
-        <button type="button" class="vbtn" onclick="showPortfolio();setView('grid')" title="Vista de tarjetas" aria-label="Vista de tarjetas"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="2" y="2" width="5" height="5" rx=".7" stroke="currentColor"/><rect x="9" y="2" width="5" height="5" rx=".7" stroke="currentColor"/><rect x="2" y="9" width="5" height="5" rx=".7" stroke="currentColor"/><rect x="9" y="9" width="5" height="5" rx=".7" stroke="currentColor"/></svg></button>
-        <button type="button" class="vbtn" onclick="showPortfolio();setView('list')" title="Vista de lista" aria-label="Vista de lista"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><line x1="4" y1="4" x2="14" y2="4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><line x1="4" y1="8" x2="14" y2="8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><line x1="4" y1="12" x2="14" y2="12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="2" cy="4" r=".8" fill="currentColor"/><circle cx="2" cy="8" r=".8" fill="currentColor"/><circle cx="2" cy="12" r=".8" fill="currentColor"/></svg></button>
-        <button type="button" class="vbtn active" title="Panel de estado" aria-label="Panel de estado"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="2" y="8.5" width="2.5" height="5.5" rx=".6" fill="currentColor"/><rect x="6.75" y="5.5" width="2.5" height="8.5" rx=".6" fill="currentColor"/><rect x="11.5" y="2" width="2.5" height="12" rx=".6" fill="currentColor"/></svg></button>
-      </div>
+  <div id="stats" class="stats"></div>
+  <div id="portfolioContent" class="content"></div>
+  <div id="dashboardContent" class="dashboard" style="display:none"></div>
+  <div id="centersContent" class="centros" style="display:none">
+    <div class="intro">
+      <h2>Iniciativas por Centros de Trabajo</h2>
+      <p>Vista de cobertura y despliegue del portafolio. La matriz utiliza únicamente los centros y asociaciones configurados en el código.</p>
     </div>
-    <div class="dashboard-kpis" id="dashboardKpis"></div>
-    <div class="dashboard-grid">
-      <div class="dashboard-panel"><div class="panel-title">Iniciativas por foco</div><div class="panel-subtitle">Identidad principal de las iniciativas</div><div class="metric-list" id="focusMetrics"></div><div class="focus-legend" id="focusLegend"></div></div>
-      <div class="dashboard-panel"><div class="panel-title">Iniciativas por etapa</div><div class="panel-subtitle">Madurez dentro del método de innovación</div><div class="metric-list" id="stageMetrics"></div></div>
-      <div class="dashboard-panel"><div class="panel-title">Continuidad del portafolio</div><div class="panel-subtitle">Iniciativas nuevas 2026 y continuidad 2025</div><div class="metric-list" id="typeMetrics"></div></div>
-      <div class="dashboard-panel"><div class="panel-title">Carga por sponsor</div><div class="panel-subtitle">Cantidad de iniciativas asociadas a cada sponsor</div><div class="metric-list" id="sponsorMetrics"></div></div>
-      <div class="dashboard-panel wide"><div class="panel-title">Carga por desafío estratégico</div><div class="panel-subtitle">Cantidad de iniciativas asociadas a cada desafío PPEE</div><div class="challenge-load" id="challengeMetrics"></div></div>
-    </div>
+    <div id="centerCards" class="centers-cards"></div>
+    <div id="centerMatrix"></div>
   </div>
+</section>
 
-  <div class="ficha-view" id="fichaView">
-    <div class="ficha-card" id="fichaContent"></div>
-  </div>
-
-  <div class="desafios-view" id="desafiosView">
-    <div class="desafios-intro">
-      <h2>Desafíos Estratégicos PPEE</h2>
-      <p>Focos de productividad, innovación y excelencia operacional para orientar el portafolio de iniciativas.</p>
-    </div>
+<section id="challengesView" class="view">
+  <div class="desafios">
+    <div class="intro"><h2>Desafíos Estratégicos PPEE</h2><p>Desafíos estratégicos de Proyectos Especiales 2025–2028 y distribución de iniciativas asociadas.</p></div>
     <div class="desafios-toolbar">
-      <div class="desafios-toolbar-title">Distribución de iniciativas por desafío: cada bloque representa una iniciativa asociada.</div>
-      <div class="desafios-toggle" aria-label="Vistas de desafíos estratégicos">
-        <button type="button" class="vbtn active" id="desafiosCardsBtn" onclick="setDesafiosView('cards')" title="Vista de tarjetas" aria-label="Vista de tarjetas">
-          <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="2" y="2" width="5" height="5" rx=".7" stroke="currentColor"/><rect x="9" y="2" width="5" height="5" rx=".7" stroke="currentColor"/><rect x="2" y="9" width="5" height="5" rx=".7" stroke="currentColor"/><rect x="9" y="9" width="5" height="5" rx=".7" stroke="currentColor"/></svg>
-        </button>
-        <button type="button" class="vbtn" id="desafiosTrainBtn" onclick="setDesafiosView('train')" title="Vista de carga" aria-label="Vista de carga">
-          <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><line x1="4" y1="4" x2="14" y2="4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><line x1="4" y1="8" x2="14" y2="8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><line x1="4" y1="12" x2="14" y2="12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="2" cy="4" r=".8" fill="currentColor"/><circle cx="2" cy="8" r=".8" fill="currentColor"/><circle cx="2" cy="12" r=".8" fill="currentColor"/></svg>
-        </button>
+      <span style="font-size:10px;color:#687488">Cada bloque representa una iniciativa asociada al desafío.</span>
+      <div class="toggle">
+        <button id="challengeCardsBtn" class="icon-btn active" title="Tarjetas" onclick="setChallengeMode('cards')">⊞</button>
+        <button id="challengeLoadBtn" class="icon-btn" title="Carga" onclick="setChallengeMode('load')">☰</button>
       </div>
     </div>
-    <div class="desafios-grid" id="desafiosGrid"></div>
+    <div id="challengeContent"></div>
   </div>
-</div>
+</section>
+
+
+<section id="libraryView" class="view">
+  <div class="library">
+    <div class="intro"><h2>Biblioteca Estratégica</h2><p>Definiciones que estructuran la gestión del portafolio: focos, método, tipos de innovación y tipos de beneficio.</p></div>
+    <div id="libraryContent" class="library-grid"></div>
+  </div>
+</section>
+
+<section id="fichaView" class="view">
+  <div class="ficha"><div id="fichaContent"></div></div>
+</section>
 
 <script>
-const STEPS=["Enfocar","Detectar","Idear","Diseñar","Pilotear","Escalar"];
-const ETAPA_STEP={"Enfocar":0,"Detectar":1,"Idear":2,"Diseñar":3,"Pilotear":4,"Escalar":5,"I+D":-1};
-const ETAPA_HEX={
-  "Enfocar":"#4B5D78",
-  "Detectar":"#002B5C",
-  "Idear":"#1676C4",
-  "Diseñar":"#3DD5CB",
-  "Pilotear":"#FFB800",
-  "Escalar":"#F43645",
-  "I+D":"#6B5DD3"
+const FOCUS_DEFS={
+  "Digitalización":"Aplicación de herramientas digitales para gestionar la complejidad, aumentar la trazabilidad y tomar decisiones en tiempo real. En PPEE se traduce en BIM, 4D y 6D, tablets en obra, plataformas colaborativas y gemelos digitales.",
+  "Industrialización":"Estrategia para mejorar la productividad, reducir plazos y optimizar recursos mediante prefabricados, módulos estandarizados y montajes eficientes, incorporando planificación temprana y metodologías como DfMA.",
+  "Sostenibilidad":"Integración de criterios ambientales, sociales y operacionales en el diseño y ejecución de proyectos, combinando eficiencia técnica, bajo impacto ambiental, circularidad y valor para clientes.",
+  "Por definir":"Iniciativas cuyo foco de innovación aún debe ser validado y formalizado."
 };
-const ETAPA_TEXTO={"Diseñar":"#123B4A","Pilotear":"#27364A"};
-const FOCO_COLOR={"Digitalización":"blue","Sostenibilidad":"teal","Industrialización":"orange"};
-const ESTADO_COLOR={"ACTIVA":"green","PAUSA":"red"};
-const DOTS={blue:"#185FA5",amber:"#BA7517",green:"#3B6D11",red:"#A32D2D",gray:"#5F5E5A",purple:"#3C3489",teal:"#085041",orange:"#C04A10"};
-const BAR={"Digitalización":"#1A6BAF","Sostenibilidad":"#0F6E56","Industrialización":"#C25E1A","—":"#9CA3AF"};
-const HDR={"Digitalización":"#1A6BAF","Sostenibilidad":"#0F6E56","Industrialización":"#C25E1A","—":"#4B5563"};
-
-const DESAFIOS=[
-  {id:"D1",nombre:"Mano de Obra",final:"¿Cómo podríamos atraer, retener y estabilizar la mano de obra directa e indirecta calificada para asegurar productividad y calidad en los proyectos de construcción?"},
-  {id:"D2",nombre:"Gobierno de Datos",final:"¿Cómo podríamos implementar un Gobierno de Datos robusto y transversal que asegure calidad, trazabilidad y disponibilidad de la información, reduciendo la carga manual y habilitando decisiones estratégicas y operativas basadas en datos confiables?"},
-  {id:"D3",nombre:"Cultura de Aprendizaje",final:"¿Cómo podríamos construir una cultura de aprendizaje continuo y gestión del conocimiento que fortalezca nuestra capacidad de gestionar el cambio, capturando y transfiriendo aprendizajes a lo largo de todo el ciclo de vida del proceso productivo, para mejorar sostenidamente la eficiencia, calidad y toma de decisiones en la ejecución de los proyectos?"},
-  {id:"D4",nombre:"Integración Digital",final:"¿Cómo podríamos integrar y digitalizar los procesos críticos del ciclo del proyecto —planificación, control operacional, gestión de cambios, entre otros— estandarizando flujos físicos e informativos mediante herramientas como BIM y/o modelos integrados de planificación y control, para reducir variabilidad, anticipar desviaciones de plazo y costo, y asegurar la predictibilidad de la ejecución?"},
-  {id:"D5",nombre:"Integración de Equipos",final:"¿Cómo podríamos preparar e integrar a los equipos MOD y MOI en obra desde el primer día, asegurando competencias técnicas y digitales que reduzcan reprocesos y aumenten la productividad?"},
-  {id:"D6",nombre:"Industrialización Integral",final:"¿Cómo podríamos transformar la industrialización en una práctica confiable y aceptada por equipos y clientes, no solo entendida como una actividad o elemento industrializado, sino como una estrategia integral que exige adaptar el sistema de construcción antes, durante y después de su incorporación, reduciendo la resistencia al cambio, aumentando su impacto en productividad y dependiendo menos de mano de obra calificada?"},
-  {id:"D7",nombre:"Digitalización en Origen",final:"¿Cómo podríamos mejorar la productividad mediante la digitalización y captura de información en origen —avance, calidad, restricciones y compromisos operativos— para anticipar problemas, reducir reprocesos y optimizar la operación en terreno?"},
-  {id:"D8",nombre:"Valor al Cliente",final:"¿Cómo podríamos garantizar que nuestras propuestas respondan a necesidades reales de los clientes y del mercado, para ser percibidos internamente como un socio diferenciador y no solo como un ejecutor de proyectos?"},
-  {id:"D9",nombre:"Infraestructura Tecnológica",final:"¿Cómo podríamos fortalecer y consolidar la infraestructura tecnológica y el modelo de soporte digital de PPEE, asegurando continuidad operativa y automatizando la obtención de datos?"},
-  {id:"D10",nombre:"Escalamiento Industrializado",final:"¿Cómo podríamos escalar la industrialización constructiva por componentes —muebles modulares, prefabricados de hormigón, sistemas en madera, receptáculos preformados, entre otros— mediante metodologías DfMA, para reducir plazos críticos, mejorar calidad, disminuir riesgos operacionales y bajar la dependencia de mano de obra calificada en faena?"}
+const COLORS={
+  focus:{"Digitalización":"#4663F0","Industrialización":"#FF6C35","Sostenibilidad":"#97CB39","Por definir":"#8A94A3"},
+  stage:{"Enfocar":"#4B5D78","Detectar":"#062B63","Idear":"#1774C5","Diseñar":"#3FD3CA","Pilotear":"#FFB900","Escalar":"#F23846","I+D":"#6F61B5"}
+};
+const STAGES=["Enfocar","Detectar","Idear","Diseñar","Pilotear","Escalar"];
+const CHALLENGES=[
+{id:"D1",name:"Mano de Obra",text:"¿Cómo podríamos atraer, retener y estabilizar la mano de obra directa e indirecta calificada para asegurar productividad y calidad en los proyectos de construcción?"},
+{id:"D2",name:"Gobierno de Datos",text:"¿Cómo podríamos implementar un Gobierno de Datos robusto y transversal que asegure calidad, trazabilidad y disponibilidad de la información, reduciendo la carga manual y habilitando decisiones estratégicas y operativas basadas en datos confiables?"},
+{id:"D3",name:"Cultura de Aprendizaje",text:"¿Cómo podríamos construir una cultura de aprendizaje continuo y gestión del conocimiento que fortalezca nuestra capacidad de gestionar el cambio, capturando y transfiriendo aprendizajes a lo largo de todo el ciclo de vida del proceso productivo?"},
+{id:"D4",name:"Integración Digital",text:"¿Cómo podríamos integrar y digitalizar los procesos críticos del ciclo del proyecto, estandarizando flujos físicos e informativos para reducir variabilidad, anticipar desviaciones y asegurar la predictibilidad de la ejecución?"},
+{id:"D5",name:"Integración de Equipos",text:"¿Cómo podríamos preparar e integrar a los equipos MOD y MOI en obra desde el primer día, asegurando competencias técnicas y digitales que reduzcan reprocesos y aumenten la productividad?"},
+{id:"D6",name:"Industrialización Integral",text:"¿Cómo podríamos transformar la industrialización en una práctica confiable y aceptada por equipos y clientes, como una estrategia integral que adapte el sistema de construcción antes, durante y después de su incorporación?"},
+{id:"D7",name:"Digitalización en Origen",text:"¿Cómo podríamos mejorar la productividad mediante la digitalización y captura de información en origen —avance, calidad, restricciones y compromisos operativos— para anticipar problemas, reducir reprocesos y optimizar la operación en terreno?"},
+{id:"D8",name:"Valor al Cliente",text:"¿Cómo podríamos garantizar que nuestras propuestas respondan a necesidades reales de los clientes y del mercado, para ser percibidos internamente como un socio diferenciador y no solo como un ejecutor de proyectos?"},
+{id:"D9",name:"Infraestructura Tecnológica",text:"¿Cómo podríamos fortalecer y consolidar la infraestructura tecnológica y el modelo de soporte digital de PPEE, asegurando continuidad operativa y automatizando la obtención de datos?"},
+{id:"D10",name:"Escalamiento Industrializado",text:"¿Cómo podríamos escalar la industrialización constructiva por componentes mediante metodologías DfMA, para reducir plazos críticos, mejorar calidad, disminuir riesgos operacionales y bajar la dependencia de mano de obra calificada en faena?"}
 ];
-
-const DESAFIO_ASOCIADO={
-  1:"D8",2:"D8",3:"D7",4:"D7",5:"D7",6:"D4",7:"D10",8:"D10",9:"D7",10:"D6",
-  11:"D6",12:"D6",13:"D7",14:"D7",15:"D2",16:"D5",17:"D6",18:"Por Definir",19:"D2"
-};
-function desafioLabel(id){
-  if(!id||id==="Por Definir") return "Por Definir";
-  const d=DESAFIOS.find(x=>x.id===id);
-  return d?`${d.id} ${d.nombre}`:id;
-}
-
-const HIPOTESIS={
-  1:[{id:"H1",texto:"SI implementamos plantas modulares de tratamiento de aguas grises (PTAG), ENTONCES reduciremos el consumo de agua potable en al menos un 30% durante la fase de construcción.",kpis:["% reducción consumo agua potable vs. línea base (meta ≥30%)","m³ aguas grises tratadas / m³ totales consumidos (meta ≥25%)","Huella hídrica L/m² antes vs. después del piloto (meta reducción ≥20%)"]},{id:"H2",texto:"SI estandarizamos un protocolo de O&M de PTAG y capacitamos al equipo de obra, ENTONCES lograremos continuidad operativa con mínima intervención externa.",kpis:["% disponibilidad operativa PTAG (meta ≥90%)","N° incidentes críticos/mes con parada >24h (meta ≤1)","Costo unitario O&M (CLP/m³ tratado) vs. meta presupuestada"]}],
-  2:[{id:"H1",texto:"SI centralizamos la compra con un proveedor integrado y control digital de consumo por obra, ENTONCES reduciremos el gasto en insumos en al menos 15% y las mermas en al menos 20%.",kpis:["Gasto total insumos aseo (CLP/mes) vs. línea base (meta reducción ≥15%)","Consumo insumos/trabajador/mes (meta reducción ≥20%)","N° obras con consumo sobre presupuesto (meta <10%)"]}],
-  3:[{id:"H1",texto:"SI escalamos la hoja de ruta digital a todas las obras en un entorno único, ENTONCES reducimos el tiempo de consolidación mensual en al menos un 50%.",kpis:["HH consolidación hoja de ruta/obra/mes (meta reducción ≥50%)","% obras que actualizan antes del día 5 de cada mes (meta ≥90%)","N° reportes duplicados eliminados (meta reducción ≥70%)"]}],
-  4:[{id:"H1",texto:"SI digitalizamos el levantamiento y cierre de hallazgos con una app móvil, ENTONCES reduciremos el tiempo de cierre y aumentaremos el volumen de hallazgos trazados formalmente.",kpis:["Tiempo promedio cierre hallazgo (días, meta ≤7)","N° hallazgos digitalizados/mes vs. línea base papel (meta +50%)","% hallazgos con evidencia fotográfica y responsable (meta 100%)"]}],
-  5:[{id:"H1",texto:"SI digitalizamos el programa SSTMA con registro estructurado de observaciones y compromisos, ENTONCES elevaremos la adherencia de líderes sobre el 90%.",kpis:["% cumplimiento semanal actividades planificadas por líder (meta ≥90%)","N° observaciones/caminatas por líder/mes (meta ≥4)","% compromisos cerrados en plazo (meta ≥85%)"]}],
-  6:[{id:"H1",texto:"SI instalamos sensores de madurez del hormigón en losas postensadas, ENTONCES podremos liberar los cables antes de los 7 días estándar sin riesgo estructural.",kpis:["Días promedio entre hormigonado y tesado (meta reducción ≥1,5 días/losa)","% losas con liberación anticipada validada (meta ≥80%)","N° incidentes por tesado prematuro (meta = 0)"]}],
-  9:[{id:"H1",texto:"SI escalamos el Control de Avance OG como única fuente de verdad, ENTONCES eliminaremos reportes paralelos y tendremos avance físico confiable en tiempo real.",kpis:["% obras activas con Control OG operando semanalmente (meta 100%)","Desviación avance reportado vs. verificado en terreno (pp, meta ≤3)","N° reportes paralelos eliminados (meta ≥2 por obra)"]}],
-};
-const BRECHAS={
-  1:["Falta de autogestión en operación y mantención del biofiltro en obra","Ausencia de normativa interna para reutilización de aguas grises","Desconocimiento del potencial de ahorro hídrico por parte de los equipos de terreno"],
-  2:["Falta de indicadores de consumo y residuos asociados a insumos de aseo","Resistencia al cambio hacia productos de economía circular","Ausencia de estándares corporativos para compra sostenible"],
-  3:["Falta de estandarización en criterios de evaluación de subcontratos","Dependencia de planillas manuales que dificultan la consolidación de datos","Baja adopción de la plataforma por equipos de terreno"],
-  4:["Falta de capacidades internas para autogestión de la herramienta","Baja trazabilidad automática en el ciclo de vida de hallazgos","Reprocesos frecuentes por falta de registro y evidencia"],
-  5:["Baja conexión de líderes con la plataforma para consultar indicadores SSTMA","Dificultad para registrar evidencia objetiva de actividades en terreno","Ausencia de vinculación con ecosistema interno de sistemas"],
-  6:["Riesgo de tesado prematuro por falta de control en tiempo real","Dependencia de ensayos de laboratorio con tiempos que retrasan el análisis","Ausencia de alertas automáticas de resistencia mínima requerida"],
-  7:["Brecha de continuidad operativa en el control y medición de la iniciativa","Falta de trazabilidad y mapeo de proveedores locales de soluciones modulares"],
-  8:["Falta de proveedores certificados con garantía de impermeabilidad","Alta incidencia de filtraciones con métodos tradicionales en obra"],
-  9:["Falta de estandarización en metodología de medición de avance entre proyectos","Baja visibilidad gerencial universal del control de OOGG"],
-};
-const DESCRIPCIONES={
-  1:"Sistema de tratamiento que permite capturar y reutilizar aguas provenientes de duchas y lavamanos de la instalación de faena, mediante un proceso de filtración (biofiltro), para su uso en actividades operativas de obra.",
-  2:"Iniciativa que transforma el abastecimiento de insumos de aseo en obra mediante soluciones de economía circular, generando triple impacto: económico, ambiental y social.",
-  3:"Digitalizar y unificar la Hoja de Ruta en una plataforma centralizada para estandarizar el control del desempeño de subcontratos en obra.",
-  4:"Digitalizar el proceso de identificación, registro, gestión y cierre de hallazgos en obra para mejorar la trazabilidad y reducir reprocesos.",
-  5:"Implementar una plataforma digital para centralizar y gestionar el programa de liderazgo y acciones de SSTMA en los equipos en terreno.",
-  6:"Desarrollar una solución digital para controlar y registrar la resistencia del hormigón en losas postensadas, asegurando el tensado oportuno.",
-  7:"Industrializar la partida de muebles en obras de edificación mediante soluciones modulares basadas en DfMA para aumentar la predictibilidad en plazos y calidad.",
-  8:"Implementar receptáculos preformados con soluciones de impermeabilización de fábrica para asegurar calidad y reducir tiempos de ejecución.",
-  9:"Establecer una metodología digital para registrar y monitorear el avance de la obra gruesa en tiempo real, permitiendo mayor visibilidad gerencial.",
-};
-
-const SPONSORS_MAP={
-  1:"Lorena Rodríguez",2:"Lorena Rodríguez",3:"Marcela Hope",4:"Marcela Hope",
-  5:"Raúl Aguilera",6:"Marcela Hope",7:"Ivan Matus",8:"Tito Fuentes",9:"Marcela Hope",
-  10:"Ivan Matus",11:"Tito Fuentes",12:"Raúl Aguilera",13:"Marcela Hope",14:"Marcela Hope",
-  15:"—",16:"Tito Fuentes",17:"Magdalena Basoalto",18:"Nelson Carrasco",19:"Magdalena Basoalto"
-};
-const GESTORES_MAP={
-  1:"Gabriela Fuentes",2:"Gabriela Fuentes",3:"Evelyn Fica",4:"Roberto Concha",
-  5:"Mayko Ibarra",6:"Roberto Concha",9:"Adel Kassar",
-  13:"Felipe Silva y Jessica Vorphal",14:"Roberto Concha y Adel Kassar"
-};
-
+const CENTERS=["Oficina Central","San Isidro","Parque Arauco","Los Militares","La Castellana","Metrópolis Independencia","Torre Kennedy Oriente"];
 const DATA=[
-  {id:1,nombre:"Tratamiento y reutilización de aguas grises",foco:"Sostenibilidad",etapa:"Pilotear",estado:"ACTIVA",nueva:false},
-  {id:2,nombre:"Gestión de insumos de aseos",foco:"Sostenibilidad",etapa:"Pilotear",estado:"ACTIVA",nueva:false},
-  {id:3,nombre:"Digitalización Hoja de Ruta",foco:"Digitalización",etapa:"Escalar",estado:"ACTIVA",nueva:false},
-  {id:4,nombre:"Digitalización de Hallazgos",foco:"Digitalización",etapa:"Escalar",estado:"ACTIVA",nueva:false},
-  {id:5,nombre:"Digitalización Programa de Liderazgo y Gestión SSTMA",foco:"Digitalización",etapa:"Escalar",estado:"ACTIVA",nueva:false},
-  {id:6,nombre:"Control Resistencia en Losas Postensadas",foco:"Digitalización",etapa:"Pilotear",estado:"ACTIVA",nueva:false},
-  {id:7,nombre:"Muebles Modulares",foco:"Industrialización",etapa:"Escalar",estado:"ACTIVA",nueva:false},
-  {id:8,nombre:"Receptáculos Preformados Impermeabilizados",foco:"Industrialización",etapa:"I+D",estado:"ACTIVA",nueva:false},
-  {id:9,nombre:"Control de Avance OG",foco:"Digitalización",etapa:"Escalar",estado:"ACTIVA",nueva:false},
-  {id:10,nombre:"Modelo integrado de Armadura (AZA)",foco:"Industrialización",etapa:"Detectar",estado:"ACTIVA",nueva:true},
-  {id:11,nombre:"Adopción y Capacidades para industrializar",foco:"—",etapa:"Detectar",estado:"ACTIVA",nueva:true},
-  {id:12,nombre:"Desarrollo de construcción en Madera (CENAMAD)",foco:"Industrialización",etapa:"Detectar",estado:"ACTIVA",nueva:true},
-  {id:13,nombre:"Mapeo de Subcontratos",foco:"Digitalización",etapa:"Idear",estado:"ACTIVA",nueva:true},
-  {id:14,nombre:"Integración de Calidad al Last Planner",foco:"Digitalización",etapa:"Idear",estado:"ACTIVA",nueva:true},
-  {id:15,nombre:"Automatización datos SGC (G. Técnica)",foco:"Digitalización",etapa:"Detectar",estado:"ACTIVA",nueva:true},
-  {id:16,nombre:"Optimización Oficina Técnica",foco:"—",etapa:"Detectar",estado:"ACTIVA",nueva:true},
-  {id:17,nombre:"Sistema de Extracción Continua de Material en Túneles",foco:"Industrialización",etapa:"Detectar",estado:"ACTIVA",nueva:true},
-  {id:18,nombre:"Iniciativa Área de Estudios",foco:"—",etapa:"Detectar",estado:"ACTIVA",nueva:true},
-  {id:19,nombre:"Plataforma de Inteligencia Organizacional",foco:"Digitalización",etapa:"Detectar",estado:"ACTIVA",nueva:true},
+{id:1,name:"Tratamiento y reutilización de aguas grises",focus:"Sostenibilidad",challenge:"D8",stage:"Pilotear",sponsor:"Lorena Rodríguez",manager:"Gabriela Fuentes",year:"Continuidad 2025",status:"ACTIVA",innovationType:"Por definir",benefit:"Por definir",description:"Sistema de tratamiento que permite capturar y reutilizar aguas provenientes de duchas y lavamanos de la instalación de faena, mediante un proceso de filtración, para su uso en actividades operativas de obra."},
+{id:2,name:"Gestión de insumos de aseos",focus:"Sostenibilidad",challenge:"D8",stage:"Pilotear",sponsor:"Lorena Rodríguez",manager:"Gabriela Fuentes",year:"Continuidad 2025",status:"ACTIVA",innovationType:"Por definir",benefit:"Por definir",description:"Iniciativa que transforma el abastecimiento de insumos de aseo mediante soluciones de economía circular y control de consumo, generando impacto económico, ambiental y social."},
+{id:3,name:"Digitalización Hoja de Ruta",focus:"Digitalización",challenge:"D7",stage:"Escalar",sponsor:"Marcela Hope",manager:"Evelyn Fica",year:"Continuidad 2025",status:"ACTIVA",innovationType:"Por definir",benefit:"Por definir",description:"Digitalizar y unificar la Hoja de Ruta en una plataforma centralizada, que permita estandarizar el control del desempeño de subcontratos en obra."},
+{id:4,name:"Digitalización de Hallazgos",focus:"Digitalización",challenge:"D7",stage:"Escalar",sponsor:"Marcela Hope",manager:"Roberto Concha",year:"Continuidad 2025",status:"ACTIVA",innovationType:"Por definir",benefit:"Por definir",description:"Digitalizar el proceso de identificación, registro, gestión y cierre de hallazgos en obra, con el fin de mejorar la trazabilidad, reducir reprocesos y fortalecer la calidad y el control operacional mediante información centralizada y disponible en tiempo real."},
+{id:5,name:"Digitalización Programa de Liderazgo y Gestión SSTMA",focus:"Digitalización",challenge:"D7",stage:"Escalar",sponsor:"Raúl Aguilera",manager:"Mayko Ibarra",year:"Continuidad 2025",status:"ACTIVA",innovationType:"Por definir",benefit:"Por definir",description:"Implementar una plataforma digital para centralizar y gestionar el programa de liderazgo y acciones de Seguridad, Salud en el Trabajo y Medio Ambiente, facilitando el seguimiento, trazabilidad y participación de los equipos en terreno."},
+{id:6,name:"Control Resistencia en Losas Postensadas",focus:"Digitalización",challenge:"D4",stage:"Pilotear",sponsor:"Marcela Hope",manager:"Roberto Concha",year:"Continuidad 2025",status:"ACTIVA",innovationType:"Por definir",benefit:"Por definir",description:"Desarrollar una solución digital para controlar y registrar la resistencia del hormigón en losas postensadas, asegurando el tensado oportuno y la trazabilidad técnica."},
+{id:7,name:"Muebles Modulares",focus:"Industrialización",challenge:"D10",stage:"Escalar",sponsor:"Iván Matus",manager:"Por definir",year:"Continuidad 2025",status:"ACTIVA",innovationType:"Por definir",benefit:"Por definir",description:"Industrializar la partida de muebles en obras de edificación mediante soluciones modulares basadas en DfMA, con el fin de asegurar el ritmo de terminaciones, reducir desviaciones operacionales y aumentar la predictibilidad en plazos, calidad y montaje."},
+{id:8,name:"Receptáculos Preformados Impermeabilizados",focus:"Industrialización",challenge:"D10",stage:"I+D",sponsor:"Tito Fuentes",manager:"Por definir",year:"Continuidad 2025",status:"ACTIVA",innovationType:"Por definir",benefit:"Por definir",description:"Implementar receptáculos preformados con soluciones de impermeabilización de fábrica para asegurar calidad y reducir tiempos de ejecución."},
+{id:9,name:"Control de Avance OG",focus:"Digitalización",challenge:"D7",stage:"Escalar",sponsor:"Marcela Hope",manager:"Adel Kassar",year:"Continuidad 2025",status:"ACTIVA",innovationType:"Por definir",benefit:"Por definir",description:"Establecer una metodología digital para registrar y monitorear el avance de la obra gruesa en tiempo real, permitiendo mayor visibilidad y control operacional."},
+{id:10,name:"Modelo integrado de Armadura (AZA)",focus:"Industrialización",challenge:"D6",stage:"Detectar",sponsor:"Iván Matus",manager:"Por definir",year:"Nueva 2026",status:"ACTIVA",innovationType:"Por definir",benefit:"Por definir",description:"Integrar diseño, planificación, fabricación y montaje de armaduras bajo una lógica industrializada y trazable."},
+{id:11,name:"Adopción y Capacidades para industrializar",focus:"Por definir",challenge:"D6",stage:"Detectar",sponsor:"Tito Fuentes",manager:"Por definir",year:"Nueva 2026",status:"ACTIVA",innovationType:"Por definir",benefit:"Por definir",description:"Instalar capacidades organizacionales y metodológicas que permitan adoptar la industrialización de manera consistente en los proyectos."},
+{id:12,name:"Desarrollo de construcción en Madera (CENAMAD)",focus:"Industrialización",challenge:"D6",stage:"Detectar",sponsor:"Raúl Aguilera",manager:"Por definir",year:"Nueva 2026",status:"ACTIVA",innovationType:"Por definir",benefit:"Por definir",description:"Desarrollar capacidades y soluciones constructivas en madera con potencial de industrialización y aplicación en proyectos."},
+{id:13,name:"Mapeo de Subcontratos",focus:"Digitalización",challenge:"D7",stage:"Idear",sponsor:"Marcela Hope",manager:"Felipe Silva y Jessica Vorphal",year:"Nueva 2026",status:"ACTIVA",innovationType:"Por definir",benefit:"Por definir",description:"Digitalizar y estructurar información sobre subcontratos y partidas críticas para mejorar trazabilidad, evaluación y gestión desde obra."},
+{id:14,name:"Integración de Calidad al Last Planner",focus:"Digitalización",challenge:"D7",stage:"Idear",sponsor:"Marcela Hope",manager:"Roberto Concha y Adel Kassar",year:"Nueva 2026",status:"ACTIVA",innovationType:"Por definir",benefit:"Por definir",description:"Integrar la validación de calidad al proceso Last Planner para evitar avances no conformes, reducir reprocesos y fortalecer el control en terreno."},
+{id:15,name:"Automatización datos SGC (G. Técnica)",focus:"Digitalización",challenge:"D2",stage:"Detectar",sponsor:"Por definir",manager:"Por definir",year:"Nueva 2026",status:"ACTIVA",innovationType:"Por definir",benefit:"Por definir",description:"Automatizar la captura, consolidación y disponibilidad de datos del Sistema de Gestión de Calidad para reducir carga manual y mejorar la confiabilidad de la información."},
+{id:16,name:"Optimización Oficina Técnica",focus:"Por definir",challenge:"D5",stage:"Detectar",sponsor:"Tito Fuentes",manager:"Por definir",year:"Nueva 2026",status:"ACTIVA",innovationType:"Por definir",benefit:"Por definir",description:"Optimizar roles, flujos y coordinación de la Oficina Técnica para mejorar su aporte a la ejecución de los proyectos."},
+{id:17,name:"Sistema de Extracción Continua de Material en Túneles",focus:"Industrialización",challenge:"D6",stage:"Detectar",sponsor:"Magdalena Basoalto",manager:"Por definir",year:"Nueva 2026",status:"ACTIVA",innovationType:"Por definir",benefit:"Por definir",description:"Transformar el proceso de extracción de material en túneles mediante un sistema continuo que aumente productividad y continuidad operacional."},
+{id:18,name:"Iniciativa Área de estudios",focus:"Por definir",challenge:"Por definir",stage:"Detectar",sponsor:"Nelson Carrasco",manager:"Por definir",year:"Nueva 2026",status:"ACTIVA",innovationType:"Por definir",benefit:"Por definir",description:"Iniciativa en estructuración. Su alcance, foco y desafío estratégico deben ser formalizados."},
+{id:19,name:"Plataforma de Inteligencia Organizacional",focus:"Digitalización",challenge:"D2",stage:"Detectar",sponsor:"Magdalena Basoalto",manager:"Claudia Arre",year:"Nueva 2026",status:"ACTIVA",innovationType:"Por definir",benefit:"Por definir",description:"Desarrollar una plataforma de inteligencia organizacional que centralice información relevante para la toma de decisiones y gestión del conocimiento."}
 ];
+const DEPLOYMENTS={
+  1:{"Los Militares":"Activo","Metrópolis Independencia":"Activo"},
+  2:{"Oficina Central":"Activo","San Isidro":"Activo","Parque Arauco":"Activo","Los Militares":"Activo","La Castellana":"Activo","Metrópolis Independencia":"Activo","Torre Kennedy Oriente":"Activo"}
+};
+const filters={focus:new Set(),challenge:new Set(),stage:new Set(),sponsor:new Set()};
+let portfolioMode="grid",challengeMode="cards",previousView="portfolio";
 
-DATA.forEach(f=>{f.sponsor=SPONSORS_MAP[f.id]||"Por definir";f.gestor=GESTORES_MAP[f.id]||"Por definir";f.desafio=DESAFIO_ASOCIADO[f.id]||"Por Definir";f.desafioNombre=desafioLabel(f.desafio);});
+function inn(id){return `INN-${String(id).padStart(2,"0")}`}
+function challengeName(id){const d=CHALLENGES.find(x=>x.id===id);return d?d.name:"Por definir"}
+function focusColor(f){return COLORS.focus[f]||COLORS.focus["Por definir"]}
+function stageColor(s){return COLORS.stage[s]||"#8A94A3"}
+function pct(n,total){return total?Math.round(n/total*100):0}
+function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
 
-// Filter state
-const filters={foco:new Set(),desafio:new Set(),etapa:new Set(),sponsor:new Set(),tipo:new Set()};
-let view="grid";
-let desafiosView="cards";
-let previousView="portfolio";
-let openDD=null;
-
-// Build dropdown options
-const focos=[...new Set(DATA.map(f=>f.foco).filter(f=>f!=="—"))];
-const desafiosOpciones=[...new Set(DATA.map(f=>f.desafioNombre))];
-const etapas=["Enfocar","Detectar","Idear","Diseñar","Pilotear","Escalar","I+D"].filter(e=>DATA.some(f=>f.etapa===e));
-const sponsors=[...new Set(DATA.map(f=>f.sponsor).filter(s=>s&&s!=="—"&&s!=="Por definir"))].sort();
-const tipos=["Nueva 2026","Continúa 2025"];
-
-function buildDropdown(key,values){
-  const dd=document.getElementById("dd-"+key);
-  const existing=dd.querySelector(".drop-search");
-  values.forEach(val=>{
-    const btn=document.createElement("button");
-    btn.type="button";
-    btn.className="drop-item";btn.dataset.val=val;
-    btn.innerHTML=`<div class="drop-check"></div><span>${val}</span>`;
-    btn.onclick=(e)=>{e.stopPropagation();toggleFilter(key,val,btn);};
-    dd.appendChild(btn);
-  });
+function populateDropdown(id,key,values){
+ const el=document.getElementById(id);
+ el.innerHTML=values.map(v=>`<button class="drop-item" data-value="${esc(v)}" onclick="toggleFilter('${key}',this.dataset.value,this)"><span class="check"></span>${esc(v)}</button>`).join("");
 }
-
-function filterDropdownItems(key){
-  const q=document.getElementById(key+"-search").value.toLowerCase();
-  document.querySelectorAll(`#dd-${key} .drop-item`).forEach(item=>{
-    item.style.display=item.dataset.val.toLowerCase().includes(q)?"flex":"none";
-  });
+function init(){
+ populateDropdown("focusDD","focus",["Digitalización","Industrialización","Sostenibilidad","Por definir"]);
+ populateDropdown("challengeDD","challenge",[...CHALLENGES.map(d=>d.id),"Por definir"]);
+ populateDropdown("stageDD","stage",[...new Set(DATA.map(d=>d.stage))]);
+ populateDropdown("sponsorDD","sponsor",[...new Set(DATA.map(d=>d.sponsor))].sort());
+ renderPortfolio();renderChallenges();renderCenters();renderLibrary();
 }
-
-function toggleDropdown(key){
-  const dd=document.getElementById("dd-"+key);
-  const isOpen=dd.classList.contains("open");
-  closeAllDropdowns();
-  if(!isOpen){dd.classList.add("open");openDD=key;}
-  else openDD=null;
+function toggleDD(key){
+ const dd=document.getElementById(key+"DD");
+ document.querySelectorAll(".dropdown").forEach(x=>{if(x!==dd)x.classList.remove("open")});
+ dd.classList.toggle("open");
 }
-
-function closeAllDropdowns(){
-  document.querySelectorAll(".dropdown").forEach(d=>d.classList.remove("open"));
-  openDD=null;
+document.addEventListener("click",e=>{if(!e.target.closest(".filter"))document.querySelectorAll(".dropdown").forEach(x=>x.classList.remove("open"))});
+function toggleFilter(key,value,btn){
+ filters[key].has(value)?filters[key].delete(value):filters[key].add(value);
+ btn.classList.toggle("selected",filters[key].has(value));
+ btn.querySelector(".check").textContent=filters[key].has(value)?"✓":"";
+ updateFilterButton(key);renderPortfolio();
 }
-
-document.addEventListener("click",e=>{
-  if(!e.target.closest(".filter-group")) closeAllDropdowns();
-});
-
-function toggleFilter(key,val,btn){
-  if(filters[key].has(val)){filters[key].delete(val);btn.classList.remove("selected");btn.querySelector(".drop-check").innerHTML="";}
-  else{filters[key].add(val);btn.classList.add("selected");btn.querySelector(".drop-check").innerHTML=`<svg width="9" height="9" viewBox="0 0 9 9"><polyline points="1,4.5 3.5,7 8,2" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>`;}
-  updateTrigger(key);
-  updateClearBtn();
-  render();
+function updateFilterButton(key){
+ const n=filters[key].size,labels={focus:"Foco",challenge:"Desafío",stage:"Etapa",sponsor:"Sponsor"};
+ const b=document.getElementById(key+"Btn");
+ b.classList.toggle("active",n>0);b.innerHTML=`${n?`<span class="filter-count">${n}</span>`:""}${labels[key]} ▾`;
+ document.getElementById("clearBtn").classList.toggle("show",Object.values(filters).some(s=>s.size)||document.getElementById("search").value);
 }
-
-function updateTrigger(key){
-  const n=filters[key].size;
-  const trig=document.getElementById("trig-"+key);
-  trig.classList.toggle("has-active",n>0);
-  const labels={foco:"Foco",desafio:"Desafío",etapa:"Etapa",sponsor:"Sponsor",tipo:"Tipo"};
-  trig.innerHTML=`${n>0?`<span class="count">${n}</span> `:""} ${labels[key]} <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><polyline points="2,3.5 5,6.5 8,3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-  trig.onclick=()=>toggleDropdown(key);
+function clearFilters(){
+ Object.values(filters).forEach(s=>s.clear());document.getElementById("search").value="";
+ document.querySelectorAll(".drop-item").forEach(x=>{x.classList.remove("selected");x.querySelector(".check").textContent=""});
+ Object.keys(filters).forEach(updateFilterButton);renderPortfolio();
 }
-
-function updateClearBtn(){
-  const has=Object.values(filters).some(s=>s.size>0)||document.getElementById("q").value;
-  document.getElementById("clearBtn").classList.toggle("visible",!!has);
+function filteredData(){
+ const q=document.getElementById("search").value.trim().toLowerCase();
+ return DATA.filter(d=>{
+  if(q&&!`${d.name} ${d.id} ${d.sponsor} ${d.manager}`.toLowerCase().includes(q))return false;
+  if(filters.focus.size&&!filters.focus.has(d.focus))return false;
+  if(filters.challenge.size&&!filters.challenge.has(d.challenge))return false;
+  if(filters.stage.size&&!filters.stage.has(d.stage))return false;
+  if(filters.sponsor.size&&!filters.sponsor.has(d.sponsor))return false;
+  return true;
+ });
 }
+function tag(label,color,textColor="#fff"){return `<span class="tag" style="background:${color};border-color:${color};color:${textColor}">${esc(label)}</span>`}
+function renderPortfolio(){
+ updateFilterButton("focus");updateFilterButton("challenge");updateFilterButton("stage");updateFilterButton("sponsor");
+ const data=filteredData(),newN=data.filter(d=>d.year==="Nueva 2026").length;
+ document.getElementById("stats").innerHTML=`<strong>${data.length}</strong> iniciativas · <strong>${newN}</strong> nuevas 2026 · <strong>${data.length-newN}</strong> continuidad 2025`;
+ document.getElementById("headerBadge").textContent=`2026 · ${data.length} iniciativas`;
 
-function clearAll(){
-  Object.values(filters).forEach(s=>s.clear());
-  document.getElementById("q").value="";
-  document.querySelectorAll(".drop-item").forEach(b=>{b.classList.remove("selected");b.querySelector(".drop-check").innerHTML="";});
-  ["foco","desafio","etapa","sponsor","tipo"].forEach(k=>updateTrigger(k));
-  updateClearBtn();render();
+ const portfolioContent=document.getElementById("portfolioContent");
+ const dashboardContent=document.getElementById("dashboardContent");
+ const centersContent=document.getElementById("centersContent");
+ portfolioContent.style.display="none";
+ dashboardContent.style.display="none";
+ centersContent.style.display="none";
+
+ if(portfolioMode==="dashboard"){renderDashboard();return}
+ if(portfolioMode==="centers"){centersContent.style.display="block";renderCenters();return}
+
+ const c=portfolioContent;
+ c.style.display="block";
+ if(!data.length){c.innerHTML=`<div class="empty">Sin resultados para los filtros seleccionados.</div>`;return}
+ if(portfolioMode==="grid"){
+  c.innerHTML=`<div class="grid">${data.map(d=>`<article class="card" onclick="openFicha(${d.id})">
+   <div class="card-bar" style="background:${focusColor(d.focus)}"></div><div class="card-body">
+   <div class="card-top"><span class="card-id">${inn(d.id)}</span>${d.year==="Nueva 2026"?'<span class="new">Nueva</span>':""}</div>
+   <div class="card-name">${esc(d.name)}</div><div class="tags">
+   ${tag(d.focus,focusColor(d.focus))}${tag(d.stage,stageColor(d.stage),d.stage==="Pilotear"||d.stage==="Diseñar"?"#243247":"#fff")}
+   <span class="tag challenge-tag">${esc(d.challenge)} ${esc(challengeName(d.challenge))}</span></div>
+   <div class="card-footer">${esc(d.sponsor)}</div></div></article>`).join("")}</div>`;
+ }else{
+  c.innerHTML=`<div class="table-wrap"><table><thead><tr><th>ID</th><th>Iniciativa</th><th>Foco</th><th>Desafío</th><th>Etapa</th><th>Sponsor</th><th>Gestor</th></tr></thead><tbody>
+  ${data.map(d=>`<tr onclick="openFicha(${d.id})"><td><strong>${inn(d.id)}</strong></td><td>${esc(d.name)}</td><td>${tag(d.focus,focusColor(d.focus))}</td><td>${esc(d.challenge)} · ${esc(challengeName(d.challenge))}</td><td>${tag(d.stage,stageColor(d.stage),d.stage==="Pilotear"||d.stage==="Diseñar"?"#243247":"#fff")}</td><td>${esc(d.sponsor)}</td><td>${esc(d.manager)}</td></tr>`).join("")}</tbody></table></div>`;
+ }
 }
-
-function setView(v){view=v;document.getElementById("vgrid").classList.toggle("active",v==="grid");document.getElementById("vlist").classList.toggle("active",v==="list");const dashBtn=document.getElementById("vdashboard");if(dashBtn)dashBtn.classList.remove("active");render();}
-
-function getFiltered(){
-  const q=document.getElementById("q").value.toLowerCase();
-  return DATA.filter(f=>{
-    if(q&&!f.nombre.toLowerCase().includes(q)&&!String(f.id).includes(q)&&!f.sponsor.toLowerCase().includes(q)&&!f.desafioNombre.toLowerCase().includes(q)) return false;
-    if(filters.foco.size&&!filters.foco.has(f.foco)) return false;
-    if(filters.desafio.size&&!filters.desafio.has(f.desafioNombre)) return false;
-    if(filters.etapa.size&&!filters.etapa.has(f.etapa)) return false;
-    if(filters.sponsor.size&&!filters.sponsor.has(f.sponsor)) return false;
-    if(filters.tipo.size){
-      const isN=filters.tipo.has("Nueva 2026"),isC=filters.tipo.has("Continúa 2025");
-      if(isN&&!isC&&!f.nueva) return false;
-      if(isC&&!isN&&f.nueva) return false;
-    }
-    return true;
-  });
+function setPortfolioMode(mode){
+ portfolioMode=mode;
+ const activeId=mode==="dashboard"?"dash":mode;
+ ["grid","list","dash","centers"].forEach(x=>{
+  const btn=document.getElementById(x+"Btn");
+  if(btn)btn.classList.toggle("active",x===activeId);
+ });
+ renderPortfolio();
+ window.scrollTo({top:0,behavior:"smooth"});
 }
-
-function tg(label,color,lg){return `<span class="tag${lg?" tag-lg":""} tag-${color}"><span class="tag-dot" style="background:${DOTS[color]||'#888'}"></span>${label}</span>`;}
-function tgEtapa(etapa,lg=false){
-  const bg=ETAPA_HEX[etapa]||"#6B7280";
-  const fg=ETAPA_TEXTO[etapa]||"#FFFFFF";
-  return `<span class="tag${lg?" tag-lg":""} tag-stage" style="background:${bg};color:${fg};border-color:${bg}"><span class="tag-dot" style="background:${fg}"></span>${etapa}</span>`;
-}
-
-function render(){
-  const data=getFiltered();
-  const nuevas=data.filter(f=>f.nueva).length;
-  document.getElementById("statsBar").innerHTML=`<strong>${data.length}</strong> iniciativas &nbsp;·&nbsp; <strong>${data.length-nuevas}</strong> continúan del 2025 &nbsp;·&nbsp; <strong>${nuevas}</strong> nuevas 2026`;
-  document.getElementById("headerBadge").textContent=`2026 · ${data.length} iniciativas`;
-  const content=document.getElementById("content");
-  if(!data.length){content.innerHTML=`<div class="no-results">Sin resultados para los filtros seleccionados.</div>`;return;}
-  if(view==="grid"){
-    content.innerHTML=`<div class="grid">${data.map(f=>`
-      <div class="card" onclick="openFicha(${f.id})">
-        <div class="card-bar" style="background:${BAR[f.foco]||'#9CA3AF'}"></div>
-        <div class="card-body">
-          <div class="card-top"><span class="card-id">INN-${String(f.id).padStart(2,"0")}</span>${f.nueva?`<span class="card-new">Nueva</span>`:""}</div>
-          <div class="card-name">${f.nombre}</div>
-          <div class="card-tags">
-            ${f.foco!=="—"?tg(f.foco,FOCO_COLOR[f.foco]||"gray"):""}
-            ${tg(f.desafioNombre,"purple")}
-            ${tgEtapa(f.etapa)}
-            ${tg(f.estado,ESTADO_COLOR[f.estado]||"gray")}
-          </div>
-          <div class="card-footer">
-            <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><circle cx="5.5" cy="3.5" r="2" stroke="#6b7280" stroke-width="1.1"/><path d="M1.5 9.5c0-2.2 1.8-4 4-4s4 1.8 4 4" stroke="#6b7280" stroke-width="1.1" stroke-linecap="round" fill="none"/></svg>
-            ${f.sponsor}
-          </div>
-        </div>
-      </div>`).join("")}</div>`;
-  } else {
-    content.innerHTML=`<div class="tbl-wrap"><table class="tbl">
-      <thead><tr><th>ID</th><th>Iniciativa</th><th>Foco</th><th>Desafío</th><th>Etapa</th><th>Estado</th><th>Sponsor</th><th></th></tr></thead>
-      <tbody>${data.map(f=>`<tr onclick="openFicha(${f.id})">
-        <td style="font-weight:600;color:#6b7280;font-size:10px">INN-${String(f.id).padStart(2,"0")}</td>
-        <td style="font-weight:500">${f.nombre}</td>
-        <td>${f.foco!=="—"?tg(f.foco,FOCO_COLOR[f.foco]||"gray"):"-"}</td>
-        <td>${tg(f.desafioNombre,"purple")}</td>
-        <td>${tgEtapa(f.etapa)}</td>
-        <td>${tg(f.estado,ESTADO_COLOR[f.estado]||"gray")}</td>
-        <td style="color:#6b7280">${f.sponsor}</td>
-        <td>${f.nueva?`<span class="card-new">Nueva</span>`:""}</td>
-      </tr>`).join("")}</tbody>
-    </table></div>`;
-  }
-}
-
-function stepperH(etapa){
-  if(etapa==="I+D") return `<div style="display:inline-flex;align-items:center;gap:6px;padding:5px 11px;background:#EEEDFE;border-radius:7px;font-size:11px;color:#3C3489;border:0.5px solid #AFA9EC;margin-bottom:16px">Fase I+D — exploración temprana</div>`;
-  const paso=ETAPA_STEP[etapa]??0;
-  return `<div class="stepper">${STEPS.map((stage,i)=>{
-    const done=i<paso,active=i===paso;
-    const cls=done?"done":active?"active":"pending";
-    const color=ETAPA_HEX[stage];
-    const textColor=ETAPA_TEXTO[stage]||"#FFFFFF";
-    const icon=done?`<svg width="14" height="14" viewBox="0 0 13 13" fill="none"><polyline points="2,6.5 5.5,10 11,3" stroke="${textColor}" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>`:`${i+1}`;
-    const circleStyle=done||active?`background:${color};color:${textColor};--stage-color:${color}`:"";
-    const conn=i<STEPS.length-1?`<div class="step-conn${done?" done":""}" style="--conn-color:${color}"></div>`:"";
-    return `<div class="step"><div class="step-circle ${cls}" style="${circleStyle}">${icon}</div><div class="step-lbl${active?" active-lbl":""}" style="${active?`--stage-color:${color}`:""}">${stage}</div></div>${conn}`;
-  }).join("")}</div>`;
-}
-function openFicha(id){
-  const f=DATA.find(d=>d.id===id);if(!f) return;
-  previousView=document.getElementById("desafiosView").style.display==="block"?"desafios":document.getElementById("dashboardView").style.display==="block"?"dashboard":"portfolio";
-  const hdr=HDR[f.foco]||"#4B5563";
-  const desc=DESCRIPCIONES[f.id]||null;
-  const hips=HIPOTESIS[f.id]||[];
-  const brechas=BRECHAS[f.id]||[];
-  const hipSec=hips.length?`<div class="sec"><div class="sec-lbl">Hipótesis y KPIs</div><div class="hip-block">${hips.map(h=>`<div class="hip-item"><div class="hip-hdr"><span class="hip-badge">${h.id}</span><span class="hip-txt">${h.texto}</span></div>${h.kpis.length?`<div class="kpi-row">${h.kpis.map((k,i)=>`<div class="kpi-pill"><span class="kpi-num">KPI ${i+1}</span><span class="kpi-txt">${k}</span></div>`).join("")}</div>`:""}</div>`).join("")}</div></div>`:`<div class="sec"><div class="sec-lbl">Hipótesis y KPIs</div><div class="placeholder">Por definir.</div></div>`;
-  const brechasSec=brechas.length?`<div class="sec"><div class="sec-lbl">Brechas / Oportunidades de mejora</div><div class="brecha-list">${brechas.map(b=>`<div class="brecha-item"><div class="brecha-dot"></div><div class="brecha-txt">${b}</div></div>`).join("")}</div></div>`:"";
-  document.getElementById("fichaContent").innerHTML=`
-    <div class="fh" style="background:${hdr}">
-      <div class="fh-id">INN-${String(f.id).padStart(2,"0")} · ${f.nueva?"2026 · Nueva":"2025 · Continuidad"}</div>
-      <div class="fh-title">${f.nombre}</div>
-      ${f.nueva?`<span class="fh-new">Nueva 2026</span>`:""}
-    </div>
-    <div class="fb">
-      <div class="tags-lg">
-        ${f.foco!=="—"?tg(f.foco,FOCO_COLOR[f.foco]||"gray",true):""}
-        ${tg(f.desafioNombre,"purple",true)}
-        ${tgEtapa(f.etapa,true)}
-        ${tg(f.estado,ESTADO_COLOR[f.estado]||"gray",true)}
-      </div>
-      ${stepperH(f.etapa)}
-      <div class="sec"><div class="sec-lbl">Desafío estratégico asociado</div><div class="desafio-main-box"><strong>${f.desafioNombre}</strong>${f.desafio==="Por Definir"?"Pendiente de clasificación estratégica.":"Clasificación principal dentro de los Desafíos Estratégicos PPEE 2025–2028."}</div></div>
-      <div class="sec"><div class="sec-lbl">Descripción de la solución</div><div class="desc">${desc||`<span style="color:#6b7280;font-style:italic">Por definir.</span>`}</div></div>
-      <div class="sec"><div class="sec-lbl">Célula de innovación</div><div class="celula-grid">
-        <div class="cel-card"><div class="cel-role">Sponsor</div><div class="cel-name">${f.sponsor}</div></div>
-        <div class="cel-card"><div class="cel-role">Gestor</div><div class="cel-name">${f.gestor}</div></div>
-        <div class="cel-card"><div class="cel-role">Estado</div><div class="cel-name">${f.estado}</div></div>
-      </div></div>
-      ${hipSec}${brechasSec}
-    </div>`;
-  document.getElementById("listView").style.display="none";
-  document.getElementById("desafiosView").style.display="none";
-  document.getElementById("dashboardView").style.display="none";
-  document.getElementById("fichaView").style.display="block";
-  document.getElementById("btnPortafolio").classList.toggle("active",previousView==="portfolio");
-  
-  document.getElementById("btnDesafios").classList.toggle("active",previousView==="desafios");
-  document.getElementById("backBtn").style.display="inline-flex";
-  document.getElementById("headerTitle").textContent=f.nombre;
-  document.getElementById("headerBadge").textContent=`INN-${String(f.id).padStart(2,"0")}`;
-}
-
-function renderDesafios(){
-  const grid=document.getElementById("desafiosGrid");
-  const desafiosContainer=document.getElementById("desafiosView");
-  desafiosContainer.classList.toggle("compact-load",desafiosView==="train");
-  const grupos=[...DESAFIOS,{id:"Por Definir",nombre:"Por Definir",final:"Iniciativas pendientes de clasificación estratégica."}];
-  const maxCarga=Math.max(...grupos.map(d=>DATA.filter(f=>f.desafio===d.id).length),1);
-  if(desafiosView==="train"){
-    grid.className="desafios-train";
-    grid.innerHTML=grupos.map(d=>{
-      const iniciativas=DATA.filter(f=>f.desafio===d.id).sort((a,b)=>a.id-b.id);
-      const hot=iniciativas.length===maxCarga&&iniciativas.length>0?" hot":"";
-      const pills=iniciativas.length
-        ? iniciativas.map(f=>`<button type="button" class="train-pill" title="${f.nombre}" onclick="openFicha(${f.id})">INN-${String(f.id).padStart(2,"0")}</button>`).join("")
-        : `<span class="train-empty" title="Sin iniciativas asociadas">—</span>`;
-      return `<div class="train-row${hot}">
-        <div class="train-head"><div class="train-num">${d.id==="Por Definir"?"?":d.id}</div><div class="train-title">${d.nombre}</div></div>
-        <div class="train-track">${pills}</div>
-        <div class="train-count">${iniciativas.length}<span>iniciativas</span></div>
-      </div>`;
-    }).join("");
-    return;
-  }
-  grid.className="desafios-grid";
-  grid.innerHTML=grupos.map(d=>{
-    const iniciativas=DATA.filter(f=>f.desafio===d.id).sort((a,b)=>a.id-b.id);
-    const lista=iniciativas.length
-      ? `<div class="desafio-list">${iniciativas.map(f=>`<div class="desafio-inn" onclick="openFicha(${f.id})"><span class="desafio-inn-id">INN-${String(f.id).padStart(2,"0")}</span><span>${f.nombre}</span></div>`).join("")}</div>`
-      : `<div class="desafio-empty">Sin iniciativas asociadas en el portafolio 2026.</div>`;
-    return `<div class="desafio-card">
-      <div class="desafio-head"><div class="desafio-num">${d.id==="Por Definir"?"?":d.id}</div><div class="desafio-title">${d.nombre}</div></div>
-      <div class="desafio-body">${d.final}${lista}</div>
-    </div>`;
-  }).join("");
-}
-
-function setDesafiosView(v){
-  desafiosView=v;
-  document.getElementById("desafiosCardsBtn").classList.toggle("active",v==="cards");
-  document.getElementById("desafiosTrainBtn").classList.toggle("active",v==="train");
-  renderDesafios();
-}
-
-function countBy(items,keyFn){
-  return items.reduce((acc,item)=>{const key=keyFn(item);acc[key]=(acc[key]||0)+1;return acc;},{});
-}
-
-function renderMetricList(containerId,rows,total){
-  const el=document.getElementById(containerId);
-  const max=Math.max(...rows.map(r=>r.value),1);
-  el.innerHTML=rows.map(r=>`<div class="metric-row" title="${r.label}: ${r.value}">
-    <div class="metric-label">${r.label}</div>
-    <div class="metric-track"><div class="metric-fill" style="width:${(r.value/max)*100}%;background:${r.color}"></div></div>
-    <div class="metric-value">${r.value}</div>
-  </div>`).join("");
-}
-
 function renderDashboard(){
-  const total=DATA.length;
-  const nuevas=DATA.filter(f=>f.nueva).length;
-  const continuidad=total-nuevas;
-  const activas=DATA.filter(f=>f.estado==="ACTIVA").length;
-  const desafiosConCarga=new Set(DATA.filter(f=>f.desafio!=="Por Definir").map(f=>f.desafio)).size;
-  document.getElementById("dashboardKpis").innerHTML=`
-    <div class="kpi-card"><div class="kpi-label">Total portafolio</div><div class="kpi-value">${total}</div><div class="kpi-sub">iniciativas 2025–2026</div></div>
-    <div class="kpi-card"><div class="kpi-label">Nuevas 2026</div><div class="kpi-value">${nuevas}</div><div class="kpi-sub">${Math.round(nuevas/total*100)}% del portafolio</div></div>
-    <div class="kpi-card"><div class="kpi-label">Continuidad 2025</div><div class="kpi-value">${continuidad}</div><div class="kpi-sub">iniciativas que continúan</div></div>
-    <div class="kpi-card"><div class="kpi-label">Desafíos con iniciativas</div><div class="kpi-value">${desafiosConCarga}<span style="font-size:13px;color:#6b7280">/10</span></div><div class="kpi-sub">${activas} iniciativas activas</div></div>`;
+ const data=filteredData(),total=data.length,aligned=data.filter(d=>d.challenge!=="Por definir").length,governed=data.filter(d=>d.sponsor!=="Por definir"&&d.manager!=="Por definir").length;
+ document.getElementById("portfolioContent").style.display="none";
+ document.getElementById("centersContent").style.display="none";
+ const el=document.getElementById("dashboardContent");el.style.display="block";
+ const activeChallenges=new Set(data.filter(d=>d.challenge!=="Por definir").map(d=>d.challenge)).size;
+ const mature=data.filter(d=>["Pilotear","Escalar"].includes(d.stage)).length;
+ const largest=Math.max(0,...CHALLENGES.map(ch=>data.filter(d=>d.challenge===ch.id).length));
+ const concentration=pct(largest,total);
+ const focusCards=["Digitalización","Industrialización","Sostenibilidad","Por definir"].map(f=>{
+  const arr=data.filter(d=>d.focus===f);
+  const matureN=arr.filter(d=>["Pilotear","Escalar"].includes(d.stage)).length;
+  return `<div class="focus-card" style="border-color:${focusColor(f)}" onclick="filterFromDashboard('focus','${f}')"><div class="focus-head" style="background:${focusColor(f)}">${f.toUpperCase()}</div><div class="focus-body">
+   <div class="focus-count" style="color:${focusColor(f)}">${arr.length}<small>iniciativas</small></div>
+   <div class="focus-def">${esc(FOCUS_DEFS[f])}</div><div class="focus-meta">${arr.filter(d=>d.year==="Nueva 2026").length} nuevas 2026 · ${matureN} en Pilotear/Escalar</div></div></div>`;
+ }).join("");
+ const focusMetrics=["Digitalización","Industrialización","Sostenibilidad","Por definir"].map(f=>metricRow(f,data.filter(d=>d.focus===f).length,total,focusColor(f))).join("");
+ const stageMetrics=[...new Set(DATA.map(d=>d.stage))].map(s=>metricRow(s,data.filter(d=>d.stage===s).length,total,stageColor(s))).join("");
+ const innovationTypes=["Incremental","Adyacente","Disruptiva","Por definir"];
+ const theoretical={"Incremental":70,"Adyacente":20,"Disruptiva":10};
+ const typeMetrics=innovationTypes.map(t=>{
+  const n=data.filter(d=>d.innovationType===t).length;
+  const extra=theoretical[t]!=null?` · teoría ${theoretical[t]}%`:"";
+  return metricRow(t+extra,n,total,t==="Incremental"?"#4B5D78":t==="Adyacente"?"#8495AF":t==="Disruptiva"?"#C9D1DC":"#D8DDE4");
+ }).join("");
+ const stageCounts={};STAGES.forEach(s=>stageCounts[s]=data.filter(d=>d.stage===s).length);
+ const funnelCurrent=["Idear","Diseñar","Pilotear","Escalar"].map((s,i)=>{
+  const max=Math.max(1,...["Idear","Diseñar","Pilotear","Escalar"].map(x=>stageCounts[x]));
+  return `<div class="funnel-bar" style="background:${stageColor(s)};width:${Math.max(22,stageCounts[s]/max*100)}%">${s}: ${stageCounts[s]}</div>`;
+ }).join("");
+ const funnelTheory=[100,80,55,28].map((w,i)=>`<div class="funnel-bar" style="background:${stageColor(["Idear","Diseñar","Pilotear","Escalar"][i])};width:${w}%">${["Idear","Diseñar","Pilotear","Escalar"][i]}</div>`).join("");
+ const health=[
+  healthCard("Alineación estratégica",pct(aligned,total),aligned===total?"Saludable":"Atención",`${aligned} de ${total} con desafío`),
+  healthCard("Cobertura de desafíos",Math.round(activeChallenges/10*100),activeChallenges>=8?"Saludable":activeChallenges>=5?"Atención":"Crítico",`${activeChallenges} de 10 desafíos activos`),
+  healthCard("Madurez",pct(mature,total),mature/Math.max(total,1)>=.35?"Saludable":"Atención",`${mature} en Pilotear/Escalar`),
+  healthCard("Concentración",Math.max(0,100-concentration),concentration<=35?"Saludable":concentration<=50?"Atención":"Crítico",`${concentration}% en el desafío más cargado`),
+  healthCard("Gobernanza completa",pct(governed,total),governed/Math.max(total,1)>=.8?"Saludable":governed/Math.max(total,1)>=.6?"Atención":"Crítico",`${governed} con sponsor y gestor`)
+ ].join("");
+ const challengeCells=CHALLENGES.map(ch=>`<div class="challenge-cell"><div class="challenge-id">${ch.id}</div><div class="challenge-count">${data.filter(d=>d.challenge===ch.id).length}</div><div class="challenge-name">${ch.name}</div></div>`).join("");
+ el.innerHTML=`
+ <div class="intro"><h2>Panel de estado del portafolio</h2><p>Lectura ejecutiva de composición, alineación, madurez y balance. Los indicadores responden a los filtros activos.</p></div>
+ <div class="kpis"><div class="kpi"><div class="kpi-label">Iniciativas</div><div class="kpi-value">${total}</div><div class="kpi-sub">Portafolio visible</div></div>
+ <div class="kpi"><div class="kpi-label">Nuevas 2026</div><div class="kpi-value">${data.filter(d=>d.year==="Nueva 2026").length}</div><div class="kpi-sub">Renovación del portafolio</div></div>
+ <div class="kpi"><div class="kpi-label">Desafíos activos</div><div class="kpi-value">${activeChallenges}</div><div class="kpi-sub">De 10 desafíos</div></div>
+ <div class="kpi"><div class="kpi-label">Pilotear / Escalar</div><div class="kpi-value">${mature}</div><div class="kpi-sub">Iniciativas de mayor madurez</div></div>
+ <div class="kpi"><div class="kpi-label">Por clasificar</div><div class="kpi-value">${data.filter(d=>d.innovationType==="Por definir").length}</div><div class="kpi-sub">Tipo de innovación pendiente</div></div></div>
+ <div class="section"><div class="section-head"><div><div class="section-title">Focos de Innovación</div><div class="section-sub">Definición, carga y madurez por foco. Haz clic para filtrar.</div></div></div><div class="focus-grid">${focusCards}</div></div>
+ <div class="section"><div class="section-head"><div><div class="section-title">Indicadores de salud</div><div class="section-sub">Señales automáticas de alineación, cobertura, madurez, concentración y gobernanza.</div></div></div><div class="health-grid">${health}</div></div>
+ <div class="two-col">
+  <div class="panel"><h3>Distribución por foco</h3><div class="panel-note">Composición real del portafolio.</div>${focusMetrics}</div>
+  <div class="panel"><h3>Distribución por etapa</h3><div class="panel-note">Etapas oficiales del método de innovación.</div>${stageMetrics}</div>
+  <div class="panel"><h3>Balance por tipo de innovación</h3><div class="panel-note">Contraste con la referencia teórica 70–20–10.</div>${typeMetrics}<div class="theory-box"><strong>Referencia:</strong> 70% incremental, 20% adyacente y 10% disruptiva. La clasificación actual debe completarse en el campo <code>innovationType</code> de cada iniciativa.</div></div>
+  <div class="panel"><h3>Salud del embudo</h3><div class="panel-note">Teoría versus distribución actual en Idear, Diseñar, Pilotear y Escalar.</div><div class="funnel-grid"><div class="funnel-col"><h4>Teoría</h4><div class="funnel">${funnelTheory}</div></div><div class="funnel-col"><h4>Portafolio</h4><div class="funnel">${funnelCurrent}</div></div></div></div>
+ </div>
+ <div class="section" style="margin-top:11px"><div class="section-head"><div><div class="section-title">Tipos de beneficio</div><div class="section-sub">Marco ITD para distinguir innovación, transformación digital y mejora continua.</div></div></div>
+ <div class="benefit-grid"><div class="benefit"><div class="benefit-code" style="color:#1473BE">I3</div><h4>Intensidad de la Innovación</h4><p>Iniciativas de digitalización, industrialización o sostenibilidad que incorporan grado de novedad. Categorías: Innovación Digital, Industrializada o Sostenible.</p></div>
+ <div class="benefit"><div class="benefit-code" style="color:#EF2424">I2</div><h4>Intensidad de la Transformación Digital</h4><p>Iniciativas de digitalización sin grado de novedad, orientadas a optimizar procesos existentes mediante tecnología.</p></div>
+ <div class="benefit"><div class="benefit-code" style="color:#A9A9A9">I1</div><h4>Intensidad de Mejora Continua</h4><p>Iniciativas de sostenibilidad o industrialización sin grado de novedad, orientadas a estandarizar y mejorar prácticas existentes.</p></div></div></div>
+ <div class="section"><div class="section-head"><div><div class="section-title">Carga por desafío estratégico</div><div class="section-sub">Cantidad de iniciativas asociadas a cada desafío.</div></div></div><div class="challenge-load">${challengeCells}</div></div>`;
+}
+function metricRow(label,n,total,color){return `<div class="metric"><div class="metric-label">${esc(label)}</div><div class="track"><div class="fill" style="width:${pct(n,total)}%;background:${color}"></div></div><div class="metric-val">${n} · ${pct(n,total)}%</div></div>`}
+function healthCard(name,value,state,desc){const cls=state==="Saludable"?"good":state==="Atención"?"warn":"risk";const col=cls==="good"?"#3B6D11":cls==="warn"?"#BA7517":"#A32D2D";return `<div class="health"><div class="health-top"><span class="health-name">${name}</span><span class="health-state ${cls}">${state}</span></div><div class="health-value">${value}%</div><div class="health-desc">${desc}</div><div class="health-track"><div class="health-fill" style="width:${Math.min(100,value)}%;background:${col}"></div></div></div>`}
+function filterFromDashboard(key,value){clearFilters();filters[key].add(value);document.querySelectorAll(`#${key}DD .drop-item`).forEach(b=>{if(b.dataset.value===value){b.classList.add("selected");b.querySelector(".check").textContent="✓"}});setPortfolioMode("grid")}
 
-  const focoCounts=countBy(DATA,f=>f.foco);
-  const focoOrder=["Digitalización","Industrialización","Sostenibilidad","—"];
-  const focoRows=focoOrder.filter(k=>focoCounts[k]).map(k=>({label:k==="—"?"Foco por definir":k,value:focoCounts[k],color:BAR[k]||"#9CA3AF"}));
-  renderMetricList("focusMetrics",focoRows,total);
-  document.getElementById("focusLegend").innerHTML=focoRows.map(r=>`<span class="focus-chip"><i style="background:${r.color}"></i>${r.label}</span>`).join("");
+function renderChallenges(){
+ const el=document.getElementById("challengeContent");
+ document.getElementById("challengeCardsBtn").classList.toggle("active",challengeMode==="cards");
+ document.getElementById("challengeLoadBtn").classList.toggle("active",challengeMode==="load");
+ if(challengeMode==="cards"){
+  el.innerHTML=`<div class="desafios-grid">${CHALLENGES.map(ch=>{
+   const arr=DATA.filter(d=>d.challenge===ch.id);
+   return `<div class="desafio-card"><div class="desafio-head"><div class="desafio-id">${ch.id}</div><div class="desafio-title">${ch.name}</div></div><div class="desafio-body">${ch.text}<div class="inn-list">${arr.length?arr.map(d=>`<div class="inn-item" onclick="openFicha(${d.id})"><strong>${inn(d.id)}</strong><span>${esc(d.name)}</span></div>`).join(""):`<div class="inn-item"><span>Sin iniciativas asociadas</span></div>`}</div></div></div>`;
+  }).join("")}</div>`;
+ }else{
+  el.innerHTML=`<div class="load-view">${CHALLENGES.map(ch=>{
+   const arr=DATA.filter(d=>d.challenge===ch.id);
+   return `<div class="load-row"><div class="load-label"><div class="desafio-id">${ch.id}</div><span>${ch.name}</span></div><div class="load-track">${arr.length?arr.map(d=>`<button class="load-block" onclick="openFicha(${d.id})">${inn(d.id)}</button>`).join(""):`<span class="load-empty">—</span>`}</div><div class="load-count">${arr.length}<small>iniciativas</small></div></div>`;
+  }).join("")}</div>`;
+ }
+}
+function setChallengeMode(m){challengeMode=m;renderChallenges()}
 
-  const stageCounts=countBy(DATA,f=>f.etapa);
-  const stageOrder=["Enfocar","Detectar","Idear","Diseñar","Pilotear","Escalar","I+D"];
-  renderMetricList("stageMetrics",stageOrder.filter(k=>stageCounts[k]).map(k=>({label:k,value:stageCounts[k],color:ETAPA_HEX[k]||"#6B7280"})),total);
-
-  renderMetricList("typeMetrics",[
-    {label:"Nueva 2026",value:nuevas,color:"#1A6BAF"},
-    {label:"Continúa 2025",value:continuidad,color:"#4B5D78"}
-  ],total);
-
-  const sponsorCounts=countBy(DATA,f=>f.sponsor==="—"?"Por definir":f.sponsor);
-  const sponsorRows=Object.entries(sponsorCounts).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0])).map(([label,value])=>({label,value,color:"#185FA5"}));
-  renderMetricList("sponsorMetrics",sponsorRows,total);
-
-  const challengeGroups=[...DESAFIOS,{id:"Por Definir",nombre:"Por Definir"}];
-  const challengeCounts=countBy(DATA,f=>f.desafio);
-  document.getElementById("challengeMetrics").innerHTML=challengeGroups.map(d=>`<div class="challenge-cell">
-    <div class="challenge-id">${d.id==="Por Definir"?"?":d.id}</div>
-    <div class="challenge-count">${challengeCounts[d.id]||0}</div>
-    <div class="challenge-name">${d.nombre}</div>
-  </div>`).join("");
+function renderCenters(){
+ const cards=document.getElementById("centerCards");
+ cards.innerHTML=CENTERS.map(c=>{const n=DATA.filter(d=>DEPLOYMENTS[d.id]?.[c]).length;return `<div class="center-card" onclick="highlightCenter('${c}')"><div class="center-icon">⌂</div><div class="center-name">${c}</div><div class="center-count">${n} <small>iniciativas</small></div></div>`}).join("");
+ const rows=DATA.filter(d=>DEPLOYMENTS[d.id]).map(d=>`<tr><td><strong>${inn(d.id)}</strong> · ${esc(d.name)}</td>${CENTERS.map(c=>`<td>${deploymentBadge(DEPLOYMENTS[d.id]?.[c])}</td>`).join("")}</tr>`).join("");
+ document.getElementById("centerMatrix").innerHTML=`<div class="matrix-wrap"><table class="matrix"><thead><tr><th>Iniciativa</th>${CENTERS.map(c=>`<th>${c}</th>`).join("")}</tr></thead><tbody>${rows||'<tr><td colspan="8">Sin despliegues configurados.</td></tr>'}</tbody></table></div><div class="legend"><span><i class="deploy active">✓</i> Activo</span><span><i class="deploy pilot">P</i> Pilotaje</span><span><i class="deploy plan">○</i> Planificado</span></div>`;
+}
+function deploymentBadge(v){if(!v)return "";const cls=v==="Activo"?"active":v==="Pilotaje"?"pilot":"plan";return `<span class="deploy ${cls}" title="${v}">${v==="Activo"?"✓":v==="Pilotaje"?"P":"○"}</span>`}
+function highlightCenter(c){
+ const ids=DATA.filter(d=>DEPLOYMENTS[d.id]?.[c]).map(d=>inn(d.id));
+ alert(`${c}\n\n${ids.length?ids.join(", "):"Sin iniciativas configuradas."}`);
 }
 
-function showDashboard(){
-  closeAllDropdowns();
-  document.getElementById("listView").style.display="none";
-  document.getElementById("fichaView").style.display="none";
-  document.getElementById("desafiosView").style.display="none";
-  document.getElementById("dashboardView").style.display="block";
-  document.getElementById("backBtn").style.display="none";
-  document.getElementById("headerTitle").textContent="Panel de Estado PPEE";
-  document.getElementById("headerBadge").textContent="2026 · Vista ejecutiva";
-  
-  document.getElementById("btnPortafolio").classList.remove("active");
-  document.getElementById("btnDesafios").classList.remove("active");
-  const dashBtn=document.getElementById("vdashboard"); if(dashBtn) dashBtn.classList.add("active");
-  renderDashboard();
+function renderLibrary(){
+ document.getElementById("libraryContent").innerHTML=`
+ <div class="library-card"><h3>Focos de Innovación</h3>${["Digitalización","Industrialización","Sostenibilidad"].map(f=>`<div class="focus-definition" style="border-color:${focusColor(f)}"><p><strong>${f}:</strong> ${FOCUS_DEFS[f]}</p></div>`).join("")}<p style="margin-top:10px;color:#7C8797">Definiciones actualizadas en el marco de la consultoría estratégica con Socialab (2025).</p></div>
+ <div class="library-card"><h3>Método de Innovación</h3>${STAGES.map(s=>`<div class="method-row"><div class="method-pill" style="background:${stageColor(s)}">${s}</div><p>${methodDefinition(s)}</p></div>`).join("")}</div>
+ <div class="library-card"><h3>Tipos de Innovación</h3><p><strong>Incremental:</strong> mejora soluciones, procesos o capacidades existentes.</p><p style="margin-top:8px"><strong>Adyacente:</strong> lleva capacidades existentes a nuevos contextos, mercados o aplicaciones.</p><p style="margin-top:8px"><strong>Disruptiva:</strong> incorpora soluciones de alta novedad y potencial transformador.</p><div class="theory-box">Referencia teórica de composición: 70% incremental, 20% adyacente y 10% disruptiva.</div></div>
+ <div class="library-card"><h3>Tipos de Beneficio · Índice ITD</h3><p><strong>I3 · Intensidad de la Innovación:</strong> iniciativas con grado de novedad en digitalización, industrialización o sostenibilidad.</p><p style="margin-top:8px"><strong>I2 · Transformación Digital:</strong> digitalización sin grado de novedad.</p><p style="margin-top:8px"><strong>I1 · Mejora Continua:</strong> industrialización o sostenibilidad sin grado de novedad.</p></div>`;
 }
+function methodDefinition(s){return {"Enfocar":"Priorizar el desafío y alinear propósito, sponsor y oportunidad.","Detectar":"Comprender el problema, levantar evidencia y dimensionar la brecha.","Idear":"Formular hipótesis, alternativas e indicadores de validación.","Diseñar":"Definir la solución, requisitos y experiencia de implementación.","Pilotear":"Validar en condiciones reales, medir resultados y capturar aprendizajes.","Escalar":"Estandarizar, transferir y ampliar la solución con beneficios demostrados."}[s]}
 
-function showDesafios(){
-  closeAllDropdowns();
-  document.getElementById("listView").style.display="none";
-  document.getElementById("fichaView").style.display="none";
-  document.getElementById("dashboardView").style.display="none";
-  document.getElementById("desafiosView").style.display="block";
-  document.getElementById("backBtn").style.display="none";
-  document.getElementById("headerTitle").textContent="Desafíos Estratégicos PPEE";
-  document.getElementById("headerBadge").textContent="10 desafíos clave";
-  document.getElementById("btnDesafios").classList.add("active");
-  document.getElementById("btnPortafolio").classList.remove("active");
-  
-  renderDesafios();
+function openFicha(id){
+ const d=DATA.find(x=>x.id===id);if(!d)return;
+ previousView=document.querySelector(".view.active")?.id.replace("View","")||"portfolio";
+ document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));document.getElementById("fichaView").classList.add("active");
+ document.getElementById("backBtn").style.display="inline-block";document.getElementById("headerTitle").textContent=d.name;document.getElementById("headerBadge").textContent=inn(d.id);
+ const centers=Object.keys(DEPLOYMENTS[d.id]||{});
+ document.getElementById("fichaContent").innerHTML=`<div class="ficha-card"><div class="ficha-head" style="background:${focusColor(d.focus)}"><small>${inn(d.id)} · ${d.year}</small><h2>${esc(d.name)}</h2></div><div class="ficha-body">
+ <div class="tags">${tag(d.focus,focusColor(d.focus))}${tag(d.stage,stageColor(d.stage),d.stage==="Pilotear"||d.stage==="Diseñar"?"#243247":"#fff")}<span class="tag challenge-tag">${esc(d.challenge)} · ${esc(challengeName(d.challenge))}</span></div>
+ ${renderStepper(d.stage)}
+ <div class="ficha-grid"><div class="info"><div class="info-label">Sponsor</div><div class="info-value">${esc(d.sponsor)}</div></div><div class="info"><div class="info-label">Gestor</div><div class="info-value">${esc(d.manager)}</div></div><div class="info"><div class="info-label">Estado</div><div class="info-value">${esc(d.status)}</div></div>
+ <div class="info"><div class="info-label">Tipo de innovación</div><div class="info-value">${esc(d.innovationType)}</div></div><div class="info"><div class="info-label">Tipo de beneficio</div><div class="info-value">${esc(d.benefit)}</div></div><div class="info"><div class="info-label">Centros de trabajo</div><div class="info-value">${centers.length?centers.join(", "):"Sin despliegues configurados"}</div></div></div>
+ <div class="sec"><h3>Descripción de la solución</h3><p>${esc(d.description)}</p></div>
+ <div class="sec"><h3>Desafío estratégico asociado</h3><p><strong>${esc(d.challenge)} · ${esc(challengeName(d.challenge))}</strong></p></div>
+ <div class="sec"><h3>Hipótesis y KPI</h3><p style="color:#758094;font-style:italic">Información por completar en la ficha de la iniciativa.</p></div>
+ </div></div>`;
+ window.scrollTo({top:0,behavior:"smooth"});
 }
-
-function showPortfolio(){
-  document.getElementById("desafiosView").style.display="none";
-  document.getElementById("dashboardView").style.display="none";
-  document.getElementById("fichaView").style.display="none";
-  document.getElementById("listView").style.display="block";
-  document.getElementById("backBtn").style.display="none";
-  document.getElementById("headerTitle").textContent="Portafolio PPEE";
-  document.getElementById("btnPortafolio").classList.add("active");
-  
-  document.getElementById("btnDesafios").classList.remove("active");
-  const dashBtn=document.getElementById("vdashboard"); if(dashBtn) dashBtn.classList.remove("active");
-  render();
+function renderStepper(stage){
+ if(stage==="I+D")return `<div class="theory-box" style="margin-bottom:14px"><strong>Fase I+D:</strong> exploración temprana previa al flujo principal del método.</div>`;
+ const idx=STAGES.indexOf(stage);
+ return `<div class="stepper">${STAGES.map((s,i)=>{const done=i<idx,active=i===idx,c=stageColor(s);return `<div class="step"><div class="step-circle" style="background:${done||active?c:"#F1F4F7"};color:${done||active?"#fff":"#8993A1"};${active?`box-shadow:0 0 0 4px #fff,0 0 0 6px ${c}`:""}">${done?"✓":i+1}</div><div class="step-label" style="${active?`color:${c}`:""}">${s}</div></div>${i<STAGES.length-1?`<div class="conn" style="background:${i<idx?c:"#D7DEE7"}"></div>`:""}`}).join("")}</div>`;
 }
-
 function goBack(){
-  if(previousView==="desafios"){showDesafios();return;}
-  if(previousView==="dashboard"){showDashboard();return;}
-  showPortfolio();
+ if(previousView==="challenges")showView("challenges");
+ else if(previousView==="library")showView("library");
+ else showView("portfolio");
 }
-
-// Init
-buildDropdown("foco",focos);
-buildDropdown("desafio",desafiosOpciones);
-buildDropdown("etapa",etapas);
-buildDropdown("tipo",tipos);
-// Sponsors go after the search input in the dropdown
-sponsors.forEach(val=>{
-  const dd=document.getElementById("dd-sponsor");
-  const btn=document.createElement("button");
-  btn.type="button";
-  btn.className="drop-item";btn.dataset.val=val;
-  btn.innerHTML=`<div class="drop-check"></div><span>${val}</span>`;
-  btn.onclick=(e)=>{e.stopPropagation();toggleFilter("sponsor",val,btn);};
-  dd.appendChild(btn);
-});
-["foco","desafio","etapa","sponsor","tipo"].forEach(k=>updateTrigger(k));
-document.getElementById("btnPortafolio").classList.add("active");
-renderDesafios();
-renderDashboard();
-render();
+function showView(name){
+ document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+ const map={portfolio:"portfolioView",challenges:"challengesView",library:"libraryView"};
+ document.getElementById(map[name]).classList.add("active");
+ document.getElementById("backBtn").style.display="none";
+ document.querySelectorAll(".nav-btn").forEach(b=>b.classList.remove("active"));
+ document.getElementById({portfolio:"navPortfolio",challenges:"navChallenges",library:"navLibrary"}[name]).classList.add("active");
+ const titles={portfolio:"Portal de Innovación PPEE",challenges:"Desafíos Estratégicos PPEE",library:"Biblioteca Estratégica"};
+ const badges={portfolio:`2026 · ${filteredData().length} iniciativas`,challenges:"10 desafíos clave",library:"Marco estratégico"};
+ document.getElementById("headerTitle").textContent=titles[name];
+ document.getElementById("headerBadge").textContent=badges[name];
+ if(name==="portfolio")renderPortfolio();
+ if(name==="challenges")renderChallenges();
+ if(name==="library")renderLibrary();
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+init();
 </script>
 </body>
 </html>
