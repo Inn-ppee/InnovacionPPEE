@@ -231,9 +231,9 @@ tbody tr:hover td{background:#F2F7FC}
     <div class="filter"><button class="filter-btn" id="sponsorBtn" onclick="toggleDD('sponsor')">Sponsor ▾</button><div class="dropdown" id="sponsorDD"></div></div>
     <div class="sep"></div>
     <div class="toggle">
-      <button class="icon-btn active" id="gridBtn" title="Tarjetas" onclick="setPortfolioMode('grid')">⊞</button>
+      <button class="icon-btn" id="gridBtn" title="Tarjetas" onclick="setPortfolioMode('grid')">⊞</button>
       <button class="icon-btn" id="listBtn" title="Lista" onclick="setPortfolioMode('list')">☰</button>
-      <button class="icon-btn" id="dashBtn" title="Panel de estado" onclick="setPortfolioMode('dashboard')">▦</button>
+      <button class="icon-btn active" id="dashBtn" title="Panel de estado" onclick="setPortfolioMode('dashboard')">▦</button>
       <button class="icon-btn" id="centersBtn" title="Centros de trabajo" onclick="setPortfolioMode('centers')">⌂</button>
     </div>
     <button id="clearBtn" class="clear" onclick="clearFilters()">✕ Limpiar filtros</button>
@@ -345,7 +345,7 @@ const DEPLOYMENTS={
   9:{"Parque Arauco":"Activa","Los Militares":"Activa","La Castellana":"Activa","Metrópolis Independencia":"Activa","Torre Kennedy Oriente":"Activa"}
 };
 const filters={focus:new Set(),challenge:new Set(),stage:new Set(),sponsor:new Set()};
-let portfolioMode="grid",challengeMode="cards",previousView="portfolio";
+let portfolioMode="dashboard",challengeMode="cards",previousView="portfolio";
 
 function inn(id){return `INN-${String(id).padStart(2,"0")}`}
 function challengeName(id){const d=CHALLENGES.find(x=>x.id===id);return d?d.name:"Por definir"}
