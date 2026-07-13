@@ -60,6 +60,8 @@ body{font-family:'Segoe UI',sans-serif;background:#eef0f4;min-height:500px}
 .tag-teal{background:#E1F5EE;color:#085041;border-color:#9FE1CB}
 .tag-orange{background:#FEF0E7;color:#7A3010;border-color:#F0997B}
 .tag-dot{width:4px;height:4px;border-radius:50%;flex-shrink:0}
+.tag-stage{color:#fff;border-color:transparent;font-weight:700}
+.tag-stage-light{color:#132A44;border-color:transparent;font-weight:700}
 .card-footer{border-top:0.5px solid rgba(0,0,0,0.06);padding-top:7px;font-size:10px;color:#6b7280;display:flex;align-items:center;gap:4px}
 .tbl-wrap{background:#fff;border-radius:10px;border:0.5px solid rgba(0,0,0,0.08);overflow:hidden}
 .tbl{width:100%;border-collapse:collapse}
@@ -75,16 +77,16 @@ body{font-family:'Segoe UI',sans-serif;background:#eef0f4;min-height:500px}
 .fh-new{display:inline-block;font-size:10px;font-weight:600;background:rgba(255,255,255,0.2);color:#fff;border:1px solid rgba(255,255,255,0.35);border-radius:10px;padding:2px 8px;margin-top:6px}
 .fb{padding:14px 18px}
 .tags-lg{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px}
-.stepper{display:flex;align-items:flex-start;margin-bottom:18px}
-.step{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:50px}
-.step-conn{flex:1;height:2px;margin-top:16px;background:#D3D1C7}
-.step-conn.done{background:#3B6D11}
-.step-circle{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0}
-.step-circle.done{background:#3B6D11;color:#fff}
-.step-circle.active{background:#185FA5;color:#fff}
-.step-circle.pending{background:#E8E6DF;color:#888780}
-.step-lbl{font-size:10px;color:#6b7280;text-align:center;line-height:1.3}
-.step-lbl.active-lbl{color:#185FA5;font-weight:600}
+.stepper{display:flex;align-items:flex-start;margin-bottom:18px;overflow-x:auto;padding:4px 2px 8px}
+.step{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:64px}
+.step-conn{flex:1;min-width:24px;height:3px;margin-top:17px;background:#D8DEE7;border-radius:3px}
+.step-conn.done{background:var(--conn-color,#185FA5)}
+.step-circle{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;transition:transform .15s,box-shadow .15s}
+.step-circle.done{color:#fff}
+.step-circle.active{color:#fff;transform:scale(1.08);box-shadow:0 0 0 4px rgba(255,255,255,.95),0 0 0 6px var(--stage-color,#185FA5)}
+.step-circle.pending{background:#F3F5F8;color:#8A94A3;border:1px solid #D8DEE7}
+.step-lbl{font-size:9.5px;color:#6b7280;text-align:center;line-height:1.3;font-weight:600;text-transform:uppercase;white-space:nowrap}
+.step-lbl.active-lbl{color:var(--stage-color,#185FA5);font-weight:700}
 .sec{margin-bottom:14px;padding-bottom:14px;border-bottom:0.5px solid rgba(0,0,0,0.08)}
 .sec:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
 .sec-lbl{font-size:9.5px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:#6b7280;margin-bottom:7px}
@@ -112,8 +114,8 @@ body{font-family:'Segoe UI',sans-serif;background:#eef0f4;min-height:500px}
 .header-actions{display:flex;align-items:center;gap:8px}
 .header-action-btn{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.16);border:1px solid rgba(255,255,255,0.32);color:#fff;border-radius:8px;padding:6px 11px;font-size:11px;cursor:pointer;font-family:inherit}
 .header-action-btn:hover,.header-action-btn.active{background:#fff;color:#185FA5}
-.desafios-view{display:none;padding:14px 16px;overflow-y:auto;max-height:430px}
-.desafios-intro{background:#fff;border-radius:12px;border:0.5px solid rgba(0,0,0,0.08);padding:14px 16px;margin-bottom:12px}
+.desafios-view{display:none;padding:12px 16px 16px;overflow-y:auto;max-height:none;height:calc(100vh - 72px)}
+.desafios-intro{background:#fff;border-radius:12px;border:0.5px solid rgba(0,0,0,0.08);padding:11px 16px;margin-bottom:8px}
 .desafios-intro h2{font-size:15px;color:#123B6D;margin-bottom:4px}
 .desafios-intro p{font-size:11px;color:#6b7280;line-height:1.5}
 .desafios-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px}
@@ -123,6 +125,38 @@ body{font-family:'Segoe UI',sans-serif;background:#eef0f4;min-height:500px}
 .desafio-title{font-size:12px;font-weight:600;color:#123B6D;line-height:1.3}
 .desafio-body{padding:10px 12px 12px;font-size:11px;color:#374151;line-height:1.58}
 
+.dashboard-view{display:none;padding:14px 16px 22px;overflow-y:auto;max-height:440px}
+.dashboard-intro{background:#fff;border-radius:12px;border:0.5px solid rgba(0,0,0,0.08);padding:14px 16px;margin-bottom:12px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.dashboard-intro h2{font-size:15px;color:#123B6D;margin-bottom:4px}
+.dashboard-intro p{font-size:11px;color:#6b7280;line-height:1.5}
+.dashboard-kpis{display:grid;grid-template-columns:repeat(4,minmax(150px,1fr));gap:10px;margin-bottom:12px}
+.kpi-card{background:#fff;border-radius:10px;border:0.5px solid rgba(0,0,0,0.08);padding:12px 14px;position:relative;overflow:hidden}
+.kpi-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:#1A6BAF}
+.kpi-card .kpi-label{font-size:9.5px;text-transform:uppercase;letter-spacing:.06em;color:#6b7280;font-weight:600;margin-bottom:5px}
+.kpi-card .kpi-value{font-size:25px;line-height:1;font-weight:700;color:#123B6D}
+.kpi-card .kpi-sub{font-size:10px;color:#6b7280;margin-top:5px;line-height:1.35}
+.dashboard-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.dashboard-panel{background:#fff;border-radius:12px;border:0.5px solid rgba(0,0,0,0.08);padding:13px 14px;min-width:0}
+.dashboard-panel.wide{grid-column:1/-1}
+.panel-title{font-size:12px;font-weight:700;color:#123B6D;margin-bottom:2px}
+.panel-subtitle{font-size:9.5px;color:#6b7280;margin-bottom:11px}
+.metric-list{display:flex;flex-direction:column;gap:8px}
+.metric-row{display:grid;grid-template-columns:minmax(115px,170px) minmax(0,1fr) 30px;gap:8px;align-items:center}
+.metric-label{font-size:10.5px;color:#374151;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.metric-track{height:12px;background:#EEF1F5;border-radius:6px;overflow:hidden}
+.metric-fill{height:100%;border-radius:6px;min-width:0;transition:width .25s ease}
+.metric-value{font-size:11px;font-weight:700;color:#123B6D;text-align:right}
+.challenge-load{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px}
+.challenge-cell{border:0.5px solid rgba(0,0,0,.08);background:#F8FAFC;border-radius:8px;padding:8px;min-height:68px}
+.challenge-cell .challenge-id{font-size:10px;font-weight:700;color:#123B6D}
+.challenge-cell .challenge-count{font-size:20px;font-weight:700;color:#1A6BAF;line-height:1.1;margin:3px 0 1px}
+.challenge-cell .challenge-name{font-size:8.8px;color:#6b7280;line-height:1.25}
+.focus-legend{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
+.focus-chip{display:inline-flex;align-items:center;gap:5px;font-size:9.5px;color:#374151}
+.focus-chip i{width:8px;height:8px;border-radius:2px;display:inline-block}
+@media (max-width:850px){.dashboard-kpis{grid-template-columns:repeat(2,minmax(140px,1fr))}.challenge-load{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:700px){.dashboard-grid{grid-template-columns:1fr}.dashboard-panel.wide{grid-column:auto}.metric-row{grid-template-columns:105px minmax(0,1fr) 25px}}
+
 .desafio-list{margin-top:10px;border-top:0.5px solid rgba(0,0,0,0.07);padding-top:8px;display:flex;flex-direction:column;gap:5px}
 .desafio-inn{display:flex;gap:6px;align-items:flex-start;background:#F5F7FA;border:0.5px solid rgba(0,0,0,0.06);border-radius:7px;padding:6px 8px;font-size:10.5px;color:#374151;line-height:1.35}
 .desafio-inn-id{font-weight:700;color:#123B6D;flex-shrink:0}
@@ -130,24 +164,31 @@ body{font-family:'Segoe UI',sans-serif;background:#eef0f4;min-height:500px}
 .desafio-main-box{background:#EBF3FB;border:0.5px solid #B5D4F4;border-radius:8px;padding:9px 11px;font-size:12px;color:#123B6D;line-height:1.5}
 .desafio-main-box strong{display:block;font-size:13px;margin-bottom:2px}
 
-.desafios-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.desafios-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px;flex-wrap:wrap}
 .desafios-toolbar-title{font-size:11px;color:#6b7280;line-height:1.4}
 .desafios-toggle{display:flex;gap:3px;background:#e9edf3;border-radius:8px;padding:3px;border:0.5px solid rgba(0,0,0,0.08)}
 .desafios-toggle .vbtn{padding:5px 10px;font-size:11px}
-.desafios-train{display:flex;flex-direction:column;gap:8px}
-.train-row{background:#fff;border-bottom:1px solid #E5EAF0;display:grid;grid-template-columns:220px minmax(0,1fr) 54px;align-items:center;gap:0;min-height:46px;padding:0;overflow:hidden}
+.desafios-train{display:flex;flex-direction:column;gap:5px}
+.train-row{background:#fff;border:1px solid #E5EAF0;display:grid;grid-template-columns:220px minmax(0,1fr) 54px;align-items:center;gap:0;min-height:40px;height:40px;padding:0;overflow:hidden}
 .train-row:first-child{border-top:1px solid #E5EAF0}
-.train-head{display:flex;align-items:center;gap:9px;min-width:0;padding:6px 12px 6px 6px}
-.train-num{width:36px;height:34px;border-radius:4px;background:#123B6D;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.train-head{display:flex;align-items:center;gap:8px;min-width:0;padding:3px 10px 3px 5px}
+.train-num{width:34px;height:32px;border-radius:4px;background:#123B6D;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
 .train-title{font-size:11.5px;font-weight:600;color:#123B6D;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.train-track{display:flex;align-items:stretch;gap:0;min-height:34px;position:relative;flex-wrap:nowrap;overflow-x:auto;background-image:linear-gradient(to right,#DDE5ED 1px,transparent 1px),linear-gradient(to bottom,#DDE5ED 1px,transparent 1px);background-size:58px 34px;background-color:#F8FAFC;border-left:1px solid #DDE5ED;border-right:1px solid #DDE5ED}
-.train-pill{width:58px;min-width:58px;height:34px;border:none;border-radius:0;background:#1A6BAF;color:#fff;border-right:1px solid rgba(255,255,255,.55);font-size:9.5px;font-weight:700;padding:0 3px;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .12s,transform .12s}
+.train-track{display:flex;align-items:stretch;gap:0;min-height:32px;height:32px;position:relative;flex-wrap:nowrap;overflow-x:auto;background-image:linear-gradient(to right,#DDE5ED 1px,transparent 1px),linear-gradient(to bottom,#DDE5ED 1px,transparent 1px);background-size:58px 32px;background-color:#F8FAFC;border-left:1px solid #DDE5ED;border-right:1px solid #DDE5ED}
+.train-pill{width:58px;min-width:58px;height:32px;border:none;border-radius:0;background:#1A6BAF;color:#fff;border-right:1px solid rgba(255,255,255,.55);font-size:9.5px;font-weight:700;padding:0 3px;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .12s,transform .12s}
 .train-pill:hover{background:#123B6D;transform:translateY(-1px)}
-.train-empty{width:58px;height:34px;color:#9CA3AF;font-size:16px;display:inline-flex;align-items:center;justify-content:center}
+.train-empty{width:58px;height:32px;color:#9CA3AF;font-size:16px;display:inline-flex;align-items:center;justify-content:center}
 .train-count{font-size:17px;font-weight:700;color:#123B6D;text-align:center;padding-left:8px}
 .train-count span{display:block;font-size:8.5px;font-weight:500;color:#6b7280;margin-top:-2px}
 .train-row.hot{background:#F4F9FE}
 .train-row.hot .train-pill{background:#123B6D}
+
+.desafios-view.compact-load{overflow:hidden}
+.desafios-view.compact-load .desafios-intro{padding:8px 14px;margin-bottom:6px}
+.desafios-view.compact-load .desafios-intro h2{font-size:14px;margin-bottom:2px}
+.desafios-view.compact-load .desafios-intro p{font-size:10px}
+.desafios-view.compact-load .desafios-toolbar{margin-bottom:6px}
+.desafios-view.compact-load .desafios-train{height:calc(100vh - 190px);justify-content:space-between}
 @media (max-width:700px){.train-row{grid-template-columns:150px minmax(220px,1fr) 42px}.train-title{font-size:10px}.train-track{overflow-x:auto}}
 
 @media (max-width:700px){.desafios-grid{grid-template-columns:1fr}.header{align-items:flex-start}.header-actions{flex-wrap:wrap;justify-content:flex-end}}
@@ -168,6 +209,7 @@ body{font-family:'Segoe UI',sans-serif;background:#eef0f4;min-height:500px}
     </div>
     <div class="header-actions">
       <button type="button" class="header-action-btn" id="btnPortafolio" onclick="showPortfolio()">Portafolio</button>
+      <button type="button" class="header-action-btn" id="btnDashboard" onclick="showDashboard()">Panel de estado</button>
       <button type="button" class="header-action-btn" id="btnDesafios" onclick="showDesafios()">Desafíos estratégicos</button>
     </div>
   </div>
@@ -230,6 +272,23 @@ body{font-family:'Segoe UI',sans-serif;background:#eef0f4;min-height:500px}
     <div class="content" id="content"></div>
   </div>
 
+  <div class="dashboard-view" id="dashboardView">
+    <div class="dashboard-intro">
+      <div>
+        <h2>Panel de estado del portafolio</h2>
+        <p>Lectura ejecutiva de la distribución de las 19 iniciativas por foco, etapa, desafío estratégico y continuidad.</p>
+      </div>
+    </div>
+    <div class="dashboard-kpis" id="dashboardKpis"></div>
+    <div class="dashboard-grid">
+      <div class="dashboard-panel"><div class="panel-title">Iniciativas por foco</div><div class="panel-subtitle">Identidad principal de las iniciativas</div><div class="metric-list" id="focusMetrics"></div><div class="focus-legend" id="focusLegend"></div></div>
+      <div class="dashboard-panel"><div class="panel-title">Iniciativas por etapa</div><div class="panel-subtitle">Madurez dentro del método de innovación</div><div class="metric-list" id="stageMetrics"></div></div>
+      <div class="dashboard-panel"><div class="panel-title">Continuidad del portafolio</div><div class="panel-subtitle">Iniciativas nuevas 2026 y continuidad 2025</div><div class="metric-list" id="typeMetrics"></div></div>
+      <div class="dashboard-panel"><div class="panel-title">Carga por sponsor</div><div class="panel-subtitle">Cantidad de iniciativas asociadas a cada sponsor</div><div class="metric-list" id="sponsorMetrics"></div></div>
+      <div class="dashboard-panel wide"><div class="panel-title">Carga por desafío estratégico</div><div class="panel-subtitle">Cantidad de iniciativas asociadas a cada desafío PPEE</div><div class="challenge-load" id="challengeMetrics"></div></div>
+    </div>
+  </div>
+
   <div class="ficha-view" id="fichaView">
     <div class="ficha-card" id="fichaContent"></div>
   </div>
@@ -251,10 +310,19 @@ body{font-family:'Segoe UI',sans-serif;background:#eef0f4;min-height:500px}
 </div>
 
 <script>
-const STEPS=["Detectar","Idear","Diseñar","Pilotear","Escalar"];
-const ETAPA_STEP={"Detectar":0,"Idear":1,"Diseñar":2,"Pilotear":3,"Escalar":4,"I+D":-1};
+const STEPS=["Enfocar","Detectar","Idear","Diseñar","Pilotear","Escalar"];
+const ETAPA_STEP={"Enfocar":0,"Detectar":1,"Idear":2,"Diseñar":3,"Pilotear":4,"Escalar":5,"I+D":-1};
+const ETAPA_HEX={
+  "Enfocar":"#4B5D78",
+  "Detectar":"#002B5C",
+  "Idear":"#1676C4",
+  "Diseñar":"#3DD5CB",
+  "Pilotear":"#FFB800",
+  "Escalar":"#F43645",
+  "I+D":"#6B5DD3"
+};
+const ETAPA_TEXTO={"Diseñar":"#123B4A","Pilotear":"#27364A"};
 const FOCO_COLOR={"Digitalización":"blue","Sostenibilidad":"teal","Industrialización":"orange"};
-const ETAPA_COLOR={"Detectar":"gray","Idear":"gray","Diseñar":"blue","Pilotear":"amber","Escalar":"green","I+D":"purple"};
 const ESTADO_COLOR={"ACTIVA":"green","PAUSA":"red"};
 const DOTS={blue:"#185FA5",amber:"#BA7517",green:"#3B6D11",red:"#A32D2D",gray:"#5F5E5A",purple:"#3C3489",teal:"#085041",orange:"#C04A10"};
 const BAR={"Digitalización":"#1A6BAF","Sostenibilidad":"#0F6E56","Industrialización":"#C25E1A","—":"#9CA3AF"};
@@ -361,7 +429,7 @@ let openDD=null;
 // Build dropdown options
 const focos=[...new Set(DATA.map(f=>f.foco).filter(f=>f!=="—"))];
 const desafiosOpciones=[...new Set(DATA.map(f=>f.desafioNombre))];
-const etapas=["Detectar","Idear","Diseñar","Pilotear","Escalar","I+D"].filter(e=>DATA.some(f=>f.etapa===e));
+const etapas=["Enfocar","Detectar","Idear","Diseñar","Pilotear","Escalar","I+D"].filter(e=>DATA.some(f=>f.etapa===e));
 const sponsors=[...new Set(DATA.map(f=>f.sponsor).filter(s=>s&&s!=="—"&&s!=="Por definir"))].sort();
 const tipos=["Nueva 2026","Continúa 2025"];
 
@@ -452,6 +520,11 @@ function getFiltered(){
 }
 
 function tg(label,color,lg){return `<span class="tag${lg?" tag-lg":""} tag-${color}"><span class="tag-dot" style="background:${DOTS[color]||'#888'}"></span>${label}</span>`;}
+function tgEtapa(etapa,lg=false){
+  const bg=ETAPA_HEX[etapa]||"#6B7280";
+  const fg=ETAPA_TEXTO[etapa]||"#FFFFFF";
+  return `<span class="tag${lg?" tag-lg":""} tag-stage" style="background:${bg};color:${fg};border-color:${bg}"><span class="tag-dot" style="background:${fg}"></span>${etapa}</span>`;
+}
 
 function render(){
   const data=getFiltered();
@@ -470,7 +543,7 @@ function render(){
           <div class="card-tags">
             ${f.foco!=="—"?tg(f.foco,FOCO_COLOR[f.foco]||"gray"):""}
             ${tg(f.desafioNombre,"purple")}
-            ${tg(f.etapa,ETAPA_COLOR[f.etapa]||"gray")}
+            ${tgEtapa(f.etapa)}
             ${tg(f.estado,ESTADO_COLOR[f.estado]||"gray")}
           </div>
           <div class="card-footer">
@@ -487,7 +560,7 @@ function render(){
         <td style="font-weight:500">${f.nombre}</td>
         <td>${f.foco!=="—"?tg(f.foco,FOCO_COLOR[f.foco]||"gray"):"-"}</td>
         <td>${tg(f.desafioNombre,"purple")}</td>
-        <td>${tg(f.etapa,ETAPA_COLOR[f.etapa]||"gray")}</td>
+        <td>${tgEtapa(f.etapa)}</td>
         <td>${tg(f.estado,ESTADO_COLOR[f.estado]||"gray")}</td>
         <td style="color:#6b7280">${f.sponsor}</td>
         <td>${f.nueva?`<span class="card-new">Nueva</span>`:""}</td>
@@ -499,18 +572,20 @@ function render(){
 function stepperH(etapa){
   if(etapa==="I+D") return `<div style="display:inline-flex;align-items:center;gap:6px;padding:5px 11px;background:#EEEDFE;border-radius:7px;font-size:11px;color:#3C3489;border:0.5px solid #AFA9EC;margin-bottom:16px">Fase I+D — exploración temprana</div>`;
   const paso=ETAPA_STEP[etapa]??0;
-  return `<div class="stepper">${STEPS.map((s,i)=>{
+  return `<div class="stepper">${STEPS.map((stage,i)=>{
     const done=i<paso,active=i===paso;
     const cls=done?"done":active?"active":"pending";
-    const icon=done?`<svg width="13" height="13" viewBox="0 0 13 13" fill="none"><polyline points="2,6.5 5.5,10 11,3" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`:`${i+1}`;
-    const conn=i<4?`<div class="step-conn${done?" done":""}"></div>`:"";
-    return `<div class="step"><div class="step-circle ${cls}">${icon}</div><div class="step-lbl${active?" active-lbl":""}">${s}</div></div>${conn}`;
+    const color=ETAPA_HEX[stage];
+    const textColor=ETAPA_TEXTO[stage]||"#FFFFFF";
+    const icon=done?`<svg width="14" height="14" viewBox="0 0 13 13" fill="none"><polyline points="2,6.5 5.5,10 11,3" stroke="${textColor}" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>`:`${i+1}`;
+    const circleStyle=done||active?`background:${color};color:${textColor};--stage-color:${color}`:"";
+    const conn=i<STEPS.length-1?`<div class="step-conn${done?" done":""}" style="--conn-color:${color}"></div>`:"";
+    return `<div class="step"><div class="step-circle ${cls}" style="${circleStyle}">${icon}</div><div class="step-lbl${active?" active-lbl":""}" style="${active?`--stage-color:${color}`:""}">${stage}</div></div>${conn}`;
   }).join("")}</div>`;
 }
-
 function openFicha(id){
   const f=DATA.find(d=>d.id===id);if(!f) return;
-  previousView=document.getElementById("desafiosView").style.display==="block"?"desafios":"portfolio";
+  previousView=document.getElementById("desafiosView").style.display==="block"?"desafios":document.getElementById("dashboardView").style.display==="block"?"dashboard":"portfolio";
   const hdr=HDR[f.foco]||"#4B5563";
   const desc=DESCRIPCIONES[f.id]||null;
   const hips=HIPOTESIS[f.id]||[];
@@ -527,7 +602,7 @@ function openFicha(id){
       <div class="tags-lg">
         ${f.foco!=="—"?tg(f.foco,FOCO_COLOR[f.foco]||"gray",true):""}
         ${tg(f.desafioNombre,"purple",true)}
-        ${tg(f.etapa,ETAPA_COLOR[f.etapa]||"gray",true)}
+        ${tgEtapa(f.etapa,true)}
         ${tg(f.estado,ESTADO_COLOR[f.estado]||"gray",true)}
       </div>
       ${stepperH(f.etapa)}
@@ -542,9 +617,11 @@ function openFicha(id){
     </div>`;
   document.getElementById("listView").style.display="none";
   document.getElementById("desafiosView").style.display="none";
+  document.getElementById("dashboardView").style.display="none";
   document.getElementById("fichaView").style.display="block";
-  document.getElementById("btnPortafolio").classList.add("active");
-  document.getElementById("btnDesafios").classList.remove("active");
+  document.getElementById("btnPortafolio").classList.toggle("active",previousView==="portfolio");
+  document.getElementById("btnDashboard").classList.toggle("active",previousView==="dashboard");
+  document.getElementById("btnDesafios").classList.toggle("active",previousView==="desafios");
   document.getElementById("backBtn").style.display="inline-flex";
   document.getElementById("headerTitle").textContent=f.nombre;
   document.getElementById("headerBadge").textContent=`INN-${String(f.id).padStart(2,"0")}`;
@@ -552,6 +629,8 @@ function openFicha(id){
 
 function renderDesafios(){
   const grid=document.getElementById("desafiosGrid");
+  const desafiosContainer=document.getElementById("desafiosView");
+  desafiosContainer.classList.toggle("compact-load",desafiosView==="train");
   const grupos=[...DESAFIOS,{id:"Por Definir",nombre:"Por Definir",final:"Iniciativas pendientes de clasificación estratégica."}];
   const maxCarga=Math.max(...grupos.map(d=>DATA.filter(f=>f.desafio===d.id).length),1);
   if(desafiosView==="train"){
@@ -590,35 +669,106 @@ function setDesafiosView(v){
   renderDesafios();
 }
 
+function countBy(items,keyFn){
+  return items.reduce((acc,item)=>{const key=keyFn(item);acc[key]=(acc[key]||0)+1;return acc;},{});
+}
+
+function renderMetricList(containerId,rows,total){
+  const el=document.getElementById(containerId);
+  const max=Math.max(...rows.map(r=>r.value),1);
+  el.innerHTML=rows.map(r=>`<div class="metric-row" title="${r.label}: ${r.value}">
+    <div class="metric-label">${r.label}</div>
+    <div class="metric-track"><div class="metric-fill" style="width:${(r.value/max)*100}%;background:${r.color}"></div></div>
+    <div class="metric-value">${r.value}</div>
+  </div>`).join("");
+}
+
+function renderDashboard(){
+  const total=DATA.length;
+  const nuevas=DATA.filter(f=>f.nueva).length;
+  const continuidad=total-nuevas;
+  const activas=DATA.filter(f=>f.estado==="ACTIVA").length;
+  const desafiosConCarga=new Set(DATA.filter(f=>f.desafio!=="Por Definir").map(f=>f.desafio)).size;
+  document.getElementById("dashboardKpis").innerHTML=`
+    <div class="kpi-card"><div class="kpi-label">Total portafolio</div><div class="kpi-value">${total}</div><div class="kpi-sub">iniciativas 2025–2026</div></div>
+    <div class="kpi-card"><div class="kpi-label">Nuevas 2026</div><div class="kpi-value">${nuevas}</div><div class="kpi-sub">${Math.round(nuevas/total*100)}% del portafolio</div></div>
+    <div class="kpi-card"><div class="kpi-label">Continuidad 2025</div><div class="kpi-value">${continuidad}</div><div class="kpi-sub">iniciativas que continúan</div></div>
+    <div class="kpi-card"><div class="kpi-label">Desafíos con iniciativas</div><div class="kpi-value">${desafiosConCarga}<span style="font-size:13px;color:#6b7280">/10</span></div><div class="kpi-sub">${activas} iniciativas activas</div></div>`;
+
+  const focoCounts=countBy(DATA,f=>f.foco);
+  const focoOrder=["Digitalización","Industrialización","Sostenibilidad","—"];
+  const focoRows=focoOrder.filter(k=>focoCounts[k]).map(k=>({label:k==="—"?"Foco por definir":k,value:focoCounts[k],color:BAR[k]||"#9CA3AF"}));
+  renderMetricList("focusMetrics",focoRows,total);
+  document.getElementById("focusLegend").innerHTML=focoRows.map(r=>`<span class="focus-chip"><i style="background:${r.color}"></i>${r.label}</span>`).join("");
+
+  const stageCounts=countBy(DATA,f=>f.etapa);
+  const stageOrder=["Enfocar","Detectar","Idear","Diseñar","Pilotear","Escalar","I+D"];
+  renderMetricList("stageMetrics",stageOrder.filter(k=>stageCounts[k]).map(k=>({label:k,value:stageCounts[k],color:ETAPA_HEX[k]||"#6B7280"})),total);
+
+  renderMetricList("typeMetrics",[
+    {label:"Nueva 2026",value:nuevas,color:"#1A6BAF"},
+    {label:"Continúa 2025",value:continuidad,color:"#4B5D78"}
+  ],total);
+
+  const sponsorCounts=countBy(DATA,f=>f.sponsor==="—"?"Por definir":f.sponsor);
+  const sponsorRows=Object.entries(sponsorCounts).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0])).map(([label,value])=>({label,value,color:"#185FA5"}));
+  renderMetricList("sponsorMetrics",sponsorRows,total);
+
+  const challengeGroups=[...DESAFIOS,{id:"Por Definir",nombre:"Por Definir"}];
+  const challengeCounts=countBy(DATA,f=>f.desafio);
+  document.getElementById("challengeMetrics").innerHTML=challengeGroups.map(d=>`<div class="challenge-cell">
+    <div class="challenge-id">${d.id==="Por Definir"?"?":d.id}</div>
+    <div class="challenge-count">${challengeCounts[d.id]||0}</div>
+    <div class="challenge-name">${d.nombre}</div>
+  </div>`).join("");
+}
+
+function showDashboard(){
+  closeAllDropdowns();
+  document.getElementById("listView").style.display="none";
+  document.getElementById("fichaView").style.display="none";
+  document.getElementById("desafiosView").style.display="none";
+  document.getElementById("dashboardView").style.display="block";
+  document.getElementById("backBtn").style.display="none";
+  document.getElementById("headerTitle").textContent="Panel de Estado PPEE";
+  document.getElementById("headerBadge").textContent="2026 · Vista ejecutiva";
+  document.getElementById("btnDashboard").classList.add("active");
+  document.getElementById("btnPortafolio").classList.remove("active");
+  document.getElementById("btnDesafios").classList.remove("active");
+  renderDashboard();
+}
+
 function showDesafios(){
   closeAllDropdowns();
   document.getElementById("listView").style.display="none";
   document.getElementById("fichaView").style.display="none";
+  document.getElementById("dashboardView").style.display="none";
   document.getElementById("desafiosView").style.display="block";
   document.getElementById("backBtn").style.display="none";
   document.getElementById("headerTitle").textContent="Desafíos Estratégicos PPEE";
   document.getElementById("headerBadge").textContent="10 desafíos clave";
   document.getElementById("btnDesafios").classList.add("active");
   document.getElementById("btnPortafolio").classList.remove("active");
+  document.getElementById("btnDashboard").classList.remove("active");
   renderDesafios();
 }
 
 function showPortfolio(){
   document.getElementById("desafiosView").style.display="none";
+  document.getElementById("dashboardView").style.display="none";
   document.getElementById("fichaView").style.display="none";
   document.getElementById("listView").style.display="block";
   document.getElementById("backBtn").style.display="none";
   document.getElementById("headerTitle").textContent="Portafolio PPEE";
   document.getElementById("btnPortafolio").classList.add("active");
+  document.getElementById("btnDashboard").classList.remove("active");
   document.getElementById("btnDesafios").classList.remove("active");
   render();
 }
 
 function goBack(){
-  if(previousView==="desafios"){
-    showDesafios();
-    return;
-  }
+  if(previousView==="desafios"){showDesafios();return;}
+  if(previousView==="dashboard"){showDashboard();return;}
   showPortfolio();
 }
 
@@ -640,6 +790,7 @@ sponsors.forEach(val=>{
 ["foco","desafio","etapa","sponsor","tipo"].forEach(k=>updateTrigger(k));
 document.getElementById("btnPortafolio").classList.add("active");
 renderDesafios();
+renderDashboard();
 render();
 </script>
 </body>
