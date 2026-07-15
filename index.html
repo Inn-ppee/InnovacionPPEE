@@ -205,12 +205,56 @@ tbody tr:hover td{background:#F2F7FC}
 @media(max-width:780px){.center-detail-grid{grid-template-columns:1fr 1fr}}
 
 
+.challenge-exec-list{display:flex;flex-direction:column;gap:8px}
+.challenge-exec-row{
+  background:#fff;border:1px solid #E1E6EC;border-radius:11px;
+  padding:11px 12px;display:grid;grid-template-columns:255px minmax(0,1fr) 140px;
+  gap:12px;align-items:center
+}
+.challenge-exec-main{display:flex;align-items:flex-start;gap:9px;min-width:0}
+.challenge-exec-id{
+  width:42px;height:42px;border-radius:8px;background:var(--navy);color:#fff;
+  display:grid;place-items:center;font-size:11px;font-weight:800;flex:0 0 auto
+}
+.challenge-exec-title{font-size:12px;color:var(--navy);font-weight:800;line-height:1.25}
+.challenge-exec-question{
+  font-size:10px;color:#4B5563;line-height:1.45;margin-top:3px
+}
+.challenge-exec-load{min-width:0}
+.challenge-exec-bar{
+  height:34px;display:flex;align-items:stretch;overflow-x:auto;
+  background-color:#F8FAFC;
+  background-image:linear-gradient(to right,#DDE5ED 1px,transparent 1px);
+  background-size:62px 34px;border:1px solid #DDE5ED;border-radius:7px
+}
+.challenge-exec-block{
+  width:62px;min-width:62px;border:0;border-right:1px solid rgba(255,255,255,.65);
+  color:#fff;font-size:9px;font-weight:800
+}
+.challenge-exec-empty{
+  width:62px;min-width:62px;display:grid;place-items:center;color:#9AA4B2;font-size:11px
+}
+.challenge-exec-meta{text-align:right}
+.challenge-exec-count{font-size:21px;color:var(--navy);font-weight:800;line-height:1}
+.challenge-exec-count small{display:block;font-size:8px;color:#687488;font-weight:600;margin-top:3px}
+.challenge-exec-pct{font-size:10px;color:#185FA5;font-weight:700;margin-top:5px}
+.challenge-summary{
+  background:#fff;border:1px solid #E1E6EC;border-radius:11px;padding:12px 13px;margin-top:10px
+}
+.challenge-summary h3{font-size:12px;color:var(--navy);margin-bottom:7px}
+.challenge-summary-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.challenge-summary-item{background:#F7F9FB;border:1px solid #E4E8ED;border-radius:8px;padding:8px}
+.challenge-summary-label{font-size:8.5px;text-transform:uppercase;letter-spacing:.06em;color:#758094;font-weight:700}
+.challenge-summary-value{font-size:12px;color:#263244;font-weight:800;margin-top:3px;line-height:1.35}
+@media(max-width:950px){
+  .challenge-exec-row{grid-template-columns:1fr}
+  .challenge-exec-meta{text-align:left;display:flex;gap:10px;align-items:center}
+}
+@media(max-width:700px){
+  .challenge-summary-grid{grid-template-columns:1fr 1fr}
 }
 
 
-
-
-}
 
 
 .challenge-board{display:flex;flex-direction:column;gap:8px}
@@ -233,13 +277,13 @@ tbody tr:hover td{background:#F2F7FC}
 }
 .challenge-row-body{
   display:grid;
-  grid-template-columns:minmax(0,1.55fr) minmax(420px,.95fr);
+  grid-template-columns:minmax(0,1.45fr) minmax(310px,.85fr);
   gap:10px;
   align-items:stretch
 }
 .challenge-question{
   border:1px solid #DCE4EC;background:#F8FAFC;border-radius:8px;
-  padding:9px 10px;min-height:70px;display:flex;align-items:flex-start
+  padding:9px 10px;min-height:70px;display:flex;align-items:center
 }
 .challenge-question p{
   font-size:10px;color:#465266;line-height:1.45
@@ -251,7 +295,7 @@ tbody tr:hover td{background:#F2F7FC}
   flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden
 }
 .challenge-initiative{
-  width:70px;min-width:70px;height:36px;border:0;border-radius:6px;color:#fff;
+  width:66px;min-width:66px;height:34px;border:0;border-radius:6px;color:#fff;
   font-size:9px;font-weight:800;display:grid;place-items:center;
   box-shadow:inset 0 -2px 0 rgba(0,0,0,.08);transition:.12s
 }
@@ -259,11 +303,517 @@ tbody tr:hover td{background:#F2F7FC}
   transform:translateY(-2px);box-shadow:0 4px 10px rgba(18,59,109,.14)
 }
 .challenge-initiative-empty{
-  width:70px;min-width:70px;height:36px;border:1px dashed #C9D2DC;border-radius:6px;
+  width:66px;min-width:66px;height:34px;border:1px dashed #C9D2DC;border-radius:6px;
   color:#9AA4B2;display:grid;place-items:center;font-size:12px;background:#F8FAFC
 }
-@media(max-width:980px){
+@media(max-width:900px){
   .challenge-row-body{grid-template-columns:1fr}
+}
+
+
+/* ================================================================
+   DESAFÍOS ESTRATÉGICOS — ESTRUCTURA REESCRITA COMPLETAMENTE
+   ================================================================ */
+.strategic-challenges-page{
+  padding:12px 14px 28px;
+}
+.strategic-challenges-scroll{
+  width:100%;
+  overflow-x:auto;
+  overflow-y:visible;
+  border:1px solid #DDE4EB;
+  border-radius:12px;
+  background:#fff;
+}
+.strategic-challenges-table{
+  width:100%;
+  min-width:1180px;
+  border-collapse:separate;
+  border-spacing:0;
+  table-layout:fixed;
+}
+.strategic-col-name{width:220px}
+.strategic-col-question{width:560px}
+.strategic-col-initiatives{width:400px}
+
+.strategic-challenges-table thead th{
+  position:sticky;
+  top:55px;
+  z-index:10;
+  padding:9px 12px;
+  background:#F4F7FA;
+  color:#657085;
+  border-bottom:1px solid #DDE4EB;
+  font-size:9px;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+  font-weight:800;
+  text-align:left;
+}
+.strategic-challenges-table thead th:not(:last-child){
+  border-right:1px solid #E2E8EE;
+}
+.strategic-challenges-table tbody td{
+  padding:10px 12px;
+  vertical-align:top;
+  background:#fff;
+  border-bottom:1px solid #E7ECF1;
+}
+.strategic-challenges-table tbody tr:last-child td{
+  border-bottom:0;
+}
+.strategic-challenges-table tbody td:not(:last-child){
+  border-right:1px solid #E2E8EE;
+}
+.strategic-challenges-table tbody tr:hover td{
+  background:#FBFCFE;
+}
+
+/* Columna 1: número + nombre */
+.strategic-name-wrap{
+  display:flex;
+  align-items:flex-start;
+  gap:9px;
+}
+.strategic-id{
+  width:40px;
+  height:36px;
+  min-width:40px;
+  border-radius:7px;
+  background:#123B6D;
+  color:#fff;
+  display:grid;
+  place-items:center;
+  font-size:10px;
+  font-weight:900;
+}
+.strategic-name{
+  color:#123B6D;
+  font-size:11.5px;
+  font-weight:800;
+  line-height:1.35;
+  padding-top:2px;
+}
+.strategic-count{
+  display:block;
+  margin-top:5px;
+  color:#758094;
+  font-size:8.5px;
+  font-weight:600;
+}
+
+/* Columna 2: pregunta */
+.strategic-question{
+  min-height:52px;
+  color:#465266;
+  font-size:10.2px;
+  line-height:1.52;
+}
+
+/* Columna 3: una sola línea horizontal */
+.strategic-initiatives-line{
+  width:100%;
+  display:flex;
+  flex-direction:row;
+  flex-wrap:nowrap;
+  gap:6px;
+  align-items:flex-start;
+  overflow-x:auto;
+  overflow-y:hidden;
+  white-space:nowrap;
+  padding-bottom:3px;
+}
+.strategic-initiative-chip{
+  flex:0 0 70px;
+  width:70px;
+  height:34px;
+  border:0;
+  border-radius:6px;
+  color:#fff;
+  font-size:9px;
+  font-weight:900;
+  display:grid;
+  place-items:center;
+  box-shadow:inset 0 -2px 0 rgba(0,0,0,.09);
+  transition:transform .12s,box-shadow .12s;
+}
+.strategic-initiative-chip:hover{
+  transform:translateY(-2px);
+  box-shadow:0 4px 10px rgba(18,59,109,.16);
+}
+.strategic-no-initiative{
+  display:inline-grid;
+  place-items:center;
+  width:70px;
+  height:34px;
+  border:1px dashed #C8D1DB;
+  border-radius:6px;
+  background:#F7F9FB;
+  color:#98A2B1;
+  font-size:11px;
+}
+
+/* Resumen inferior */
+.strategic-summary{
+  margin-top:10px;
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:8px;
+}
+.strategic-summary-card{
+  background:#fff;
+  border:1px solid #E1E6EC;
+  border-radius:9px;
+  padding:9px 10px;
+}
+.strategic-summary-label{
+  color:#758094;
+  font-size:8.5px;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+  font-weight:800;
+}
+.strategic-summary-value{
+  margin-top:4px;
+  color:#263244;
+  font-size:11px;
+  line-height:1.4;
+  font-weight:800;
+}
+@media(max-width:800px){
+  .strategic-summary{grid-template-columns:1fr 1fr}
+}
+
+
+/* ===== AJUSTE FINAL DESAFÍOS: SIN TITULARES Y PREGUNTA DESTACADA ===== */
+.strategic-challenges-table{
+  min-width:1180px;
+}
+.strategic-col-name{width:220px}
+.strategic-col-question{width:560px}
+.strategic-col-initiatives{width:400px}
+
+.strategic-challenges-table tbody td{
+  padding:8px 10px;
+  vertical-align:middle;
+  background:#fff;
+  border-bottom:1px solid #E7ECF1;
+}
+.strategic-challenges-table tbody tr:last-child td{
+  border-bottom:0;
+}
+.strategic-challenges-table tbody td:not(:last-child){
+  border-right:1px solid #E2E8EE;
+}
+.strategic-challenges-table tbody tr:hover td{
+  background:#FBFCFE;
+}
+
+/* Columna desafío */
+.strategic-name-wrap{
+  display:flex;
+  align-items:center;
+  gap:9px;
+}
+.strategic-id{
+  width:60px;
+  height:54px;
+  min-width:60px;
+  border-radius:10px;
+  background:#123B6D;
+  color:#fff;
+  display:grid;
+  place-items:center;
+  font-size:12px;
+  font-weight:900;
+}
+.strategic-name{
+  color:#123B6D;
+  font-size:12px;
+  font-weight:800;
+  line-height:1.3;
+  padding-top:0;
+}
+.strategic-count{
+  display:block;
+  margin-top:5px;
+  color:#758094;
+  font-size:8.7px;
+  font-weight:600;
+}
+
+/* Pregunta dentro de rectángulo */
+.strategic-question{
+  min-height:76px;
+  display:flex;
+  align-items:flex-start;
+  background:#F8FAFC;
+  border:1px solid #DCE4EC;
+  border-radius:8px;
+  padding:10px 11px;
+  color:#465266;
+  font-size:10.2px;
+  line-height:1.5;
+  overflow-wrap:anywhere;
+}
+
+/* Iniciativas en una sola línea */
+.strategic-initiatives-line{
+  width:100%;
+  min-height:76px;
+  display:flex;
+  flex-direction:row;
+  flex-wrap:nowrap;
+  gap:7px;
+  align-items:flex-start;
+  overflow-x:auto;
+  overflow-y:hidden;
+  white-space:nowrap;
+  padding:10px;
+  background:#fff;
+  border:1px solid #DCE4EC;
+  border-radius:8px;
+}
+.strategic-initiative-chip{
+  flex:0 0 78px;
+  width:78px;
+  height:52px;
+  border:0;
+  border-radius:8px;
+  color:#fff;
+  font-size:9.5px;
+  font-weight:900;
+  display:grid;
+  place-items:center;
+  box-shadow:inset 0 -2px 0 rgba(0,0,0,.09);
+  transition:transform .12s,box-shadow .12s;
+}
+.strategic-initiative-chip:hover{
+  transform:translateY(-2px);
+  box-shadow:0 4px 10px rgba(18,59,109,.16);
+}
+.strategic-no-initiative{
+  display:grid;
+  place-items:center;
+  width:78px;
+  min-width:78px;
+  height:52px;
+  border:1px dashed #C8D1DB;
+  border-radius:8px;
+  background:#F7F9FB;
+  color:#98A2B1;
+  font-size:11px;
+}
+
+
+/* ===== CORRECCIÓN DESBORDE DE PREGUNTAS ===== */
+.strategic-challenges-table{
+  table-layout:fixed !important;
+}
+.strategic-challenges-table tbody td:nth-child(2){
+  white-space:normal !important;
+  overflow:hidden !important;
+}
+.strategic-question{
+  width:100% !important;
+  max-width:100% !important;
+  white-space:normal !important;
+  overflow:hidden !important;
+  overflow-wrap:anywhere !important;
+  word-break:normal !important;
+  hyphens:auto !important;
+  display:block !important;
+  min-height:76px !important;
+  box-sizing:border-box !important;
+}
+.strategic-question *{
+  white-space:normal !important;
+  overflow-wrap:anywhere !important;
+}
+.strategic-challenges-table tbody td:nth-child(3){
+  white-space:normal !important;
+  overflow:hidden !important;
+}
+.strategic-initiatives-line{
+  max-width:100% !important;
+  box-sizing:border-box !important;
+}
+
+
+/* ===== AJUSTE VISUAL: PREGUNTAS MÁS COMPACTAS Y TÍTULOS BIEN CONTENIDOS ===== */
+
+/* Columna de desafío un poco más ancha para títulos largos */
+.strategic-col-name{width:245px !important}
+.strategic-col-question{width:535px !important}
+.strategic-col-initiatives{width:400px !important}
+
+/* Fila más compacta */
+.strategic-challenges-table tbody td{
+  padding:7px 9px !important;
+}
+
+/* Contenedor del desafío */
+.strategic-name-wrap{
+  align-items:center !important;
+  gap:8px !important;
+  min-width:0 !important;
+}
+
+/* Número D */
+.strategic-id{
+  width:54px !important;
+  height:48px !important;
+  min-width:54px !important;
+  border-radius:9px !important;
+  font-size:11px !important;
+}
+
+/* Título del desafío: permite salto de línea dentro de su espacio */
+.strategic-name-wrap > div:last-child{
+  min-width:0 !important;
+  max-width:165px !important;
+}
+.strategic-name{
+  display:block !important;
+  width:100% !important;
+  max-width:165px !important;
+  white-space:normal !important;
+  overflow-wrap:anywhere !important;
+  word-break:normal !important;
+  line-height:1.18 !important;
+  font-size:11.2px !important;
+  padding:0 !important;
+}
+
+/* Contador más compacto */
+.strategic-count{
+  margin-top:4px !important;
+  font-size:8.3px !important;
+  line-height:1.15 !important;
+  white-space:normal !important;
+}
+
+/* Pregunta más baja y compacta */
+.strategic-question{
+  min-height:48px !important;
+  height:auto !important;
+  padding:7px 9px !important;
+  font-size:9.7px !important;
+  line-height:1.35 !important;
+  display:flex !important;
+  align-items:flex-start !important;
+}
+
+/* Área de iniciativas con menor altura para acompañar la pregunta */
+.strategic-initiatives-line{
+  min-height:48px !important;
+  padding:7px !important;
+  align-items:center !important;
+}
+
+/* Chips un poco más bajos */
+.strategic-initiative-chip{
+  height:38px !important;
+  flex-basis:74px !important;
+  width:74px !important;
+}
+.strategic-no-initiative{
+  height:38px !important;
+  width:74px !important;
+  min-width:74px !important;
+}
+
+
+/* ===== AJUSTE RESPONSIVE: TODO CABE EN EL ANCHO DE LA PÁGINA ===== */
+.strategic-challenges-scroll{
+  width:100% !important;
+  overflow-x:hidden !important;
+}
+.strategic-challenges-table{
+  width:100% !important;
+  min-width:0 !important;
+  table-layout:fixed !important;
+}
+
+/* Proporciones de las tres columnas */
+.strategic-col-name{width:20% !important}
+.strategic-col-question{width:48% !important}
+.strategic-col-initiatives{width:32% !important}
+
+/* Desafío */
+.strategic-name-wrap > div:last-child{
+  max-width:none !important;
+  width:calc(100% - 62px) !important;
+}
+.strategic-name{
+  max-width:none !important;
+  width:100% !important;
+  font-size:10.7px !important;
+  line-height:1.16 !important;
+}
+
+/* Pregunta */
+.strategic-question{
+  width:100% !important;
+  max-width:100% !important;
+  font-size:9.35px !important;
+  line-height:1.3 !important;
+  padding:7px 8px !important;
+}
+
+/* Iniciativas: una sola línea que cabe dentro de la columna */
+.strategic-initiatives-line{
+  width:100% !important;
+  max-width:100% !important;
+  overflow-x:hidden !important;
+  gap:4px !important;
+  padding:7px !important;
+  justify-content:flex-start !important;
+}
+.strategic-initiative-chip{
+  flex:1 1 0 !important;
+  min-width:0 !important;
+  width:auto !important;
+  max-width:58px !important;
+  height:36px !important;
+  padding:0 3px !important;
+  font-size:8.4px !important;
+}
+.strategic-no-initiative{
+  width:52px !important;
+  min-width:52px !important;
+  height:36px !important;
+}
+
+/* En pantallas más pequeñas conserva las tres columnas, pero compacta */
+@media(max-width:1100px){
+  .strategic-col-name{width:21% !important}
+  .strategic-col-question{width:47% !important}
+  .strategic-col-initiatives{width:32% !important}
+  .strategic-id{
+    width:46px !important;
+    min-width:46px !important;
+    height:44px !important;
+  }
+  .strategic-name-wrap > div:last-child{
+    width:calc(100% - 54px) !important;
+  }
+  .strategic-name{font-size:10px !important}
+  .strategic-question{font-size:8.9px !important}
+  .strategic-initiative-chip{
+    max-width:52px !important;
+    font-size:7.8px !important;
+  }
+}
+
+/* Solo en móvil se permite desplazamiento interno del módulo */
+@media(max-width:760px){
+  .strategic-challenges-scroll{
+    overflow-x:auto !important;
+  }
+  .strategic-challenges-table{
+    min-width:760px !important;
+  }
 }
 
 </style>
@@ -313,13 +863,27 @@ tbody tr:hover td{background:#F2F7FC}
   </div>
 </section>
 
+
 <section id="challengesView" class="view">
-  <div class="desafios">
+  <div class="strategic-challenges-page">
     <div class="intro">
       <h2>Desafíos Estratégicos PPEE</h2>
-      <p>Desafíos estratégicos de Proyectos Especiales 2025–2028 y distribución de iniciativas asociadas.</p>
+      <p>Relación entre cada desafío estratégico, su pregunta movilizadora y las iniciativas que contribuyen a abordarlo.</p>
     </div>
-    <div id="challengeContent"></div>
+
+    <div class="strategic-challenges-scroll">
+      <table class="strategic-challenges-table" aria-label="Desafíos estratégicos e iniciativas asociadas">
+        <colgroup>
+          <col class="strategic-col-name">
+          <col class="strategic-col-question">
+          <col class="strategic-col-initiatives">
+        </colgroup>
+        
+        <tbody id="strategicChallengesBody"></tbody>
+      </table>
+    </div>
+
+    <div id="strategicChallengesSummary"></div>
   </div>
 </section>
 
@@ -485,7 +1049,7 @@ function renderPortfolio(){
    <span class="tag challenge-tag">${esc(d.challenge)} ${esc(challengeName(d.challenge))}</span></div>
    <div class="card-footer">${esc(d.sponsor)}</div></div></article>`).join("")}</div>`;
  }else{
-  c.innerHTML=`<div class="table-wrap"><table><thead><tr><th>ID</th><th>Iniciativa</th><th>Año inicio</th><th>Foco</th><th>Tipo innovación</th><th>Desafío</th><th>Etapa</th><th>Beneficio</th><th>Startup / Aliado</th><th>Sponsor</th><th>Gestor</th></tr></thead><tbody>
+  c.innerHTML=`<div class="table-wrap"><table><tbody>
   ${data.map(d=>`<tr onclick="openFicha(${d.id})"><td><strong>${inn(d.id)}</strong></td><td>${esc(d.name)}</td><td>${esc(d.startYear)}</td><td>${tag(d.focus,focusColor(d.focus))}</td><td>${esc(d.innovationType)}</td><td>${esc(d.challenge)} · ${esc(challengeName(d.challenge))}</td><td>${tag(d.stage,stageColor(d.stage),d.stage==="Pilotear"||d.stage==="Diseñar"?"#243247":"#fff")}</td><td>${esc(d.benefit)}</td><td>${esc(d.startup)}</td><td>${esc(d.sponsor)}</td><td>${esc(d.manager)}</td></tr>`).join("")}</tbody></table></div>`;
  }
 }
@@ -564,45 +1128,74 @@ function healthCard(name,value,state,desc){const cls=state==="Saludable"?"good":
 function filterFromDashboard(key,value){clearFilters();filters[key].add(value);document.querySelectorAll(`#${key}DD .drop-item`).forEach(b=>{if(b.dataset.value===value){b.classList.add("selected");b.querySelector(".check").textContent="✓"}});setPortfolioMode("grid")}
 
 function renderChallenges(){
- const el=document.getElementById("challengeContent");
+ const body=document.getElementById("strategicChallengesBody");
+ const summary=document.getElementById("strategicChallengesSummary");
  const total=DATA.length;
- const counts=CHALLENGES.map(ch=>({
+
+ const rows=CHALLENGES.map(ch=>({
   ...ch,
   initiatives:DATA.filter(d=>d.challenge===ch.id)
  }));
 
- el.innerHTML=`
- <div class="challenge-board">
-  ${counts.map(ch=>{
-   const arr=ch.initiatives;
-   return `<article class="challenge-row">
-    <div class="challenge-row-head">
-      <div class="challenge-row-title">
-        <div class="challenge-row-id">${ch.id}</div>
-        <div class="challenge-row-name">${ch.name}</div>
+ body.innerHTML=rows.map(ch=>`
+  <tr>
+    <td>
+      <div class="strategic-name-wrap">
+        <div class="strategic-id">${ch.id}</div>
+        <div>
+          <div class="strategic-name">${ch.name}</div>
+          <span class="strategic-count">${ch.initiatives.length} iniciativas · ${pct(ch.initiatives.length,total)}%</span>
+        </div>
       </div>
-      <div class="challenge-row-meta">${arr.length} iniciativas · ${pct(arr.length,total)}%</div>
-    </div>
+    </td>
 
-    <div class="challenge-row-body">
-      <div class="challenge-question">
-        <p>${ch.text}</p>
-      </div>
+    <td>
+      <div class="strategic-question">${ch.text}</div>
+    </td>
 
-      <div class="challenge-initiatives">
-        ${arr.length
-          ? arr.map(d=>`<button
-              class="challenge-initiative"
-              style="background:${focusColor(d.focus)}"
-              title="${inn(d.id)} · ${esc(d.name)} · ${esc(d.stage)} · ${esc(d.sponsor)}"
-              onclick="openFicha(${d.id})"
-            >${inn(d.id)}</button>`).join("")
-          : `<span class="challenge-initiative-empty">—</span>`}
+    <td>
+      <div class="strategic-initiatives-line">
+        ${ch.initiatives.length
+          ? ch.initiatives.map(d=>`
+              <button
+                type="button"
+                class="strategic-initiative-chip"
+                style="background:${focusColor(d.focus)}"
+                title="${inn(d.id)} · ${esc(d.name)} · ${esc(d.stage)} · ${esc(d.sponsor)}"
+                onclick="openFicha(${d.id})"
+              >${inn(d.id)}</button>
+            `).join("")
+          : `<span class="strategic-no-initiative">—</span>`}
       </div>
+    </td>
+  </tr>
+ `).join("");
+
+ const sorted=[...rows].sort((a,b)=>b.initiatives.length-a.initiatives.length);
+ const first=sorted[0];
+ const second=sorted[1];
+ const empty=rows.filter(ch=>ch.initiatives.length===0);
+ const topTwo=first.initiatives.length+second.initiatives.length;
+
+ summary.innerHTML=`
+  <div class="strategic-summary">
+    <div class="strategic-summary-card">
+      <div class="strategic-summary-label">Mayor concentración</div>
+      <div class="strategic-summary-value">${first.id} · ${first.name}<br>${first.initiatives.length} iniciativas (${pct(first.initiatives.length,total)}%)</div>
     </div>
-   </article>`;
-  }).join("")}
- </div>`;
+    <div class="strategic-summary-card">
+      <div class="strategic-summary-label">Segundo desafío</div>
+      <div class="strategic-summary-value">${second.id} · ${second.name}<br>${second.initiatives.length} iniciativas (${pct(second.initiatives.length,total)}%)</div>
+    </div>
+    <div class="strategic-summary-card">
+      <div class="strategic-summary-label">Sin iniciativas</div>
+      <div class="strategic-summary-value">${empty.length?empty.map(ch=>ch.id).join(", "):"Ninguno"}</div>
+    </div>
+    <div class="strategic-summary-card">
+      <div class="strategic-summary-label">Concentración top 2</div>
+      <div class="strategic-summary-value">${first.id} + ${second.id}<br>${topTwo} iniciativas (${pct(topTwo,total)}%)</div>
+    </div>
+  </div>`;
 }
 
 function renderCenters(){
@@ -626,7 +1219,7 @@ function renderCenters(){
  ).join("");
 
  document.getElementById("centerMatrix").innerHTML=`
- <div class="matrix-wrap"><table class="matrix"><thead><tr><th>Iniciativa</th>${CENTERS.map(c=>`<th>${c}</th>`).join("")}</tr></thead>
+ <div class="matrix-wrap"><table class="matrix">
  <tbody>${rows||'<tr><td colspan="8">Sin despliegues configurados.</td></tr>'}</tbody></table></div>
  <div class="legend">
    <span><i class="deploy active">✓</i> Iniciativa activa en el centro de trabajo</span>
@@ -735,3 +1328,4 @@ init();
 </script>
 </body>
 </html>
+
