@@ -127,7 +127,6 @@ tbody tr:hover td{background:#F2F7FC}
 .challenge-count{font-size:21px;color:var(--blue);font-weight:800}
 .challenge-name{font-size:8.7px;color:#697386}
 .desafios{padding:12px 14px 28px}
-.desafios-toolbar{display:flex;justify-content:space-between;align-items:center;margin:8px 0;gap:9px}
 .desafios-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(285px,1fr));gap:9px}
 .desafio-card{background:#fff;border:1px solid #E1E6EC;border-radius:11px;overflow:hidden}
 .desafio-head{background:#F7FAFD;border-bottom:1px solid #E5EAF0;padding:10px;display:flex;gap:8px;align-items:center}
@@ -205,6 +204,68 @@ tbody tr:hover td{background:#F2F7FC}
 .center-initiative{border:0;background:#F2F6FA;color:#185FA5;border-radius:7px;padding:5px 7px;font-size:9px;font-weight:700}
 @media(max-width:780px){.center-detail-grid{grid-template-columns:1fr 1fr}}
 
+
+}
+
+
+
+
+}
+
+
+.challenge-board{display:flex;flex-direction:column;gap:8px}
+.challenge-row{
+  background:#fff;border:1px solid #E1E6EC;border-radius:11px;padding:10px 12px
+}
+.challenge-row-head{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:7px
+}
+.challenge-row-title{display:flex;align-items:center;gap:8px;min-width:0}
+.challenge-row-id{
+  width:38px;height:34px;border-radius:7px;background:var(--navy);color:#fff;
+  display:grid;place-items:center;font-size:10px;font-weight:800;flex:0 0 auto
+}
+.challenge-row-name{
+  font-size:12px;color:var(--navy);font-weight:800;line-height:1.2
+}
+.challenge-row-meta{
+  font-size:9px;color:#687488;font-weight:700;white-space:nowrap
+}
+.challenge-row-body{
+  display:grid;
+  grid-template-columns:minmax(0,1.55fr) minmax(420px,.95fr);
+  gap:10px;
+  align-items:stretch
+}
+.challenge-question{
+  border:1px solid #DCE4EC;background:#F8FAFC;border-radius:8px;
+  padding:9px 10px;min-height:70px;display:flex;align-items:flex-start
+}
+.challenge-question p{
+  font-size:10px;color:#465266;line-height:1.45
+}
+.challenge-initiatives{
+  border:1px solid #DCE4EC;background:#fff;border-radius:8px;
+  padding:8px;min-height:70px;
+  display:flex;align-items:flex-start;gap:6px;
+  flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden
+}
+.challenge-initiative{
+  width:70px;min-width:70px;height:36px;border:0;border-radius:6px;color:#fff;
+  font-size:9px;font-weight:800;display:grid;place-items:center;
+  box-shadow:inset 0 -2px 0 rgba(0,0,0,.08);transition:.12s
+}
+.challenge-initiative:hover{
+  transform:translateY(-2px);box-shadow:0 4px 10px rgba(18,59,109,.14)
+}
+.challenge-initiative-empty{
+  width:70px;min-width:70px;height:36px;border:1px dashed #C9D2DC;border-radius:6px;
+  color:#9AA4B2;display:grid;place-items:center;font-size:12px;background:#F8FAFC
+}
+@media(max-width:980px){
+  .challenge-row-body{grid-template-columns:1fr}
+}
+
 </style>
 </head>
 <body>
@@ -254,13 +315,9 @@ tbody tr:hover td{background:#F2F7FC}
 
 <section id="challengesView" class="view">
   <div class="desafios">
-    <div class="intro"><h2>Desafíos Estratégicos PPEE</h2><p>Desafíos estratégicos de Proyectos Especiales 2025–2028 y distribución de iniciativas asociadas.</p></div>
-    <div class="desafios-toolbar">
-      <span style="font-size:10px;color:#687488">Cada bloque representa una iniciativa asociada al desafío.</span>
-      <div class="toggle">
-        <button id="challengeCardsBtn" class="icon-btn active" title="Tarjetas" onclick="setChallengeMode('cards')">⊞</button>
-        <button id="challengeLoadBtn" class="icon-btn" title="Carga" onclick="setChallengeMode('load')">☰</button>
-      </div>
+    <div class="intro">
+      <h2>Desafíos Estratégicos PPEE</h2>
+      <p>Desafíos estratégicos de Proyectos Especiales 2025–2028 y distribución de iniciativas asociadas.</p>
     </div>
     <div id="challengeContent"></div>
   </div>
@@ -313,25 +370,25 @@ const CENTERS_DATA=[
 ];
 const CENTERS=CENTERS_DATA.map(c=>c.name);
 const DATA=[
-{id:1,name:"Tratamiento y reutilización de aguas grises",focus:"Sostenibilidad",challenge:"D8",stage:"Pilotear",sponsor:"Lorena Rodríguez",manager:"Gabriela Fuentes",year:"Continuidad 2025",status:"ACTIVA",innovationType:"Por definir",benefit:"Por definir",description:"Sistema de tratamiento que permite capturar y reutilizar aguas provenientes de duchas y lavamanos de la instalación de faena, mediante un proceso de filtración, para su uso en actividades operativas de obra."},
-{id:2,name:"Gestión de insumos de aseos",focus:"Sostenibilidad",challenge:"D8",stage:"Pilotear",sponsor:"Lorena Rodríguez",manager:"Gabriela Fuentes",year:"Continuidad 2025",status:"ACTIVA",innovationType:"Por definir",benefit:"Por definir",description:"Iniciativa que transforma el abastecimiento de insumos de aseo mediante soluciones de economía circular y control de consumo, generando impacto económico, ambiental y social."},
-{id:3,name:"Digitalización Hoja de Ruta",focus:"Digitalización",challenge:"D7",stage:"Escalar",sponsor:"Marcela Hope",manager:"Evelyn Fica",year:"Continuidad 2025",status:"ACTIVA",innovationType:"Por definir",benefit:"Por definir",description:"Digitalizar y unificar la Hoja de Ruta en una plataforma centralizada, que permita estandarizar el control del desempeño de subcontratos en obra."},
-{id:4,name:"Digitalización de Hallazgos",focus:"Digitalización",challenge:"D7",stage:"Escalar",sponsor:"Marcela Hope",manager:"Roberto Concha",year:"Continuidad 2025",status:"ACTIVA",innovationType:"Por definir",benefit:"Por definir",description:"Digitalizar el proceso de identificación, registro, gestión y cierre de hallazgos en obra, con el fin de mejorar la trazabilidad, reducir reprocesos y fortalecer la calidad y el control operacional mediante información centralizada y disponible en tiempo real."},
-{id:5,name:"Digitalización Programa de Liderazgo y Gestión SSTMA",focus:"Digitalización",challenge:"D7",stage:"Escalar",sponsor:"Raúl Aguilera",manager:"Mayko Ibarra",year:"Continuidad 2025",status:"ACTIVA",innovationType:"Por definir",benefit:"Por definir",description:"Implementar una plataforma digital para centralizar y gestionar el programa de liderazgo y acciones de Seguridad, Salud en el Trabajo y Medio Ambiente, facilitando el seguimiento, trazabilidad y participación de los equipos en terreno."},
-{id:6,name:"Control Resistencia en Losas Postensadas",focus:"Digitalización",challenge:"D4",stage:"Pilotear",sponsor:"Marcela Hope",manager:"Roberto Concha",year:"Continuidad 2025",status:"ACTIVA",innovationType:"Por definir",benefit:"Por definir",description:"Desarrollar una solución digital para controlar y registrar la resistencia del hormigón en losas postensadas, asegurando el tensado oportuno y la trazabilidad técnica."},
-{id:7,name:"Muebles Modulares",focus:"Industrialización",challenge:"D10",stage:"Escalar",sponsor:"Iván Matus",manager:"Por definir",year:"Continuidad 2025",status:"ACTIVA",innovationType:"Por definir",benefit:"Por definir",description:"Industrializar la partida de muebles en obras de edificación mediante soluciones modulares basadas en DfMA, con el fin de asegurar el ritmo de terminaciones, reducir desviaciones operacionales y aumentar la predictibilidad en plazos, calidad y montaje."},
-{id:8,name:"Receptáculos Preformados Impermeabilizados",focus:"Industrialización",challenge:"D10",stage:"I+D",sponsor:"Tito Fuentes",manager:"Por definir",year:"Continuidad 2025",status:"ACTIVA",innovationType:"Por definir",benefit:"Por definir",description:"Implementar receptáculos preformados con soluciones de impermeabilización de fábrica para asegurar calidad y reducir tiempos de ejecución."},
-{id:9,name:"Control de Avance OG",focus:"Digitalización",challenge:"D7",stage:"Escalar",sponsor:"Marcela Hope",manager:"Adel Kassar",year:"Continuidad 2025",status:"ACTIVA",innovationType:"Por definir",benefit:"Por definir",description:"Establecer una metodología digital para registrar y monitorear el avance de la obra gruesa en tiempo real, permitiendo mayor visibilidad y control operacional."},
-{id:10,name:"Modelo integrado de Armadura (AZA)",focus:"Industrialización",challenge:"D6",stage:"Detectar",sponsor:"Iván Matus",manager:"Por definir",year:"Nueva 2026",status:"ACTIVA",innovationType:"Por definir",benefit:"Por definir",description:"Integrar diseño, planificación, fabricación y montaje de armaduras bajo una lógica industrializada y trazable."},
-{id:11,name:"Adopción y Capacidades para industrializar",focus:"Por definir",challenge:"D6",stage:"Detectar",sponsor:"Tito Fuentes",manager:"Por definir",year:"Nueva 2026",status:"ACTIVA",innovationType:"Por definir",benefit:"Por definir",description:"Instalar capacidades organizacionales y metodológicas que permitan adoptar la industrialización de manera consistente en los proyectos."},
-{id:12,name:"Desarrollo de construcción en Madera (CENAMAD)",focus:"Industrialización",challenge:"D6",stage:"Detectar",sponsor:"Raúl Aguilera",manager:"Por definir",year:"Nueva 2026",status:"ACTIVA",innovationType:"Por definir",benefit:"Por definir",description:"Desarrollar capacidades y soluciones constructivas en madera con potencial de industrialización y aplicación en proyectos."},
-{id:13,name:"Mapeo de Subcontratos",focus:"Digitalización",challenge:"D7",stage:"Idear",sponsor:"Marcela Hope",manager:"Felipe Silva y Jessica Vorphal",year:"Nueva 2026",status:"ACTIVA",innovationType:"Por definir",benefit:"Por definir",description:"Digitalizar y estructurar información sobre subcontratos y partidas críticas para mejorar trazabilidad, evaluación y gestión desde obra."},
-{id:14,name:"Integración de Calidad al Last Planner",focus:"Digitalización",challenge:"D7",stage:"Idear",sponsor:"Marcela Hope",manager:"Roberto Concha y Adel Kassar",year:"Nueva 2026",status:"ACTIVA",innovationType:"Por definir",benefit:"Por definir",description:"Integrar la validación de calidad al proceso Last Planner para evitar avances no conformes, reducir reprocesos y fortalecer el control en terreno."},
-{id:15,name:"Automatización datos SGC (G. Técnica)",focus:"Digitalización",challenge:"D2",stage:"Detectar",sponsor:"Por definir",manager:"Por definir",year:"Nueva 2026",status:"ACTIVA",innovationType:"Por definir",benefit:"Por definir",description:"Automatizar la captura, consolidación y disponibilidad de datos del Sistema de Gestión de Calidad para reducir carga manual y mejorar la confiabilidad de la información."},
-{id:16,name:"Optimización Oficina Técnica",focus:"Por definir",challenge:"D5",stage:"Detectar",sponsor:"Tito Fuentes",manager:"Por definir",year:"Nueva 2026",status:"ACTIVA",innovationType:"Por definir",benefit:"Por definir",description:"Optimizar roles, flujos y coordinación de la Oficina Técnica para mejorar su aporte a la ejecución de los proyectos."},
-{id:17,name:"Sistema de Extracción Continua de Material en Túneles",focus:"Industrialización",challenge:"D6",stage:"Detectar",sponsor:"Magdalena Basoalto",manager:"Por definir",year:"Nueva 2026",status:"ACTIVA",innovationType:"Por definir",benefit:"Por definir",description:"Transformar el proceso de extracción de material en túneles mediante un sistema continuo que aumente productividad y continuidad operacional."},
-{id:18,name:"Iniciativa Área de estudios",focus:"Por definir",challenge:"Por definir",stage:"Detectar",sponsor:"Nelson Carrasco",manager:"Por definir",year:"Nueva 2026",status:"ACTIVA",innovationType:"Por definir",benefit:"Por definir",description:"Iniciativa en estructuración. Su alcance, foco y desafío estratégico deben ser formalizados."},
-{id:19,name:"Plataforma de Inteligencia Organizacional",focus:"Digitalización",challenge:"D2",stage:"Detectar",sponsor:"Magdalena Basoalto",manager:"Claudia Arre",year:"Nueva 2026",status:"ACTIVA",innovationType:"Por definir",benefit:"Por definir",description:"Desarrollar una plataforma de inteligencia organizacional que centralice información relevante para la toma de decisiones y gestión del conocimiento."}
+{id:1,name:"Tratamiento y reutilización de aguas grises",description:"Sistema de tratamiento que permite capturar y reutilizar aguas provenientes de duchas y lavamanos de la instalación de faena, mediante un proceso de filtración (biofiltro), para su uso en actividades operativas de obra como el lavado de bomba impulsora de hormigón.",startYear:2023,year:"Continuidad 2025",status:"ACTIVA",innovationType:"Disruptiva",focus:"Sostenibilidad",stage:"Pilotear",benefit:"I3",startup:"YAKU",challenge:"D8",sponsor:"Lorena Rodríguez",manager:"Gabriela Fuentes"},
+{id:2,name:"Gestión de insumos de aseos",description:"Iniciativa que transforma el abastecimiento de insumos de aseo en obra mediante soluciones de economía circular, generando triple impacto: económico, ambiental y social, al reducir costos, residuos y huella de carbono, e incorporar inclusión en su cadena de valor.",startYear:2024,year:"Continuidad 2025",status:"ACTIVA",innovationType:"Incremental",focus:"Sostenibilidad",stage:"Pilotear",benefit:"I3",startup:"REFIL",challenge:"D8",sponsor:"Lorena Rodríguez",manager:"Gabriela Fuentes"},
+{id:3,name:"Digitalización Hoja de Ruta",description:"Digitalizar y unificar la Hoja de Ruta en una plataforma centralizada, que permita estandarizar el control del desempeño de subcontratos en obra.",startYear:2023,year:"Continuidad 2025",status:"ACTIVA",innovationType:"Incremental",focus:"Digitalización",stage:"Escalar",benefit:"I2",startup:"No aplica",challenge:"D7",sponsor:"Marcela Hope",manager:"Evelyn Fica"},
+{id:4,name:"Digitalización de Hallazgos",description:"Digitalizar el proceso de identificación, registro, gestión y cierre de hallazgos en obra, con el fin de mejorar la trazabilidad, reducir reprocesos y fortalecer la calidad y el control operacional mediante información centralizada y disponible en tiempo real.",startYear:2023,year:"Continuidad 2025",status:"ACTIVA",innovationType:"Incremental",focus:"Digitalización",stage:"Escalar",benefit:"I2",startup:"No aplica",challenge:"D7",sponsor:"Marcela Hope",manager:"Roberto Concha"},
+{id:5,name:"Digitalización Programa de Liderazgo y Gestión SSTMA",description:"Implementar una plataforma digital para centralizar y gestionar el programa de liderazgo y acciones de Seguridad, Salud en el Trabajo y Medio Ambiente (SSTMA), facilitando el seguimiento, trazabilidad y participación de los equipos en terreno.",startYear:2023,year:"Continuidad 2025",status:"ACTIVA",innovationType:"Incremental",focus:"Digitalización",stage:"Escalar",benefit:"I3",startup:"TASKY",challenge:"D7",sponsor:"Raúl Aguilera",manager:"Mayko Ibarra"},
+{id:6,name:"Control Resistencia en Losas Postensadas",description:"Desarrollar una solución digital para controlar y registrar la resistencia del hormigón en losas postensadas, asegurando el tensado oportuno y mejorando la productividad del proceso constructivo.",startYear:2025,year:"Continuidad 2025",status:"ACTIVA",innovationType:"Incremental",focus:"Digitalización",stage:"Pilotear",benefit:"I3",startup:"OBRALINK",challenge:"D4",sponsor:"Marcela Hope",manager:"Roberto Concha"},
+{id:7,name:"Muebles Modulares",description:"Industrializar la partida de muebles en obras de edificación mediante soluciones modulares basadas en DfMA, con el fin de asegurar el ritmo de terminaciones, reducir desviaciones operacionales y aumentar la predictibilidad en plazos, calidad y montaje.",startYear:2023,year:"Continuidad 2025",status:"ACTIVA",innovationType:"Incremental",focus:"Industrialización",stage:"Escalar",benefit:"I3",startup:"No aplica",challenge:"D10",sponsor:"Iván Matus",manager:"Por definir"},
+{id:8,name:"Receptáculos Preformados Impermeabilizados",description:"Implementar receptáculos preformados con soluciones de impermeabilización de fábrica, que aseguren calidad, reduzcan tiempos de ejecución y errores en obra.",startYear:2025,year:"Continuidad 2025",status:"ACTIVA",innovationType:"Disruptiva",focus:"Industrialización",stage:"I+D",benefit:"No aplica",startup:"No aplica",challenge:"D10",sponsor:"Tito Fuentes",manager:"Por definir"},
+{id:9,name:"Control de Avance OG",description:"Establecer una metodología digital para registrar y monitorear el avance de la obra gruesa en tiempo real, permitiendo análisis productivo, ajustes tempranos y mayor visibilidad a nivel gerencial.",startYear:2022,year:"Continuidad 2025",status:"ACTIVA",innovationType:"Incremental",focus:"Digitalización",stage:"Escalar",benefit:"I2",startup:"OBRALINK",challenge:"D7",sponsor:"Marcela Hope",manager:"Adel Kassar"},
+{id:10,name:"Modelo integrado de Armadura (AZA)",description:"Por definir",startYear:2026,year:"Nueva 2026",status:"ACTIVA",innovationType:"Por definir",focus:"Industrialización",stage:"Detectar",benefit:"Por definir",startup:"Por definir",challenge:"D6",sponsor:"Iván Matus",manager:"Por definir"},
+{id:11,name:"Adopción y Capacidades para industrializar",description:"Por definir",startYear:2026,year:"Nueva 2026",status:"ACTIVA",innovationType:"Por definir",focus:"Por definir",stage:"Detectar",benefit:"Por definir",startup:"Por definir",challenge:"D6",sponsor:"Tito Fuentes",manager:"Por definir"},
+{id:12,name:"Desarrollo de construcción en Madera (CENAMAD)",description:"Explorar e implementar soluciones constructivas en madera como alternativa sostenible e industrializada para obras de edificación, alineadas con los objetivos de descarbonización y eficiencia constructiva.",startYear:2026,year:"Nueva 2026",status:"ACTIVA",innovationType:"Por definir",focus:"Industrialización",stage:"Detectar",benefit:"Por definir",startup:"Por definir",challenge:"D6",sponsor:"Raúl Aguilera",manager:"Por definir"},
+{id:13,name:"Mapeo de Subcontratos",description:"Por definir",startYear:2026,year:"Nueva 2026",status:"ACTIVA",innovationType:"Por definir",focus:"Digitalización",stage:"Idear",benefit:"Por definir",startup:"Por definir",challenge:"D7",sponsor:"Marcela Hope",manager:"Felipe Silva y Jessica Vorphal"},
+{id:14,name:"Integración de Calidad al Last Planner",description:"Por definir",startYear:2026,year:"Nueva 2026",status:"ACTIVA",innovationType:"Por definir",focus:"Digitalización",stage:"Idear",benefit:"Por definir",startup:"Por definir",challenge:"D7",sponsor:"Marcela Hope",manager:"Roberto Concha y Adel Kassar"},
+{id:15,name:"Automatización datos SGC (G. Técnica)",description:"Por definir",startYear:2026,year:"Nueva 2026",status:"ACTIVA",innovationType:"Por definir",focus:"Digitalización",stage:"Detectar",benefit:"Por definir",startup:"Por definir",challenge:"D2",sponsor:"Por definir",manager:"Por definir"},
+{id:16,name:"Optimización Oficina Técnica",description:"Por definir",startYear:2026,year:"Nueva 2026",status:"ACTIVA",innovationType:"Por definir",focus:"Por definir",stage:"Detectar",benefit:"Por definir",startup:"Por definir",challenge:"D5",sponsor:"Tito Fuentes",manager:"Por definir"},
+{id:17,name:"Sistema de Extracción Continua de Material en Túneles",description:"Por definir",startYear:2026,year:"Nueva 2026",status:"ACTIVA",innovationType:"Por definir",focus:"Industrialización",stage:"Detectar",benefit:"Por definir",startup:"Por definir",challenge:"D6",sponsor:"Magdalena Basoalto",manager:"Por definir"},
+{id:18,name:"Iniciativa Área de estudios",description:"Por definir",startYear:2026,year:"Nueva 2026",status:"ACTIVA",innovationType:"Por definir",focus:"Por definir",stage:"Detectar",benefit:"Por definir",startup:"Por definir",challenge:"Por definir",sponsor:"Nelson Carrasco",manager:"Por definir"},
+{id:19,name:"Plataforma de Inteligencia Organizacional",description:"Por definir",startYear:2026,year:"Nueva 2026",status:"ACTIVA",innovationType:"Por definir",focus:"Por definir",stage:"Detectar",benefit:"Por definir",startup:"Por definir",challenge:"D2",sponsor:"Magdalena Basoalto",manager:"Claudia Arre"}
 ];
 const DEPLOYMENTS={
   1:{"Los Militares":"Finalizada","Metrópolis Independencia":"Activa"},
@@ -345,7 +402,7 @@ const DEPLOYMENTS={
   9:{"Parque Arauco":"Activa","Los Militares":"Activa","La Castellana":"Activa","Metrópolis Independencia":"Activa","Torre Kennedy Oriente":"Activa"}
 };
 const filters={focus:new Set(),challenge:new Set(),stage:new Set(),sponsor:new Set()};
-let portfolioMode="dashboard",challengeMode="cards",previousView="portfolio";
+let portfolioMode="dashboard",previousView="portfolio";
 
 function inn(id){return `INN-${String(id).padStart(2,"0")}`}
 function challengeName(id){const d=CHALLENGES.find(x=>x.id===id);return d?d.name:"Por definir"}
@@ -428,8 +485,8 @@ function renderPortfolio(){
    <span class="tag challenge-tag">${esc(d.challenge)} ${esc(challengeName(d.challenge))}</span></div>
    <div class="card-footer">${esc(d.sponsor)}</div></div></article>`).join("")}</div>`;
  }else{
-  c.innerHTML=`<div class="table-wrap"><table><thead><tr><th>ID</th><th>Iniciativa</th><th>Foco</th><th>Desafío</th><th>Etapa</th><th>Sponsor</th><th>Gestor</th></tr></thead><tbody>
-  ${data.map(d=>`<tr onclick="openFicha(${d.id})"><td><strong>${inn(d.id)}</strong></td><td>${esc(d.name)}</td><td>${tag(d.focus,focusColor(d.focus))}</td><td>${esc(d.challenge)} · ${esc(challengeName(d.challenge))}</td><td>${tag(d.stage,stageColor(d.stage),d.stage==="Pilotear"||d.stage==="Diseñar"?"#243247":"#fff")}</td><td>${esc(d.sponsor)}</td><td>${esc(d.manager)}</td></tr>`).join("")}</tbody></table></div>`;
+  c.innerHTML=`<div class="table-wrap"><table><thead><tr><th>ID</th><th>Iniciativa</th><th>Año inicio</th><th>Foco</th><th>Tipo innovación</th><th>Desafío</th><th>Etapa</th><th>Beneficio</th><th>Startup / Aliado</th><th>Sponsor</th><th>Gestor</th></tr></thead><tbody>
+  ${data.map(d=>`<tr onclick="openFicha(${d.id})"><td><strong>${inn(d.id)}</strong></td><td>${esc(d.name)}</td><td>${esc(d.startYear)}</td><td>${tag(d.focus,focusColor(d.focus))}</td><td>${esc(d.innovationType)}</td><td>${esc(d.challenge)} · ${esc(challengeName(d.challenge))}</td><td>${tag(d.stage,stageColor(d.stage),d.stage==="Pilotear"||d.stage==="Diseñar"?"#243247":"#fff")}</td><td>${esc(d.benefit)}</td><td>${esc(d.startup)}</td><td>${esc(d.sponsor)}</td><td>${esc(d.manager)}</td></tr>`).join("")}</tbody></table></div>`;
  }
 }
 function setPortfolioMode(mode){
@@ -508,21 +565,45 @@ function filterFromDashboard(key,value){clearFilters();filters[key].add(value);d
 
 function renderChallenges(){
  const el=document.getElementById("challengeContent");
- document.getElementById("challengeCardsBtn").classList.toggle("active",challengeMode==="cards");
- document.getElementById("challengeLoadBtn").classList.toggle("active",challengeMode==="load");
- if(challengeMode==="cards"){
-  el.innerHTML=`<div class="desafios-grid">${CHALLENGES.map(ch=>{
-   const arr=DATA.filter(d=>d.challenge===ch.id);
-   return `<div class="desafio-card"><div class="desafio-head"><div class="desafio-id">${ch.id}</div><div class="desafio-title">${ch.name}</div></div><div class="desafio-body">${ch.text}<div class="inn-list">${arr.length?arr.map(d=>`<div class="inn-item" onclick="openFicha(${d.id})"><strong>${inn(d.id)}</strong><span>${esc(d.name)}</span></div>`).join(""):`<div class="inn-item"><span>Sin iniciativas asociadas</span></div>`}</div></div></div>`;
-  }).join("")}</div>`;
- }else{
-  el.innerHTML=`<div class="load-view">${CHALLENGES.map(ch=>{
-   const arr=DATA.filter(d=>d.challenge===ch.id);
-   return `<div class="load-row"><div class="load-label"><div class="desafio-id">${ch.id}</div><span>${ch.name}</span></div><div class="load-track">${arr.length?arr.map(d=>`<button class="load-block" onclick="openFicha(${d.id})">${inn(d.id)}</button>`).join(""):`<span class="load-empty">—</span>`}</div><div class="load-count">${arr.length}<small>iniciativas</small></div></div>`;
-  }).join("")}</div>`;
- }
+ const total=DATA.length;
+ const counts=CHALLENGES.map(ch=>({
+  ...ch,
+  initiatives:DATA.filter(d=>d.challenge===ch.id)
+ }));
+
+ el.innerHTML=`
+ <div class="challenge-board">
+  ${counts.map(ch=>{
+   const arr=ch.initiatives;
+   return `<article class="challenge-row">
+    <div class="challenge-row-head">
+      <div class="challenge-row-title">
+        <div class="challenge-row-id">${ch.id}</div>
+        <div class="challenge-row-name">${ch.name}</div>
+      </div>
+      <div class="challenge-row-meta">${arr.length} iniciativas · ${pct(arr.length,total)}%</div>
+    </div>
+
+    <div class="challenge-row-body">
+      <div class="challenge-question">
+        <p>${ch.text}</p>
+      </div>
+
+      <div class="challenge-initiatives">
+        ${arr.length
+          ? arr.map(d=>`<button
+              class="challenge-initiative"
+              style="background:${focusColor(d.focus)}"
+              title="${inn(d.id)} · ${esc(d.name)} · ${esc(d.stage)} · ${esc(d.sponsor)}"
+              onclick="openFicha(${d.id})"
+            >${inn(d.id)}</button>`).join("")
+          : `<span class="challenge-initiative-empty">—</span>`}
+      </div>
+    </div>
+   </article>`;
+  }).join("")}
+ </div>`;
 }
-function setChallengeMode(m){challengeMode=m;renderChallenges()}
 
 function renderCenters(){
  const detail=document.getElementById("centerDetail");
@@ -607,8 +688,17 @@ function openFicha(id){
  document.getElementById("fichaContent").innerHTML=`<div class="ficha-card"><div class="ficha-head" style="background:${focusColor(d.focus)}"><small>${inn(d.id)} · ${d.year}</small><h2>${esc(d.name)}</h2></div><div class="ficha-body">
  <div class="tags">${tag(d.focus,focusColor(d.focus))}${tag(d.stage,stageColor(d.stage),d.stage==="Pilotear"||d.stage==="Diseñar"?"#243247":"#fff")}<span class="tag challenge-tag">${esc(d.challenge)} · ${esc(challengeName(d.challenge))}</span></div>
  ${renderStepper(d.stage)}
- <div class="ficha-grid"><div class="info"><div class="info-label">Sponsor</div><div class="info-value">${esc(d.sponsor)}</div></div><div class="info"><div class="info-label">Gestor</div><div class="info-value">${esc(d.manager)}</div></div><div class="info"><div class="info-label">Estado</div><div class="info-value">${esc(d.status)}</div></div>
- <div class="info"><div class="info-label">Tipo de innovación</div><div class="info-value">${esc(d.innovationType)}</div></div><div class="info"><div class="info-label">Tipo de beneficio</div><div class="info-value">${esc(d.benefit)}</div></div><div class="info"><div class="info-label">Centros de trabajo</div><div class="info-value">${centers.length?centers.join(", "):"Sin despliegues configurados"}</div></div></div>
+ <div class="ficha-grid">
+ <div class="info"><div class="info-label">Año de inicio</div><div class="info-value">${esc(d.startYear)}</div></div>
+ <div class="info"><div class="info-label">Estado</div><div class="info-value">${esc(d.status)}</div></div>
+ <div class="info"><div class="info-label">Startup / Aliado</div><div class="info-value">${esc(d.startup)}</div></div>
+ <div class="info"><div class="info-label">Tipo de innovación</div><div class="info-value">${esc(d.innovationType)}</div></div>
+ <div class="info"><div class="info-label">Tipo de beneficio</div><div class="info-value">${esc(d.benefit)}</div></div>
+ <div class="info"><div class="info-label">Etapa de innovación</div><div class="info-value">${esc(d.stage)}</div></div>
+ <div class="info"><div class="info-label">Sponsor</div><div class="info-value">${esc(d.sponsor)}</div></div>
+ <div class="info"><div class="info-label">Gestor</div><div class="info-value">${esc(d.manager)}</div></div>
+ <div class="info"><div class="info-label">Centros de trabajo</div><div class="info-value">${centers.length?centers.join(", "):"Sin despliegues configurados"}</div></div>
+ </div>
  <div class="sec"><h3>Descripción de la solución</h3><p>${esc(d.description)}</p></div>
  <div class="sec"><h3>Desafío estratégico asociado</h3><p><strong>${esc(d.challenge)} · ${esc(challengeName(d.challenge))}</strong></p></div>
  <div class="sec"><h3>Hipótesis y KPI</h3><p style="color:#758094;font-style:italic">Información por completar en la ficha de la iniciativa.</p></div>
